@@ -4,5 +4,7 @@ public interface Address {
 
     int getId();
 
-    void setId(int id_address);
+    void setId(int id);
+
+
 }

@@ -4,7 +4,7 @@ public interface Model {
 
     int getId();
 
-    void setId(int id_model);
+    void setId(int id);
 
     String getName ();
 

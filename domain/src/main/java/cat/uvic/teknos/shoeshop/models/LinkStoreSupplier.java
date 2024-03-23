@@ -4,9 +4,9 @@ public interface LinkStoreSupplier {
 
     int getStoreId();
 
-    void setStoreId(int id_store);
+    void setStoreId(int id);
 
     int getSupplierId();
 
-    void setSupplierId(int id_supplier);
+    void setSupplierId(int id);
 }

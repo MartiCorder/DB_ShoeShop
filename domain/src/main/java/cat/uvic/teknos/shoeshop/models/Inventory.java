@@ -4,7 +4,7 @@ public interface Inventory {
 
     int getId();
 
-    void setId(int id_inventory);
+    void setId(int id);
 
     int getCapacity();
 

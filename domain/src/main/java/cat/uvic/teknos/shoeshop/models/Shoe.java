@@ -6,6 +6,10 @@ public interface Shoe {
 
     void setId(int id_shoe);
 
+    String getName();
+
+    void setName(String name);
+
     int getModelId();
 
     void setModelId(int id_model);

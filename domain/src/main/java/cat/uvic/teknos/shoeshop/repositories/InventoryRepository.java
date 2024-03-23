@@ -14,6 +14,7 @@ public interface InventoryRepository extends Repository<Integer, Inventory> {
     @Override
     Inventory get(Integer id);
 
+
     @Override
     Set<Inventory> getAll();
 }

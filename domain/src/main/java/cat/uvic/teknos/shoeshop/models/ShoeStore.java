@@ -4,7 +4,7 @@ public interface ShoeStore {
 
     int getId();
 
-    void setId(int id_store);
+    void setId(int id);
 
     String getName();
 

@@ -11,4 +11,4 @@ plugins {
 }
 
 rootProject.name = "gradle-shoe_shop"
-include("app", "domain", "utilities")
+include("app", "domain", "utilities", ":domain-implementations:file")

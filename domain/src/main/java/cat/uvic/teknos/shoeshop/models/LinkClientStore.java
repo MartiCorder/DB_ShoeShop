@@ -8,6 +8,6 @@ public interface LinkClientStore {
 
     int getStoreId();
 
-    void setStoreId(int id_store);
+    void setStoreId(int id);
 
 }

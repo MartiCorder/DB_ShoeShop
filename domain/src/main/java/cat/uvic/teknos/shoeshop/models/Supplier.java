@@ -4,11 +4,11 @@ public interface Supplier {
 
     int getId();
 
-    void setId(int id_supplier);
+    void setId(int id);
 
     String getName();
 
-    void setName(int name);
+    void setName(String name);
 
     String getPhone();
 
