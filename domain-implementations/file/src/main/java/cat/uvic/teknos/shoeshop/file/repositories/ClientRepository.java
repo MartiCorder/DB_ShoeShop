@@ -45,6 +45,15 @@ public class ClientRepository implements cat.uvic.teknos.shoeshop.repositories.C
         }
 
     }
+    public static void update(){
+        var currentDirectory = System.getProperty("user.dir") + "/src/main/resources/";
+        try (var outputStream = new ObjectOutputStream(new FileOutputStream(currentDirectory + "client.ser"))) {
+            outputStream.writeObject(client);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 
     @Override
     public void delete(Client model) {
@@ -53,6 +62,11 @@ public class ClientRepository implements cat.uvic.teknos.shoeshop.repositories.C
 
     @Override
     public Client get(Integer id) {
+        return null;
+    }
+
+    @Override
+    public Client get(String name) {
         return null;
     }
 

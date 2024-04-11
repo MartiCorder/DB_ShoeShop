@@ -44,6 +44,15 @@ public class SupplierRepository implements cat.uvic.teknos.shoeshop.repositories
             supplier.put(model.getId(), model);
         }
     }
+    public static void update(){
+        var currentDirectory = System.getProperty("user.dir") + "/src/main/resources/";
+        try (var outputStream = new ObjectOutputStream(new FileOutputStream(currentDirectory + "supplier.ser"))) {
+            outputStream.writeObject(supplier);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 
     @Override
     public void delete(Supplier model) {

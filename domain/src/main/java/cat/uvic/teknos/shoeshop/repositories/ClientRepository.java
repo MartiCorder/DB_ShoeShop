@@ -17,8 +17,6 @@ public interface ClientRepository extends Repository<Integer, Client>{
 
     Client get(String name);
 
-
-
     @Override
     Set<Client> getAll();
 }

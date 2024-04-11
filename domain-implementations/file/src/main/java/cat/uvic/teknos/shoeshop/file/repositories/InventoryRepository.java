@@ -45,6 +45,15 @@ public class InventoryRepository implements cat.uvic.teknos.shoeshop.repositorie
         }
 
     }
+    public static void update(){
+        var currentDirectory = System.getProperty("user.dir") + "/src/main/resources/";
+        try (var outputStream = new ObjectOutputStream(new FileOutputStream(currentDirectory + "inventory.ser"))) {
+            outputStream.writeObject(inventory);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 
     @Override
     public void delete(Inventory model) {

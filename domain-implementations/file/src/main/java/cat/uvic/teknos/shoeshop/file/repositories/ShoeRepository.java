@@ -44,6 +44,15 @@ public class ShoeRepository implements cat.uvic.teknos.shoeshop.repositories.Sho
         }
 
     }
+    public static void update(){
+        var currentDirectory = System.getProperty("user.dir") + "/src/main/resources/";
+        try (var outputStream = new ObjectOutputStream(new FileOutputStream(currentDirectory + "shoe.ser"))) {
+            outputStream.writeObject(shoe);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 
     @Override
     public void delete(Shoe model) {

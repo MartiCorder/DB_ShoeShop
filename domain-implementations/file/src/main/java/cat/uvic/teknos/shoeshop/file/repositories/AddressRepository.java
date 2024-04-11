@@ -34,6 +34,7 @@ public class AddressRepository implements cat.uvic.teknos.shoeshop.repositories.
             throw new RuntimeException(e);
         }
     }
+
     @Override
     public void save(Address model) {
 
@@ -43,6 +44,15 @@ public class AddressRepository implements cat.uvic.teknos.shoeshop.repositories.
             address.put(newId, model);
         }else{
             address.put(model.getId(), model);
+        }
+
+    }
+    public static void update(){
+        var currentDirectory = System.getProperty("user.dir") + "/src/main/resources/";
+        try (var outputStream = new ObjectOutputStream(new FileOutputStream(currentDirectory + "address.ser"))) {
+            outputStream.writeObject(address);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
 
     }

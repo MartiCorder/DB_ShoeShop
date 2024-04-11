@@ -45,6 +45,15 @@ public class ModelRepository implements cat.uvic.teknos.shoeshop.repositories.Mo
         }
 
     }
+    public static void update(){
+        var currentDirectory = System.getProperty("user.dir") + "/src/main/resources/";
+        try (var outputStream = new ObjectOutputStream(new FileOutputStream(currentDirectory + "model1.ser"))) {
+            outputStream.writeObject(model1);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 
     @Override
     public void delete(Model model) {
