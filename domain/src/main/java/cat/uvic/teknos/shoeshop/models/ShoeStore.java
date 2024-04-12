@@ -1,5 +1,7 @@
 package cat.uvic.teknos.shoeshop.models;
 
+import java.util.Set;
+
 public interface ShoeStore {
 
     int getId();

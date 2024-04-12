@@ -1,6 +1,8 @@
 package cat.uvic.teknos.shoeshop.file.models;
 
-public class ShoeStore implements cat.uvic.teknos.shoeshop.models.ShoeStore {
+import java.io.Serializable;
+
+public class ShoeStore implements cat.uvic.teknos.shoeshop.models.ShoeStore, Serializable {
 
     private int id;
     private String name;

@@ -1,5 +1,4 @@
 package cat.uvic.teknos.shoeshop.file.models;
-
 public class Supplier implements cat.uvic.teknos.shoeshop.models.Supplier{
 
     private int id;
