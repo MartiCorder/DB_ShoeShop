@@ -20,18 +20,17 @@ public class ShoeRepository implements cat.uvic.teknos.shoeshop.repositories.Sho
     }
 
     public void load(){
-
-        //var currentDirectory = System.getProperty("user.dir") + "/src/main/resources/";
-
-        try(var inputStream = new ObjectInputStream(new
-                FileInputStream(path))) {
-            shoe = (Map<Integer, Shoe>)
-                    inputStream.readObject();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e){
+        try {
+            File file = new File(path);
+            if (!file.exists()) {
+                shoe = new HashMap<>();
+                write();
+            } else {
+                try (var inputStream = new ObjectInputStream(new FileInputStream(path))) {
+                    shoe = (Map<Integer, Shoe>) inputStream.readObject();
+                }
+            }
+        } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }

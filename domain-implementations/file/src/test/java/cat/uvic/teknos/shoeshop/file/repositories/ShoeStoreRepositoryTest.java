@@ -19,20 +19,25 @@ class ShoeStoreRepositoryTest {
         shopTaradell.setLocation("Taradell");
         shopTaradell.setOwner("Martí Corder");
         repository.save(shopTaradell);
+
         assertTrue(shopTaradell.getId() > 0);
         assertNotNull(repository.get(shopTaradell.getId()));
         repository.load();
         assertNotNull(repository.get(shopTaradell.getId()));
     }
+
+    @Test
     void update() {
         var path = System.getProperty("user.dir") +
                 "/src/main/resources/shoestore.ser/";
         var repository = new ShoeStoreRepository(path);
+
         var shopTaradell = new ShoeStore();
         shopTaradell.setId(1);
         shopTaradell.setName("Corder's Shop");
         repository.save(shopTaradell);
-        var updateTeam = repository.get(1);
-        assertEquals(1,updateTeam.getId());
+        assertNotNull(repository.get(1));
+        var updateShoeStore = repository.get(1);
+        assertEquals(1,updateShoeStore.getId());
     }
 }

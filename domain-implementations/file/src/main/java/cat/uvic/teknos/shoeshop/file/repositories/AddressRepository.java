@@ -21,18 +21,17 @@ public class AddressRepository implements cat.uvic.teknos.shoeshop.repositories.
     }
 
     public void load(){
-
-        //var currentDirectory = System.getProperty("user.dir") + "/src/main/resources/";
-
-        try(var inputStream = new ObjectInputStream(new
-                FileInputStream(path))) {
-            address = (Map<Integer, Address>)
-                    inputStream.readObject();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e){
+        try {
+            File file = new File(path);
+            if (!file.exists()) {
+                address = new HashMap<>();
+                write();
+            } else {
+                try (var inputStream = new ObjectInputStream(new FileInputStream(path))) {
+                    address = (Map<Integer, Address>) inputStream.readObject();
+                }
+            }
+        } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }

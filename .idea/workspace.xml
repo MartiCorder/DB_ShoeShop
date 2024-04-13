@@ -5,9 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9ef11ec9-4fcc-40fb-b4e7-c98455c3a946" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/domain-implementations/file/src/test/java/cat/uvic/teknos/shoeshop/file/repositories/SupplierRepositoryTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/models/ShoeStore.java" beforeDir="false" afterPath="$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/models/ShoeStore.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/models/Supplier.java" beforeDir="false" afterPath="$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/models/Supplier.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/repositories/AddressRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/repositories/AddressRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/repositories/ClientRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/repositories/ClientRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/repositories/InventoryRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/repositories/InventoryRepository.java" afterDir="false" />
@@ -15,10 +15,7 @@
       <change beforePath="$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/repositories/ShoeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/repositories/ShoeRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/repositories/ShoeStoreRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/repositories/ShoeStoreRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/repositories/SupplierRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/repositories/SupplierRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/domain-implementations/file/src/main/resources/musicians.ser" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/domain-implementations/file/src/test/java/cat/uvic/teknos/shoeshop/file/repositories/ShoeStoreRepositoryTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/domain-implementations/file/src/test/java/cat/uvic/teknos/shoeshop/file/repositories/ShoeStoreRepositoryTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/domain/src/main/java/cat/uvic/teknos/shoeshop/models/ShoeStore.java" beforeDir="false" afterPath="$PROJECT_DIR$/domain/src/main/java/cat/uvic/teknos/shoeshop/models/ShoeStore.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/domain/src/main/java/cat/uvic/teknos/shoeshop/repositories/AddressRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/domain/src/main/java/cat/uvic/teknos/shoeshop/repositories/AddressRepository.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,8 +43,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Interface" />
-        <option value="Class" />
         <option value="JUnit5 Test Class" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -65,29 +62,31 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Gradle.ShoeStoreRepositoryTest.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.ShoeStoreRepositoryTest.save.executor&quot;: &quot;Debug&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary&quot;: &quot;JUnit5&quot;,
-    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5&quot;: &quot;&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/marti/source/repos/bands&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Gradle.ShoeStoreRepositoryTest.executor": "Run",
+    "Gradle.ShoeStoreRepositoryTest.save.executor": "Debug",
+    "Gradle.ShoeStoreRepositoryTest.update.executor": "Run",
+    "Gradle.SupplierRepositoryTest.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
+    "git-widget-placeholder": "master",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/marti/source/repos/bands",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\marti\source\repos\gradle-shoe_shop\domain-implementations\file" />
@@ -137,7 +136,8 @@
       <workItem from="1712583686899" duration="3603000" />
       <workItem from="1712850588967" duration="8957000" />
       <workItem from="1712867374306" duration="604000" />
-      <workItem from="1712909921486" duration="3930000" />
+      <workItem from="1712909921486" duration="4002000" />
+      <workItem from="1712994897071" duration="3571000" />
     </task>
     <servers />
   </component>

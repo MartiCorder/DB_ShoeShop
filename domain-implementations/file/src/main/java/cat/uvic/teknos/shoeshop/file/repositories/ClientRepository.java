@@ -21,18 +21,17 @@ public class ClientRepository implements cat.uvic.teknos.shoeshop.repositories.C
     }
 
     public void load(){
-
-        //var currentDirectory = System.getProperty("user.dir") + "/src/main/resources/";
-
-        try(var inputStream = new ObjectInputStream(new
-                FileInputStream(path))) {
-            client = (Map<Integer, Client>)
-                    inputStream.readObject();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e){
+        try {
+            File file = new File(path);
+            if (!file.exists()) {
+                client = new HashMap<>();
+                write();
+            } else {
+                try (var inputStream = new ObjectInputStream(new FileInputStream(path))) {
+                    client = (Map<Integer, Client>) inputStream.readObject();
+                }
+            }
+        } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
