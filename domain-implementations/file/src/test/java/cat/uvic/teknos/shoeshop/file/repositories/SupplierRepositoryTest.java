@@ -9,7 +9,7 @@ class SupplierRepositoryTest {
 
     @Test
     void save() {
-        var path = System.getProperty("user.dir") + "/src/main/resources/supplier.ser/";
+        var path = System.getProperty("user.dir") + "/src/test/resources/supplier.ser/";
         var repository = new SupplierRepository(path);
         var supplier1 = new Supplier();
         supplier1.setId(1);
@@ -22,7 +22,7 @@ class SupplierRepositoryTest {
 
     @Test
     void update() {
-        var path = System.getProperty("user.dir") + "/src/main/resources/supplier.ser/";
+        var path = System.getProperty("user.dir") + "/src/test/resources/supplier.ser/";
         var repository = new SupplierRepository(path);
 
         var supplier1 = new Supplier();
@@ -36,7 +36,7 @@ class SupplierRepositoryTest {
 
     @Test
     void get() {
-        var path = System.getProperty("user.dir") + "/src/main/resources/supplier.ser/";
+        var path = System.getProperty("user.dir") + "/src/test/resources/supplier.ser/";
         var repository = new SupplierRepository(path);
 
         var supplier1 = new Supplier();
@@ -54,7 +54,7 @@ class SupplierRepositoryTest {
 
     @Test
     void getAll() {
-        var path = System.getProperty("user.dir") + "/src/main/resources/supplier.ser/";
+        var path = System.getProperty("user.dir") + "/src/test/resources/supplier.ser/";
         var repository = new SupplierRepository(path);
 
         var supplier1 = new Supplier();
