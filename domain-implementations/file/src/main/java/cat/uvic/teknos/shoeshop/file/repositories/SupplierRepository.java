@@ -4,6 +4,8 @@ import cat.uvic.teknos.shoeshop.models.Shoe;
 import cat.uvic.teknos.shoeshop.models.Supplier;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -13,27 +15,31 @@ public class SupplierRepository implements cat.uvic.teknos.shoeshop.repositories
 
     private static Map<Integer, Supplier> supplier = new HashMap<>();
 
-    public static void load(){
+    private String path;
 
-        var currentDirectory = System.getProperty("user.dir") + "/src/main/resources/";
+    public SupplierRepository(String path){this.path=path;}
 
+    void load(){
 
-        try(var inputStream = new ObjectInputStream(new FileInputStream(currentDirectory+ "supplier.ser"))) {
-            supplier = (Map<Integer, Supplier>) inputStream.readObject();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e){
-            throw new RuntimeException(e);
+        if (Files.exists(Path.of(path))) {
+
+            try(var inputStream = new ObjectInputStream(new FileInputStream(path))) {
+                supplier = (Map<Integer, Supplier>) inputStream.readObject();
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } catch (ClassNotFoundException e){
+                throw new RuntimeException(e);
+            }
         }
 
+
     }
+    void write(){
 
-    public static void write(){
-        var currentDirectory = System.getProperty("user.dir") + "/src/main/resources/";
 
-        try(var outputStream = new ObjectOutputStream(new FileOutputStream(currentDirectory + "supplier.ser"))) {
+        try(var outputStream = new ObjectOutputStream(new FileOutputStream(path))) {
             outputStream.writeObject(supplier);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
@@ -44,7 +50,6 @@ public class SupplierRepository implements cat.uvic.teknos.shoeshop.repositories
     @Override
     public void save(Supplier model) {
         if (model.getId() <= 0){
-            //get new id
             var newId=supplier.keySet().stream().mapToInt(k -> k).max().orElse(0)+1;
             supplier.put(newId, model);
         }else{
@@ -53,9 +58,9 @@ public class SupplierRepository implements cat.uvic.teknos.shoeshop.repositories
         write();
 
     }
-    public static void update(){
+    public void update(){
         var currentDirectory = System.getProperty("user.dir") + "/src/main/resources/";
-        try (var outputStream = new ObjectOutputStream(new FileOutputStream(currentDirectory + "supplier.ser"))) {
+        try (var outputStream = new ObjectOutputStream(new FileOutputStream(path))) {
             outputStream.writeObject(supplier);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -66,9 +71,9 @@ public class SupplierRepository implements cat.uvic.teknos.shoeshop.repositories
     @Override
     public void delete(Supplier model) {
 
-        var currentDirectory = System.getProperty("user.dir") + "/src/main/resources/";
+        //var currentDirectory = System.getProperty("user.dir") + "/src/main/resources/";
 
-        try (var outputStream = new ObjectOutputStream(new FileOutputStream(currentDirectory + "supplier.ser"))) {
+        try (var outputStream = new ObjectOutputStream(new FileOutputStream(path))) {
 
             for (Iterator<Map.Entry<Integer, Supplier>> iterator = supplier.entrySet().iterator(); iterator.hasNext(); ) {
                 Map.Entry<Integer, Supplier> entry = iterator.next();

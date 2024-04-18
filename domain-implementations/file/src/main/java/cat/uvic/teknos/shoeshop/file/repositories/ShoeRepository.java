@@ -3,32 +3,38 @@ package cat.uvic.teknos.shoeshop.file.repositories;
 import cat.uvic.teknos.shoeshop.models.Shoe;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 
 public class ShoeRepository implements cat.uvic.teknos.shoeshop.repositories.ShoeRepository{
     private static Map<Integer, Shoe> shoe = new HashMap<>();
 
-    public static void load(){
+    private String path;
 
-        var currentDirectory = System.getProperty("user.dir") + "/src/main/resources/";
+    public ShoeRepository(String path){this.path=path;}
 
+     void load(){
 
-        try(var inputStream = new ObjectInputStream(new FileInputStream(currentDirectory+ "shoe.ser"))) {
-            shoe = (Map<Integer, Shoe>) inputStream.readObject();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e){
-            throw new RuntimeException(e);
-        }
+        if (Files.exists(Path.of(path))) {
+
+             try(var inputStream = new ObjectInputStream(new FileInputStream(path))) {
+                 shoe = (Map<Integer, Shoe>) inputStream.readObject();
+             } catch (FileNotFoundException e) {
+                 throw new RuntimeException(e);
+             } catch (IOException e) {
+                 throw new RuntimeException(e);
+             } catch (ClassNotFoundException e){
+                 throw new RuntimeException(e);
+             }
+         }
+
 
     }
+    void write(){
 
-    public static void write(){
-        var currentDirectory = System.getProperty("user.dir") + "/src/main/resources/";
 
-        try(var outputStream = new ObjectOutputStream(new FileOutputStream(currentDirectory + "shoe.ser"))) {
+        try(var outputStream = new ObjectOutputStream(new FileOutputStream(path))) {
             outputStream.writeObject(shoe);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
@@ -39,7 +45,6 @@ public class ShoeRepository implements cat.uvic.teknos.shoeshop.repositories.Sho
     @Override
     public void save(Shoe model) {
         if (model.getId() <= 0){
-            //get new id
             var newId=shoe.keySet().stream().mapToInt(k -> k).max().orElse(0)+1;
             shoe.put(newId, model);
         }else{
@@ -48,9 +53,9 @@ public class ShoeRepository implements cat.uvic.teknos.shoeshop.repositories.Sho
         write();
 
     }
-    public static void update(){
+    public void update(){
         var currentDirectory = System.getProperty("user.dir") + "/src/main/resources/";
-        try (var outputStream = new ObjectOutputStream(new FileOutputStream(currentDirectory + "shoe.ser"))) {
+        try (var outputStream = new ObjectOutputStream(new FileOutputStream(path))) {
             outputStream.writeObject(shoe);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -61,9 +66,9 @@ public class ShoeRepository implements cat.uvic.teknos.shoeshop.repositories.Sho
     @Override
     public void delete(Shoe model) {
 
-        var currentDirectory = System.getProperty("user.dir") + "/src/main/resources/";
+        //var currentDirectory = System.getProperty("user.dir") + "/src/main/resources/";
 
-        try (var outputStream = new ObjectOutputStream(new FileOutputStream(currentDirectory + "shoe.ser"))) {
+        try (var outputStream = new ObjectOutputStream(new FileOutputStream(path))) {
 
             for (Iterator<Map.Entry<Integer, Shoe>> iterator = shoe.entrySet().iterator(); iterator.hasNext(); ) {
                 Map.Entry<Integer, Shoe> entry = iterator.next();
