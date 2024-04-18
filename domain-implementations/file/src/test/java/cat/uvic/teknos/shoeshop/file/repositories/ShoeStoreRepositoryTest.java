@@ -11,7 +11,7 @@ class ShoeStoreRepositoryTest {
     void save() {
         var path = System.getProperty("user.dir") +
                 "/src/main/resources/shoestore.ser/";
-        var repository = new ShoeStoreRepository(path);
+        var repository = new ShoeStoreRepository();
         var shopTaradell = new ShoeStore();
         shopTaradell.setId(1);
         shopTaradell.setName("Corder Shop");
@@ -30,7 +30,7 @@ class ShoeStoreRepositoryTest {
     void update() {
         var path = System.getProperty("user.dir") +
                 "/src/main/resources/shoestore.ser/";
-        var repository = new ShoeStoreRepository(path);
+        var repository = new ShoeStoreRepository();
 
         var shopTaradell = new ShoeStore();
         shopTaradell.setId(1);

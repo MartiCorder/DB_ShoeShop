@@ -1,45 +1,37 @@
 package cat.uvic.teknos.shoeshop.file.repositories;
 
 import cat.uvic.teknos.shoeshop.models.Client;
+import cat.uvic.teknos.shoeshop.models.Shoe;
 import cat.uvic.teknos.shoeshop.models.ShoeStore;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-public class ClientRepository implements cat.uvic.teknos.shoeshop.repositories.ClientRepository{
+public class ClientRepository implements cat.uvic.teknos.shoeshop.repositories.ClientRepository {
 
-    private Map<Integer, Client>client = new HashMap<>();
-    private final String path;
-    public ClientRepository(String path){
+    private static Map<Integer, Client> client = new HashMap<>();
 
-        this.path=path;
+    public static void load() {
 
-        load();
-    }
+        var currentDirectory = System.getProperty("user.dir") + "/src/main/resources/";
 
-    public void load(){
-        try {
-            File file = new File(path);
-            if (!file.exists()) {
-                client = new HashMap<>();
-                write();
-            } else {
-                try (var inputStream = new ObjectInputStream(new FileInputStream(path))) {
-                    client = (Map<Integer, Client>) inputStream.readObject();
-                }
-            }
-        } catch (IOException | ClassNotFoundException e) {
+
+        try (var inputStream = new ObjectInputStream(new FileInputStream(currentDirectory + "client.ser"))) {
+            client = (Map<Integer, Client>) inputStream.readObject();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
+
     }
 
-    public void write(){
-        //var currentDirectory = System.getProperty("user.dir") + "/src/main/resources/";
-        try(var outputStream = new ObjectOutputStream(new
-                FileOutputStream(path))) {
+    public static void write() {
+        var currentDirectory = System.getProperty("user.dir") + "/src/main/resources/";
+
+        try (var outputStream = new ObjectOutputStream(new FileOutputStream(currentDirectory + "client.ser"))) {
             outputStream.writeObject(client);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
@@ -48,26 +40,22 @@ public class ClientRepository implements cat.uvic.teknos.shoeshop.repositories.C
         }
     }
 
+    @Override
     public void save(Client model) {
-        if (model.getId() <= 0){
+        if (model.getId() <= 0) {
             //get new id
-            var newId=client.keySet().stream().mapToInt(k ->
-                    k).max().orElse(0)+1;
+            var newId = client.keySet().stream().mapToInt(k -> k).max().orElse(0) + 1;
             client.put(newId, model);
-        }else{
-            if (client.get(model.getId())==null){
-                throw new RuntimeException("Team with id"+
-                        model.getId()+"Not found");
-            }
+        } else {
             client.put(model.getId(), model);
         }
         write();
+
     }
 
-    public void update(){
-        //var currentDirectory = System.getProperty("user.dir")+ "/src/main/resources/";
-        try (var outputStream = new ObjectOutputStream(new
-                FileOutputStream(path))) {
+    public static void update() {
+        var currentDirectory = System.getProperty("user.dir") + "/src/main/resources/";
+        try (var outputStream = new ObjectOutputStream(new FileOutputStream(currentDirectory + "client.ser"))) {
             outputStream.writeObject(client);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -77,16 +65,30 @@ public class ClientRepository implements cat.uvic.teknos.shoeshop.repositories.C
 
     @Override
     public void delete(Client model) {
-        client.remove(model.getId());
-    }
 
-    public Client get(Integer id) {
-        return client.get(id);
+        var currentDirectory = System.getProperty("user.dir") + "/src/main/resources/";
+
+        try (var outputStream = new ObjectOutputStream(new FileOutputStream(currentDirectory + "client.ser"))) {
+
+            for (Iterator<Map.Entry<Integer, Client>> iterator = client.entrySet().iterator(); iterator.hasNext(); ) {
+                Map.Entry<Integer, Client> entry = iterator.next();
+                if (entry.getValue().equals(model)) {
+                    iterator.remove();
+                    break;
+                }
+            }
+
+            outputStream.writeObject(client);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
-    public Client get(String name) {
-        return client.get(name);
+    public Client get(Integer id) {
+        return client.get(id);
     }
 
     @Override

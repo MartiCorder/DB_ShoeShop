@@ -1,6 +1,7 @@
-package cat.uvic.teknos.shoeshop.file.models;
 
-public class Inventory implements cat.uvic.teknos.shoeshop.models.Inventory{
+import java.io.Serializable;
+
+public class Inventory implements cat.uvic.teknos.shoeshop.models.Inventory, Serializable{
 
     private int id;
     private  int capacity;

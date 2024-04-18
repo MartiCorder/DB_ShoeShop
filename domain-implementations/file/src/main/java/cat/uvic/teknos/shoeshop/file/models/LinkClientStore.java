@@ -1,6 +1,7 @@
 package cat.uvic.teknos.shoeshop.file.models;
+import java.io.Serializable;
 
-public class LinkClientStore implements cat.uvic.teknos.shoeshop.models.LinkClientStore {
+public class LinkClientStore implements cat.uvic.teknos.shoeshop.models.LinkClientStore, Serializable {
 
     private String dni;
 

@@ -1,6 +1,7 @@
 package cat.uvic.teknos.shoeshop.file.models;
+import java.io.Serializable;
 
-public class LinkStoreSupplier implements cat.uvic.teknos.shoeshop.models.LinkStoreSupplier{
+public class LinkStoreSupplier implements cat.uvic.teknos.shoeshop.models.LinkStoreSupplier, Serializable{
     private int id;
     private int id2;
     @Override

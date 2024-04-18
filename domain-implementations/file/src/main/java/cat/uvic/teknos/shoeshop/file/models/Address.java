@@ -1,6 +1,8 @@
 package cat.uvic.teknos.shoeshop.file.models;
 
-public class Address implements cat.uvic.teknos.shoeshop.models.Address{
+import java.io.Serializable;
+
+public class Address implements cat.uvic.teknos.shoeshop.models.Address, Serializable{
 
     private int id;
     @Override

@@ -5,9 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9ef11ec9-4fcc-40fb-b4e7-c98455c3a946" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/domain-implementations/file/src/test/java/cat/uvic/teknos/shoeshop/file/repositories/SupplierRepositoryTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/domain-implementations/file/src/main/resources/shoe.ser" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/domain-implementations/file/src/test/java/cat/uvic/teknos/shoeshop/file/repositories/ShoeRepositoryTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/models/Address.java" beforeDir="false" afterPath="$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/models/Address.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/models/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/models/Client.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/models/Inventory.java" beforeDir="false" afterPath="$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/models/Inventory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/models/LinkClientStore.java" beforeDir="false" afterPath="$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/models/LinkClientStore.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/models/LinkStoreSupplier.java" beforeDir="false" afterPath="$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/models/LinkStoreSupplier.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/models/Model.java" beforeDir="false" afterPath="$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/models/Model.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/models/Shoe.java" beforeDir="false" afterPath="$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/models/Shoe.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/models/Supplier.java" beforeDir="false" afterPath="$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/models/Supplier.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/repositories/AddressRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/repositories/AddressRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/repositories/ClientRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/repositories/ClientRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/repositories/InventoryRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/repositories/InventoryRepository.java" afterDir="false" />
@@ -15,7 +23,9 @@
       <change beforePath="$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/repositories/ShoeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/repositories/ShoeRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/repositories/ShoeStoreRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/repositories/ShoeStoreRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/repositories/SupplierRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/repositories/SupplierRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain-implementations/file/src/main/resources/supplier.ser" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/domain-implementations/file/src/test/java/cat/uvic/teknos/shoeshop/file/repositories/ShoeStoreRepositoryTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/domain-implementations/file/src/test/java/cat/uvic/teknos/shoeshop/file/repositories/ShoeStoreRepositoryTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain-implementations/file/src/test/java/cat/uvic/teknos/shoeshop/file/repositories/SupplierRepositoryTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/domain-implementations/file/src/test/java/cat/uvic/teknos/shoeshop/file/repositories/SupplierRepositoryTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,20 +64,31 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="ProjectErrors" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 5
 }</component>
   <component name="ProjectId" id="2dY8l4mH0puYsKwcujMafjTv0VC" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "Gradle.ShoeRepositoryTest.executor": "Run",
+    "Gradle.ShoeRepositoryTest.save.executor": "Run",
     "Gradle.ShoeStoreRepositoryTest.executor": "Run",
     "Gradle.ShoeStoreRepositoryTest.save.executor": "Debug",
     "Gradle.ShoeStoreRepositoryTest.update.executor": "Run",
+    "Gradle.SupplierRepositoryTest (1).executor": "Run",
     "Gradle.SupplierRepositoryTest.executor": "Run",
+    "Gradle.SupplierRepositoryTest.save.executor": "Debug",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
@@ -84,6 +105,7 @@
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "settings.qodana",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -101,6 +123,62 @@
     <key name="CreateTestDialog.RecentsKey">
       <recent name="cat.uvic.teknos.shoeshop.file.repositories" />
     </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="ShoeRepositoryTest.save" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":domain-implementations:file:test" />
+            <option value="--tests" />
+            <option value="&quot;cat.uvic.teknos.shoeshop.file.repositories.ShoeRepositoryTest.save&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>true</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="SupplierRepositoryTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":domain-implementations:file:test" />
+            <option value="--tests" />
+            <option value="&quot;cat.uvic.teknos.shoeshop.file.repositories.SupplierRepositoryTest&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>true</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Gradle.ShoeRepositoryTest.save" />
+        <item itemvalue="Gradle.SupplierRepositoryTest" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -137,11 +215,33 @@
       <workItem from="1712850588967" duration="8957000" />
       <workItem from="1712867374306" duration="604000" />
       <workItem from="1712909921486" duration="4002000" />
-      <workItem from="1712994897071" duration="3571000" />
+      <workItem from="1712994897071" duration="3651000" />
+      <workItem from="1713186964100" duration="6306000" />
+      <workItem from="1713372515573" duration="369000" />
+      <workItem from="1713430174818" duration="2402000" />
+      <workItem from="1713438876135" duration="977000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/repositories/SupplierRepository.java</url>
+          <line>27</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

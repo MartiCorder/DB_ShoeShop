@@ -1,6 +1,7 @@
 package cat.uvic.teknos.shoeshop.file.models;
+import java.io.Serializable;
 
-public class Client implements cat.uvic.teknos.shoeshop.models.Client{
+public class Client implements cat.uvic.teknos.shoeshop.models.Client, Serializable{
 
     private int id;
     private String name;
