@@ -23,15 +23,33 @@
         <task path="$PROJECT_DIR$">
           <activation />
         </task>
+<<<<<<< HEAD
         <task path="$PROJECT_DIR$/utilities">
           <activation />
         </task>
+=======
+>>>>>>> 9a304ecd1193741a67882b9f6a5ab20810aaece8
         <projects_view>
           <tree_state>
             <expand>
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+<<<<<<< HEAD
                 <item name="shoe_shop" type="f1a62948:ProjectNode" />
+=======
+                <item name="gradle-shoe_shop" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="gradle-shoe_shop" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="gradle-shoe_shop" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="build" type="c8890929:TasksNode$1" />
+>>>>>>> 9a304ecd1193741a67882b9f6a5ab20810aaece8
               </path>
             </expand>
             <select />
@@ -72,6 +90,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "ASKED_ADD_EXTERNAL_FILES": "true",
+<<<<<<< HEAD
     "Gradle.Build gradle-shoe_shop.executor": "Run",
     "Gradle.CreateSchemaExtensionTest.executor": "Run",
     "Gradle.JbdcAddressRepositoryTest.delete.executor": "Run",
@@ -82,6 +101,10 @@
     "Gradle.ShoeRepositoryTest.executor": "Run",
     "Gradle.ShoeRepositoryTest.get.executor": "Run",
     "Gradle.ShoeRepositoryTest.getAll.executor": "Run",
+=======
+    "Gradle.DB_ShoeShop [build].executor": "Run",
+    "Gradle.ShoeRepositoryTest.executor": "Run",
+>>>>>>> 9a304ecd1193741a67882b9f6a5ab20810aaece8
     "Gradle.ShoeRepositoryTest.save.executor": "Run",
     "Gradle.ShoeStoreRepositoryTest.executor": "Run",
     "Gradle.ShoeStoreRepositoryTest.save.executor": "Debug",
@@ -89,17 +112,27 @@
     "Gradle.SupplierRepositoryTest (1).executor": "Run",
     "Gradle.SupplierRepositoryTest.executor": "Run",
     "Gradle.SupplierRepositoryTest.save.executor": "Debug",
+<<<<<<< HEAD
     "Gradle.Tests in 'cat.uvic.teknos.shoeshop.domain.jbdc.repositories'.executor": "Debug",
     "JUnit.JbdcAddressRepository.executor": "Run",
+=======
+    "Gradle.Tests in 'cat.uvic.teknos.shoeshop.file.repositories'.executor": "Run",
+>>>>>>> 9a304ecd1193741a67882b9f6a5ab20810aaece8
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
     "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
     "git-widget-placeholder": "master",
+<<<<<<< HEAD
     "jdk.selected.JAVA_MODULE": "21",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/marti/source/repos/mmmm",
+=======
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "H:/Uvic/DB_ShoeShop",
+>>>>>>> 9a304ecd1193741a67882b9f6a5ab20810aaece8
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -112,8 +145,13 @@
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
+<<<<<<< HEAD
     "DatabaseDriversLRU": [
       "mysql"
+=======
+    "kotlin-gradle-user-dirs": [
+      "C:\\Users\\fcard\\.gradle"
+>>>>>>> 9a304ecd1193741a67882b9f6a5ab20810aaece8
     ]
   }
 }]]></component>
@@ -138,8 +176,35 @@
       <recent name="cat.uvic.teknos.shoeshop.file.repositories" />
     </key>
   </component>
+<<<<<<< HEAD
   <component name="RunManager">
     <configuration name="JbdcAddressRepositoryTest.delete" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+=======
+  <component name="RunManager" selected="Gradle.Tests in 'cat.uvic.teknos.shoeshop.file.repositories'">
+    <configuration name="DB_ShoeShop [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="build" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="ShoeRepositoryTest.save" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+>>>>>>> 9a304ecd1193741a67882b9f6a5ab20810aaece8
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -235,7 +300,11 @@
       <RunAsTest>true</RunAsTest>
       <method v="2" />
     </configuration>
+<<<<<<< HEAD
     <configuration name="Tests in 'cat.uvic.teknos.shoeshop.domain.jbdc.repositories'" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+=======
+    <configuration name="Tests in 'cat.uvic.teknos.shoeshop.file.repositories'" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+>>>>>>> 9a304ecd1193741a67882b9f6a5ab20810aaece8
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -246,9 +315,15 @@
         </option>
         <option name="taskNames">
           <list>
+<<<<<<< HEAD
             <option value=":domain-implementations:jbdc:test" />
             <option value="--tests" />
             <option value="&quot;cat.uvic.teknos.shoeshop.domain.jbdc.repositories.*&quot;" />
+=======
+            <option value=":domain-implementations:file:test" />
+            <option value="--tests" />
+            <option value="&quot;cat.uvic.teknos.shoeshop.file.repositories.*&quot;" />
+>>>>>>> 9a304ecd1193741a67882b9f6a5ab20810aaece8
           </list>
         </option>
         <option name="vmOptions" />
@@ -259,6 +334,7 @@
       <RunAsTest>true</RunAsTest>
       <method v="2" />
     </configuration>
+<<<<<<< HEAD
     <configuration default="true" type="JetRunConfigurationType">
       <module name="shoe_shop" />
       <method v="2">
@@ -279,13 +355,22 @@
         <item itemvalue="Gradle.JbdcAddressRepositoryTest.shouldUpdateNewAddressTest" />
         <item itemvalue="Gradle.JbdcAddressRepositoryTest.shouldInsertNewAddressTest" />
         <item itemvalue="Gradle.ShoeRepositoryTest.delete" />
+=======
+    <recent_temporary>
+      <list>
+        <item itemvalue="Gradle.Tests in 'cat.uvic.teknos.shoeshop.file.repositories'" />
+        <item itemvalue="Gradle.DB_ShoeShop [build]" />
+        <item itemvalue="Gradle.SupplierRepositoryTest" />
+        <item itemvalue="Gradle.ShoeRepositoryTest.save" />
+>>>>>>> 9a304ecd1193741a67882b9f6a5ab20810aaece8
       </list>
     </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="jdk-21.0.2-openjdk-21.0.2-4caba194b151-4f524021" />
+        <option value="bundled-jdk-9f38398b9061-18abd8497189-intellij.indexing.shared.core-IU-241.14494.240" />
+        <option value="bundled-js-predefined-1d06a55b98c1-74d2a5396914-JavaScript-IU-241.14494.240" />
       </set>
     </attachedChunks>
   </component>
@@ -323,6 +408,7 @@
       <workItem from="1713430174818" duration="2402000" />
       <workItem from="1713438876135" duration="1118000" />
       <workItem from="1713448853710" duration="1884000" />
+<<<<<<< HEAD
       <workItem from="1713460587988" duration="5612000" />
       <workItem from="1713472175398" duration="149000" />
       <workItem from="1714060209911" duration="599000" />
@@ -332,6 +418,10 @@
       <workItem from="1714080619744" duration="359000" />
       <workItem from="1714081057155" duration="1610000" />
       <workItem from="1714118936919" duration="3599000" />
+=======
+      <workItem from="1713460587988" duration="4961000" />
+      <workItem from="1714055326402" duration="389000" />
+>>>>>>> 9a304ecd1193741a67882b9f6a5ab20810aaece8
     </task>
     <servers />
   </component>
