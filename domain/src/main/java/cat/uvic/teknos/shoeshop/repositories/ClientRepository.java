@@ -6,5 +6,5 @@ import java.util.Set;
 
 public interface ClientRepository extends Repository<Integer, Client>{
 
-    Client get(String name);
+
 }

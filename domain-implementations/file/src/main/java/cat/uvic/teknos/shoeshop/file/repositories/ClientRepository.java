@@ -92,10 +92,6 @@ public class ClientRepository implements cat.uvic.teknos.shoeshop.repositories.C
         return client.get(id);
     }
 
-    @Override
-    public Client get(String name) {
-        return client.get(name);
-    }
 
     @Override
     public Set<Client> getAll() {
