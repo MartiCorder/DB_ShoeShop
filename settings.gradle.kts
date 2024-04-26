@@ -10,6 +10,6 @@ plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "0.7.0"
 }
 
-rootProject.name = "shoe_shop"
+rootProject.name = "gradle-shoe_shop"
 include("app", "domain", "utilities", ":domain-implementations:file",":domain-implementations:jdbc")
 

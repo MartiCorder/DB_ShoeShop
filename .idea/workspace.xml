@@ -5,51 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9ef11ec9-4fcc-40fb-b4e7-c98455c3a946" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/domain-implementations/jdbc/build.gradle.kts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/domain-implementations/jdbc/src/main/java/cat/uvic/teknos/shoeshop/domain/jdbc/models/Address.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/domain-implementations/jdbc/src/main/java/cat/uvic/teknos/shoeshop/domain/jdbc/models/Client.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/domain-implementations/jdbc/src/main/java/cat/uvic/teknos/shoeshop/domain/jdbc/models/Inventory.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/domain-implementations/jdbc/src/main/java/cat/uvic/teknos/shoeshop/domain/jdbc/models/LinkClientStore.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/domain-implementations/jdbc/src/main/java/cat/uvic/teknos/shoeshop/domain/jdbc/models/LinkStoreSupplier.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/domain-implementations/jdbc/src/main/java/cat/uvic/teknos/shoeshop/domain/jdbc/models/Model.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/domain-implementations/jdbc/src/main/java/cat/uvic/teknos/shoeshop/domain/jdbc/models/Shoe.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/domain-implementations/jdbc/src/main/java/cat/uvic/teknos/shoeshop/domain/jdbc/models/ShoeStore.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/domain-implementations/jdbc/src/main/java/cat/uvic/teknos/shoeshop/domain/jdbc/models/Supplier.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/domain-implementations/jdbc/src/main/java/cat/uvic/teknos/shoeshop/domain/jdbc/repositories/JdbcAddressRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/domain-implementations/jdbc/src/main/java/cat/uvic/teknos/shoeshop/domain/jdbc/repositories/JdbcClientRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/domain-implementations/jdbc/src/main/java/cat/uvic/teknos/shoeshop/domain/jdbc/repositories/JdbcInventoryRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/domain-implementations/jdbc/src/main/java/cat/uvic/teknos/shoeshop/domain/jdbc/repositories/JdbcModelRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/domain-implementations/jdbc/src/main/java/cat/uvic/teknos/shoeshop/domain/jdbc/repositories/JdbcShoeRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/domain-implementations/jdbc/src/main/java/cat/uvic/teknos/shoeshop/domain/jdbc/repositories/JdbcShoeStoreRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/domain-implementations/jdbc/src/main/java/cat/uvic/teknos/shoeshop/domain/jdbc/repositories/JdbcSupplierRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/domain-implementations/jdbc/src/test/java/cat/uvic/teknos/shoeshop/domain/jdbc/repositories/JdbcAddressRepositoryTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utilities/src/main/java/com/fcardara/dbtestutils/db/DbUtils.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utilities/src/main/java/com/fcardara/dbtestutils/db/ScriptExecutor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utilities/src/main/java/com/fcardara/dbtestutils/exceptions/DbAssertionException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utilities/src/main/java/com/fcardara/dbtestutils/exceptions/DbUtilsException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utilities/src/main/java/com/fcardara/dbtestutils/exceptions/ScriptExecutorException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utilities/src/main/java/com/fcardara/dbtestutils/junit/CreateSchemaExtension.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utilities/src/main/java/com/fcardara/dbtestutils/junit/DbAssertion.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utilities/src/main/java/com/fcardara/dbtestutils/junit/DbAssertions.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utilities/src/main/java/com/fcardara/dbtestutils/junit/GetConnectionExtension.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utilities/src/test/java/com/fcardara/dbtestutils/junit/CreateSchemaExtensionTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utilities/src/test/java/com/fcardara/dbtestutils/junit/DbAssertionsTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utilities/src/test/resources/data.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utilities/src/test/resources/datasource.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utilities/src/test/resources/schema.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules/domain-implementations/file/gradle-shoe_shop.domain-implementations.file.test.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/DB_Shoe_Shop-data.sql" beforeDir="false" afterPath="$PROJECT_DIR$/database/DB_Shoe_Shop-data.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/DB_Shoe_Shop.sql" beforeDir="false" afterPath="$PROJECT_DIR$/database/DB_Shoe_Shop.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/repositories/ClientRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/domain-implementations/file/src/main/java/cat/uvic/teknos/shoeshop/file/repositories/ClientRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/domain-implementations/file/src/test/resources/shoe.ser" beforeDir="false" afterPath="$PROJECT_DIR$/domain-implementations/file/src/test/resources/shoe.ser" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/domain-implementations/jbdc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/domain/src/main/java/cat/uvic/teknos/shoeshop/repositories/ClientRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/domain/src/main/java/cat/uvic/teknos/shoeshop/repositories/ClientRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/settings.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utilities/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/utilities/build.gradle.kts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -375,7 +331,7 @@
       <workItem from="1714075808700" duration="4776000" />
       <workItem from="1714080619744" duration="359000" />
       <workItem from="1714081057155" duration="1610000" />
-      <workItem from="1714118936919" duration="3484000" />
+      <workItem from="1714118936919" duration="3599000" />
     </task>
     <servers />
   </component>
