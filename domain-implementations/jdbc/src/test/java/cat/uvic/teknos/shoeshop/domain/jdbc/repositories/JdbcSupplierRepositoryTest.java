@@ -48,7 +48,7 @@ class JdbcSupplierRepositoryTest {
         Supplier supplier1 = new Supplier();
 
 
-        supplier1.setId(2);
+        supplier1.setId(1);
         supplier1.setName("ADIDAS S.A");
         supplier1.setPhone("987655475");
 

@@ -104,13 +104,11 @@ public class JdbcAddressRepository implements AddressRepository {
                 var address1 = new cat.uvic.teknos.shoeshop.domain.jdbc.models.Address();
                 address1.setId(resultSet.getInt("ID_ADDRESS"));
 
-
                 addresses.add(address1);
             }
             return addresses;
         } catch (SQLException e) {
             throw new RuntimeException("Error", e);
         }
-
     }
 }

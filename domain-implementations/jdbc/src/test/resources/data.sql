@@ -27,11 +27,3 @@ INSERT INTO SHOE (ID_SHOE, ID_MODEL, ID_INVENTORY, PRICE, COLOR, SIZE) VALUES
                                                                            (1, 1, 1, 99.99, 'White', '42'),
                                                                            (2, 2, 2, 120, 'Black', '45');
 
-INSERT INTO LINK_STORE_SUPPLIER (ID_STORE, ID_SUPPLIER) VALUES
-                                                            (1, 1),
-                                                            (2, 2);
-
-INSERT INTO LINK_CLIENT_STORE (ID_CLIENT, ID_STORE) VALUES
-                                                 (1, 1),
-                                                 (2, 2),
-                                                 (3, 2);

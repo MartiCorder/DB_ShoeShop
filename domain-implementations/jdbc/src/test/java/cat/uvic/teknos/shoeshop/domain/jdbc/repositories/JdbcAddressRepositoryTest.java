@@ -1,6 +1,7 @@
 package cat.uvic.teknos.shoeshop.domain.jdbc.repositories;
 
 import cat.uvic.teknos.shoeshop.domain.jdbc.models.Address;
+import cat.uvic.teknos.shoeshop.models.Inventory;
 import com.fcardara.dbtestutils.junit.CreateSchemaExtension;
 import com.fcardara.dbtestutils.junit.DbAssertions;
 import com.fcardara.dbtestutils.junit.GetConnectionExtension;
@@ -11,7 +12,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith({CreateSchemaExtension.class, GetConnectionExtension.class})
@@ -72,7 +75,7 @@ class JdbcAddressRepositoryTest {
     void delete() throws SQLException {
 
         Address address1 = new Address();
-        address1.setId(1);
+        address1.setId(2);
 
         var repository = new JdbcAddressRepository(connection);
         repository.delete(address1);
@@ -91,5 +94,12 @@ class JdbcAddressRepositoryTest {
 
     @Test
     void getAll() {
+
+        var repository = new JdbcAddressRepository(connection);
+
+        var addresses = repository.getAll();
+
+        assertNotNull(addresses);
+        assertFalse(addresses.isEmpty());
     }
 }

@@ -59,7 +59,7 @@ class JdbcShoeStoreRepositoryTest {
         var repository = new JdbcShoeStoreRepository(connection);
         ShoeStore shoeStore = new ShoeStore();
 
-        shoeStore.setId(2);
+        shoeStore.setId(1);
         shoeStore.setName("Taradell's Shop");
         shoeStore.setOwner("Corder");
         shoeStore.setLocation("Taradell");

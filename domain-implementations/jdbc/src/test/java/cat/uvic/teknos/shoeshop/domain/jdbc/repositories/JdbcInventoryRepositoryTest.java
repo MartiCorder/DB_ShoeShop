@@ -85,8 +85,8 @@ class JdbcInventoryRepositoryTest {
         int existingInventoryId = 1;
         Inventory inventory = (Inventory) repository.get(existingInventoryId);
 
-        assertNotNull(inventory, "Client should not be null");
-        assertEquals(existingInventoryId, inventory.getId(), "Client ID should match");
+        assertNotNull(inventory);
+        assertEquals(existingInventoryId, inventory.getId());
 
 
     }
@@ -98,8 +98,8 @@ class JdbcInventoryRepositoryTest {
 
         var inventories = repository.getAll();
 
-        assertNotNull(inventories, "Clients collection should not be null");
-        assertFalse(inventories.isEmpty(), "Clients collection should not be empty");
+        assertNotNull(inventories);
+        assertFalse(inventories.isEmpty());
 
     }
 

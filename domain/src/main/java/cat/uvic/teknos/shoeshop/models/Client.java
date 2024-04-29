@@ -5,8 +5,8 @@ public interface Client {
     int getId();
     void setId(int id);
 
-    int getDni();
-    void setDni(int dni);
+    String getDni();
+    void setDni(String dni);
 
     String getName();
     void setName(String name);

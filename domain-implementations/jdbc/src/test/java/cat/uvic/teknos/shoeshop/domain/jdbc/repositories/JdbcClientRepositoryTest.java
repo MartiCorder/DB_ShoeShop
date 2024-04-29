@@ -34,9 +34,9 @@ class JdbcClientRepositoryTest {
 
         Client client = new Client();
 
-        client.setDni(45);
+        client.setDni("458756678X");
         client.setPhone("694564526");
-        client.setName("BRRRR");
+        client.setName("tesgfd");
 
 
         var repository = new JdbcClientRepository(connection);
@@ -60,8 +60,8 @@ class JdbcClientRepositoryTest {
         var repository = new JdbcClientRepository(connection);
         Client client = new Client();
 
-        client.setId(2);
-        client.setDni(4365);
+        client.setId(1);
+        client.setDni("48044553F");
         client.setPhone("697894566");
         client.setName("Oriol");
 
@@ -75,7 +75,7 @@ class JdbcClientRepositoryTest {
     void delete() throws SQLException {
 
         Client client = new Client();
-        client.setId(4);
+        client.setId(1);
 
         var repository = new JdbcClientRepository(connection);
         repository.delete(client);
@@ -92,8 +92,8 @@ class JdbcClientRepositoryTest {
         int existingClientId = 1;
         Client client = (Client) repository.get(existingClientId);
 
-        assertNotNull(client, "Client should not be null");
-        assertEquals(existingClientId, client.getId(), "Client ID should match");
+        assertNotNull(client);
+        assertEquals(existingClientId, client.getId());
 
 
     }
@@ -105,8 +105,8 @@ class JdbcClientRepositoryTest {
 
         var clients = repository.getAll();
 
-        assertNotNull(clients, "Clients collection should not be null");
-        assertFalse(clients.isEmpty(), "Clients collection should not be empty");
+        assertNotNull(clients);
+        assertFalse(clients.isEmpty());
 
     }
 }

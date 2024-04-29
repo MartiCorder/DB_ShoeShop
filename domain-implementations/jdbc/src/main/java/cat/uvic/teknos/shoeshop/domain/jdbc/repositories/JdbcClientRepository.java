@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @ExtendWith({CreateSchemaExtension.class, GetConnectionExtension.class})
+
 public class JdbcClientRepository implements ClientRepository{
 
     private final Connection connection;
@@ -24,6 +25,7 @@ public class JdbcClientRepository implements ClientRepository{
 
     @Override
     public void save(Client model) {
+
         if (model.getId() <= 0){
             insert(model);
         } else {
@@ -35,7 +37,7 @@ public class JdbcClientRepository implements ClientRepository{
         try (PreparedStatement statement = connection.prepareStatement("INSERT INTO CLIENT (ID_CLIENT, DNI,  NAME, PHONE) VALUES  (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)){
 
             statement.setInt(1, model.getId());
-            statement.setInt(2, model.getDni());
+            statement.setString(2, model.getDni());
             statement.setString(3, model.getName());
             statement.setString(4, model.getPhone());
 
@@ -54,7 +56,7 @@ public class JdbcClientRepository implements ClientRepository{
         try (PreparedStatement statement = connection.prepareStatement("UPDATE CLIENT SET DNI=?, NAME=?, PHONE=? WHERE ID_CLIENT=?", Statement.RETURN_GENERATED_KEYS)){
 
 
-            statement.setInt(1, model.getDni());
+            statement.setString(1, model.getDni());
             statement.setString(2, model.getName());
             statement.setString(3, model.getPhone());
             statement.setInt(4, model.getId());
@@ -112,7 +114,7 @@ public class JdbcClientRepository implements ClientRepository{
             while (resultSet.next()) {
                 var client1 = new cat.uvic.teknos.shoeshop.domain.jdbc.models.Client();
                 client1.setId(resultSet.getInt("ID_CLIENT"));
-                client1.setDni(resultSet.getInt("DNI"));
+                client1.setDni(resultSet.getString("DNI"));
                 client1.setName(resultSet.getString("NAME"));
                 client1.setPhone(resultSet.getString("PHONE"));
 

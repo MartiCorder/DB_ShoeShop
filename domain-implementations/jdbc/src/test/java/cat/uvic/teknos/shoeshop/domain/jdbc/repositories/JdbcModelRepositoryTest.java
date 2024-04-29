@@ -88,8 +88,8 @@ class JdbcModelRepositoryTest {
         int existingModelId = 1;
         Model model = (Model) repository.get(existingModelId);
 
-        assertNotNull(model, "Client should not be null");
-        assertEquals(existingModelId, model.getId(), "Client ID should match");
+        assertNotNull(model);
+        assertEquals(existingModelId, model.getId());
 
 
     }
@@ -101,8 +101,8 @@ class JdbcModelRepositoryTest {
 
         var clients = repository.getAll();
 
-        assertNotNull(clients, "Clients collection should not be null");
-        assertFalse(clients.isEmpty(), "Clients collection should not be empty");
+        assertNotNull(clients);
+        assertFalse(clients.isEmpty());
 
     }
 

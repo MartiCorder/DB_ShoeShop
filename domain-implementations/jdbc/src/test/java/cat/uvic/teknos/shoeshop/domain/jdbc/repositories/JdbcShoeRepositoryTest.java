@@ -59,7 +59,7 @@ class JdbcShoeRepositoryTest {
         var repository = new JdbcShoeRepository(connection);
         Shoe shoe = new Shoe();
 
-        shoe.setId(2);
+        shoe.setId(1);
         shoe.setModelId(2);
         shoe.setInventoryId(1);
         shoe.setPrice(120);
@@ -93,8 +93,8 @@ class JdbcShoeRepositoryTest {
         int existingShoeId = 1;
         Shoe shoe = (Shoe) repository.get(existingShoeId);
 
-        assertNotNull(shoe, "Client should not be null");
-        assertEquals(existingShoeId, shoe.getId(), "Client ID should match");
+        assertNotNull(shoe);
+        assertEquals(existingShoeId, shoe.getId());
 
 
     }

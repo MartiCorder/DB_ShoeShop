@@ -74,25 +74,6 @@ CREATE TABLE SHOE (
                       FOREIGN KEY (ID_INVENTORY) REFERENCES INVENTORY(ID_INVENTORY)
 );
 
-CREATE TABLE LINK_STORE_SUPPLIER (
-                                     ID_STORE INT,
-                                     ID_SUPPLIER INT,
-                                     PRIMARY KEY (ID_STORE, ID_SUPPLIER),
-                                     FOREIGN KEY (ID_STORE) REFERENCES SHOE_STORE(ID_STORE),
-                                     FOREIGN KEY (ID_SUPPLIER) REFERENCES SUPPLIER(ID_SUPPLIER)
-);
-
-CREATE TABLE LINK_CLIENT_STORE (
-                                   ID_CLIENT INT,
-                                   ID_STORE INT,
-                                   PRIMARY KEY (ID_CLIENT, ID_STORE),
-                                   FOREIGN KEY (ID_CLIENT) REFERENCES CLIENT(ID_CLIENT),
-                                   FOREIGN KEY (ID_STORE) REFERENCES SHOE_STORE(ID_STORE)
-);
-
-
-
-
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
