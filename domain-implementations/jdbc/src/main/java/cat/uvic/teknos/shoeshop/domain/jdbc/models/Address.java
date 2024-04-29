@@ -5,6 +5,8 @@ import java.io.Serializable;
 public class Address implements cat.uvic.teknos.shoeshop.models.Address, Serializable{
 
     private int id;
+
+    private String location;
     @Override
     public int getId() {
         return id;
@@ -16,4 +18,16 @@ public class Address implements cat.uvic.teknos.shoeshop.models.Address, Seriali
         this.id=id;
 
     }
+
+    @Override
+    public String getLocation() {
+        return location;
+    }
+
+    @Override
+    public void setLocation(String location) {
+        this.location=location;
+    }
+
+
 }

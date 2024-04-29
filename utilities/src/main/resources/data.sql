@@ -37,6 +37,6 @@ INSERT INTO LINK_CLIENT_STORE (DNI, ID_STORE) VALUES
                                                   ('48044773X', 1),
                                                   ('45678933R', 2),
                                                   ('44287764P', 2);
-                               
+
 
 

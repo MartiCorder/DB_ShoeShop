@@ -31,13 +31,14 @@ public class JdbcShoeStoreRepository implements ShoeStoreRepository {
 
     private void insert(ShoeStore model) {
         try (PreparedStatement statement = connection.prepareStatement(
-                "INSERT INTO SHOESTORE (ID_SHOESTORE) VALUES (?, ?, ?, ?)",
+                "INSERT INTO SHOE_STORE (ID_STORE, NAME, OWNER, LOCATION, ID_INVENTORY) VALUES (?, ?, ?, ?, ?)",
                 Statement.RETURN_GENERATED_KEYS)) {
 
-            statement.setString(1, model.getName());
-            statement.setString(2, model.getOwner());
-            statement.setString(3, model.getLocation());
-            statement.setInt(4, model.getInventoryId());
+            statement.setInt(1, model.getId());
+            statement.setString(2, model.getName());
+            statement.setString(3, model.getOwner());
+            statement.setString(4, model.getLocation());
+            statement.setInt(5, model.getInventoryId());
             statement.executeUpdate();
 
             var keys = statement.getGeneratedKeys();
@@ -51,7 +52,7 @@ public class JdbcShoeStoreRepository implements ShoeStoreRepository {
 
     private void update(ShoeStore model) {
         try (PreparedStatement statement = connection.prepareStatement(
-                "UPDATE SHOESTORE SET NAME = ?, OWNER = ?, LOCATION = ?, INVENTORY_ID = ? WHERE ID = ?")) {
+                "UPDATE SHOE_STORE SET NAME = ?, OWNER = ?, LOCATION = ?, ID_INVENTORY = ? WHERE ID_STORE = ?")) {
 
             statement.setString(1, model.getName());
             statement.setString(2, model.getOwner());
@@ -71,7 +72,7 @@ public class JdbcShoeStoreRepository implements ShoeStoreRepository {
     @Override
     public void delete(ShoeStore model) {
         try (PreparedStatement statement = connection.prepareStatement(
-                "DELETE FROM SHOESTORE WHERE ID = ?")) {
+                "DELETE FROM SHOE_STORE WHERE ID_STORE = ?")) {
             statement.setInt(1, model.getId());
             int rowsAffected = statement.executeUpdate();
             if (rowsAffected == 0) {
@@ -86,7 +87,7 @@ public class JdbcShoeStoreRepository implements ShoeStoreRepository {
 
     @Override
     public ShoeStore get(Integer id) {
-        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM SHOESTORE WHERE ID = ?")) {
+        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM SHOE_STORE WHERE ID_STORE = ?")) {
             ShoeStore shoeStore = null;
 
             statement.setInt(1, id);
@@ -94,11 +95,11 @@ public class JdbcShoeStoreRepository implements ShoeStoreRepository {
             var resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 shoeStore = new cat.uvic.teknos.shoeshop.domain.jdbc.models.ShoeStore();
-                shoeStore.setId(resultSet.getInt("ID"));
+                shoeStore.setId(resultSet.getInt("ID_STORE"));
                 shoeStore.setName(resultSet.getString("NAME"));
                 shoeStore.setOwner(resultSet.getString("OWNER"));
                 shoeStore.setLocation(resultSet.getString("LOCATION"));
-                shoeStore.setInventoryId(resultSet.getInt("INVENTORY_ID"));
+                shoeStore.setInventoryId(resultSet.getInt("ID_INVENTORY"));
             }
             return shoeStore;
         } catch (SQLException e) {
@@ -108,17 +109,17 @@ public class JdbcShoeStoreRepository implements ShoeStoreRepository {
 
     @Override
     public Set<ShoeStore> getAll() {
-        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM SHOESTORE")) {
+        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM SHOE_STORE")) {
             var shoeStores = new HashSet<ShoeStore>();
 
             var resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 var shoeStore = new cat.uvic.teknos.shoeshop.domain.jdbc.models.ShoeStore();
-                shoeStore.setId(resultSet.getInt("ID"));
+                shoeStore.setId(resultSet.getInt("ID_STORE"));
                 shoeStore.setName(resultSet.getString("NAME"));
                 shoeStore.setOwner(resultSet.getString("OWNER"));
                 shoeStore.setLocation(resultSet.getString("LOCATION"));
-                shoeStore.setInventoryId(resultSet.getInt("INVENTORY_ID"));
+                shoeStore.setInventoryId(resultSet.getInt("ID_INVENTORY"));
 
                 shoeStores.add(shoeStore);
             }

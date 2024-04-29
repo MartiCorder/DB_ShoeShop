@@ -5,7 +5,6 @@ import java.io.Serializable;
 public class Shoe implements cat.uvic.teknos.shoeshop.models.Shoe, Serializable {
 
     private int id;
-    private String name;
 
     private int modelId;
 
@@ -26,17 +25,6 @@ public class Shoe implements cat.uvic.teknos.shoeshop.models.Shoe, Serializable 
 
         this.id=id;
 
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public void setName(String name) {
-
-        this.name=name;
     }
 
     @Override

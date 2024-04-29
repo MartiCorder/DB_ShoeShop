@@ -6,23 +6,25 @@ import com.fcardara.dbtestutils.junit.CreateSchemaExtension;
 import com.fcardara.dbtestutils.junit.GetConnectionExtension;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Set;
-
 @ExtendWith({CreateSchemaExtension.class, GetConnectionExtension.class})
 
 public class JdbcSupplierRepository implements SupplierRepository {
 
     private final Connection connection;
 
-    public JdbcSupplierRepository(Connection connection) {
+    public JdbcSupplierRepository(Connection connection){
         this.connection = connection;
     }
 
     @Override
     public void save(Supplier model) {
-        if (model.getId() <= 0) {
+        if (model.getId() <= 0){
             insert(model);
         } else {
             update(model);
@@ -31,25 +33,27 @@ public class JdbcSupplierRepository implements SupplierRepository {
 
     private void insert(Supplier model) {
         try (PreparedStatement statement = connection.prepareStatement(
-                "INSERT INTO SUPPLIER (ID_SUPPLIER) VALUES (?, ?)",
-                Statement.RETURN_GENERATED_KEYS)) {
+                "INSERT INTO SUPPLIER (ID_SUPPLIER, NAME, PHONE) VALUES  (?, ?, ?)",
+                Statement.RETURN_GENERATED_KEYS)){
 
-            statement.setString(1, model.getName());
-            statement.setString(2, model.getPhone());
+            statement.setInt(1, model.getId());
+            statement.setString(2, model.getName());
+            statement.setString(3, model.getPhone());
             statement.executeUpdate();
 
             var keys = statement.getGeneratedKeys();
-            if (keys.next()) {
+            if (keys.next()){
                 model.setId(keys.getInt(1));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error inserting Supplier", e);
+            throw new RuntimeException(e);
         }
     }
 
     private void update(Supplier model) {
         try (PreparedStatement statement = connection.prepareStatement(
-                "UPDATE SUPPLIER SET NAME = ?, PHONE = ? WHERE ID = ?")) {
+                "UPDATE SUPPLIER SET NAME = ?, PHONE=? WHERE ID_SUPPLIER=?",
+                Statement.RETURN_GENERATED_KEYS)){
 
             statement.setString(1, model.getName());
             statement.setString(2, model.getPhone());
@@ -60,66 +64,64 @@ public class JdbcSupplierRepository implements SupplierRepository {
                 throw new SQLException("No items to update");
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error updating Supplier", e);
+            throw new RuntimeException(e);
         }
     }
 
     @Override
     public void delete(Supplier model) {
         try (PreparedStatement statement = connection.prepareStatement(
-                "DELETE FROM SUPPLIER WHERE ID = ?")) {
+                "DELETE FROM SUPPLIER WHERE ID_SUPPLIER = ?")) {
+
             statement.setInt(1, model.getId());
+
             int rowsAffected = statement.executeUpdate();
             if (rowsAffected == 0) {
                 System.out.println("No item to delete");
             } else {
-                System.out.println("Supplier deleted successfully");
+                System.out.println("Correct delete");
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error deleting Supplier", e);
+            throw new RuntimeException("Error", e);
         }
     }
 
     @Override
     public Supplier get(Integer id) {
         try (PreparedStatement statement = connection.prepareStatement(
-                "SELECT * FROM SUPPLIER WHERE ID = ?")) {
+                "SELECT * FROM SUPPLIER WHERE ID_SUPPLIER = ?")) {
+            Supplier supplier1 = null;
 
-            Supplier supplier = null;
             statement.setInt(1, id);
 
-            var resultSet = statement.executeQuery();
+            var resultSet= statement.executeQuery();
             if (resultSet.next()) {
-                supplier = new cat.uvic.teknos.shoeshop.domain.jdbc.models.Supplier();
-                supplier.setId(resultSet.getInt("ID"));
-                supplier.setName(resultSet.getString("NAME"));
-                supplier.setPhone(resultSet.getString("PHONE"));
+                supplier1 = new cat.uvic.teknos.shoeshop.domain.jdbc.models.Supplier();
+                supplier1.setId(resultSet.getInt("ID_SUPPLIER"));
+
             }
-            return supplier;
+            return supplier1;
         } catch (SQLException e) {
-            throw new RuntimeException("Error fetching Supplier", e);
+            throw new RuntimeException("Error", e);
         }
     }
 
     @Override
     public Set<Supplier> getAll() {
-        try (PreparedStatement statement = connection.prepareStatement(
-                "SELECT * FROM SUPPLIER")) {
-
+        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM SUPPLIER")) {
             var suppliers = new HashSet<Supplier>();
+
 
             var resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                var supplier = new cat.uvic.teknos.shoeshop.domain.jdbc.models.Supplier();
-                supplier.setId(resultSet.getInt("ID"));
-                supplier.setName(resultSet.getString("NAME"));
-                supplier.setPhone(resultSet.getString("PHONE"));
+                var supplier1 = new cat.uvic.teknos.shoeshop.domain.jdbc.models.Supplier();
+                supplier1.setId(resultSet.getInt("ID_SUPPLIER"));
 
-                suppliers.add(supplier);
+                suppliers.add(supplier1);
             }
             return suppliers;
         } catch (SQLException e) {
-            throw new RuntimeException("Error fetching Suppliers", e);
+            throw new RuntimeException("Error", e);
         }
     }
 }

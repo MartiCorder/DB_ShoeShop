@@ -6,5 +6,8 @@ public interface Address {
 
     void setId(int id);
 
+    String getLocation();
+    void setLocation(String location);
+
 
 }

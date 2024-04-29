@@ -24,7 +24,7 @@ public class JdbcClientRepository implements ClientRepository{
 
     @Override
     public void save(Client model) {
-        if (model.getId() >= 0){
+        if (model.getId() <= 0){
             insert(model);
         } else {
             update(model);
@@ -32,11 +32,13 @@ public class JdbcClientRepository implements ClientRepository{
     }
 
     private void insert(Client model) {
-        try (PreparedStatement statement = connection.prepareStatement("INSERT INTO CLIENT (ID_CLIENT) VALUES  (?, ?, ?)", Statement.RETURN_GENERATED_KEYS)){
+        try (PreparedStatement statement = connection.prepareStatement("INSERT INTO CLIENT (ID_CLIENT, DNI,  NAME, PHONE) VALUES  (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)){
 
             statement.setInt(1, model.getId());
-            statement.setString(2, model.getName());
-            statement.setString(3, model.getPhone());
+            statement.setInt(2, model.getDni());
+            statement.setString(3, model.getName());
+            statement.setString(4, model.getPhone());
+
             statement.executeUpdate();
 
             var keys = statement.getGeneratedKeys();
@@ -49,11 +51,14 @@ public class JdbcClientRepository implements ClientRepository{
     }
 
     private void update(Client model) {
-        try (PreparedStatement statement = connection.prepareStatement("UPDATE CLIENT SET ID_CLIENT=? SET NAME_CLIENT=? SET PHONE_CLIENT=? WHERE CLIENT_ID=?", Statement.RETURN_GENERATED_KEYS)){
+        try (PreparedStatement statement = connection.prepareStatement("UPDATE CLIENT SET DNI=?, NAME=?, PHONE=? WHERE ID_CLIENT=?", Statement.RETURN_GENERATED_KEYS)){
 
-            statement.setInt(1, model.getId());
-            statement.setString(1, model.getName());
-            statement.setString(1, model.getPhone());
+
+            statement.setInt(1, model.getDni());
+            statement.setString(2, model.getName());
+            statement.setString(3, model.getPhone());
+            statement.setInt(4, model.getId());
+
             int rowsAffected = statement.executeUpdate();
             if (rowsAffected == 0) {
                 throw new SQLException("No items to update");
@@ -67,8 +72,6 @@ public class JdbcClientRepository implements ClientRepository{
     public void delete(Client model) {
         try (PreparedStatement statement = connection.prepareStatement("DELETE FROM CLIENT WHERE ID_CLIENT = ?")) {
             statement.setInt(1, model.getId());
-            statement.setString(1, model.getName());
-            statement.setString(1, model.getPhone());
             int rowsAffected = statement.executeUpdate();
             if (rowsAffected == 0) {
                 System.out.println("No item to delete");
@@ -82,7 +85,7 @@ public class JdbcClientRepository implements ClientRepository{
 
     @Override
     public Client get(Integer id) {
-        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM CLIENT WHERE ID = ?")) {
+        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM CLIENT WHERE ID_CLIENT = ?")) {
             Client client1 = null;
 
             statement.setInt(1, id);
@@ -90,7 +93,7 @@ public class JdbcClientRepository implements ClientRepository{
             var resultSet= statement.executeQuery();
             if (resultSet.next()) {
                 client1 = new cat.uvic.teknos.shoeshop.domain.jdbc.models.Client();
-                client1.setId(resultSet.getInt("ID"));
+                client1.setId(resultSet.getInt("ID_CLIENT"));
 
             }
             return client1;
@@ -108,7 +111,8 @@ public class JdbcClientRepository implements ClientRepository{
             var resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 var client1 = new cat.uvic.teknos.shoeshop.domain.jdbc.models.Client();
-                client1.setId(resultSet.getInt("ID"));
+                client1.setId(resultSet.getInt("ID_CLIENT"));
+                client1.setDni(resultSet.getInt("DNI"));
                 client1.setName(resultSet.getString("NAME"));
                 client1.setPhone(resultSet.getString("PHONE"));
 

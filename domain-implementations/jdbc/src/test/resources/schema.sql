@@ -55,7 +55,8 @@ CREATE TABLE SUPPLIER (
 );
 
 CREATE TABLE CLIENT (
-                        DNI VARCHAR(20) PRIMARY KEY,
+                        ID_CLIENT INT AUTO_INCREMENT PRIMARY KEY,
+                        DNI VARCHAR(20),
                         NAME VARCHAR(255),
                         PHONE VARCHAR(15),
                         ID_ADDRESS INT,
@@ -63,7 +64,7 @@ CREATE TABLE CLIENT (
 );
 
 CREATE TABLE SHOE (
-                      ID_SHOE INT AUTO_INCREMENT PRIMARY KEY,
+                      ID_SHOE INT PRIMARY KEY,
                       ID_MODEL INT,
                       ID_INVENTORY INT,
                       PRICE DECIMAL(10, 2),
@@ -82,12 +83,16 @@ CREATE TABLE LINK_STORE_SUPPLIER (
 );
 
 CREATE TABLE LINK_CLIENT_STORE (
-                                   DNI VARCHAR(20),
+                                   ID_CLIENT INT,
                                    ID_STORE INT,
-                                   PRIMARY KEY (DNI, ID_STORE),
-                                   FOREIGN KEY (DNI) REFERENCES CLIENT(DNI),
+                                   PRIMARY KEY (ID_CLIENT, ID_STORE),
+                                   FOREIGN KEY (ID_CLIENT) REFERENCES CLIENT(ID_CLIENT),
                                    FOREIGN KEY (ID_STORE) REFERENCES SHOE_STORE(ID_STORE)
 );
+
+
+
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

@@ -2,9 +2,6 @@ package cat.uvic.teknos.shoeshop.domain.jdbc.repositories;
 
 import cat.uvic.teknos.shoeshop.models.Address;
 import cat.uvic.teknos.shoeshop.repositories.AddressRepository;
-import com.fcardara.dbtestutils.junit.CreateSchemaExtension;
-import com.fcardara.dbtestutils.junit.GetConnectionExtension;
-import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,7 +9,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Set;
-@ExtendWith({CreateSchemaExtension.class, GetConnectionExtension.class})
 
 public class JdbcAddressRepository implements AddressRepository {
 
@@ -24,7 +20,7 @@ public class JdbcAddressRepository implements AddressRepository {
 
     @Override
     public void save(Address model) {
-        if (model.getId() >= 0){
+        if (model.getId() <= 0){
             insert(model);
         } else {
             update(model);
@@ -32,9 +28,12 @@ public class JdbcAddressRepository implements AddressRepository {
     }
 
     private void insert(Address model) {
-        try (PreparedStatement statement = connection.prepareStatement("INSERT INTO ADDRESS (ID_ADDRESS) VALUES  (?)", Statement.RETURN_GENERATED_KEYS)){
+        try (PreparedStatement statement = connection.prepareStatement(
+                "INSERT INTO ADDRESS (ID_ADDRESS, LOCATION) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS)){
 
-            statement.setInt(1, model.getId());
+            statement.setInt(1,model.getId());
+            statement.setString(2, model.getLocation());
+
             statement.executeUpdate();
 
             var keys = statement.getGeneratedKeys();
@@ -47,9 +46,11 @@ public class JdbcAddressRepository implements AddressRepository {
     }
 
     private void update(Address model) {
-        try (PreparedStatement statement = connection.prepareStatement("UPDATE ADDRESS SET ID_ADDRESS=? WHERE ADDRESS_ID=?", Statement.RETURN_GENERATED_KEYS)){
+        try (PreparedStatement statement = connection.prepareStatement("UPDATE ADDRESS SET LOCATION= ? WHERE ID_ADDRESS=?", Statement.RETURN_GENERATED_KEYS)){
 
-            statement.setInt(1, model.getId());
+            statement.setInt(2, model.getId());
+            statement.setString(1, model.getLocation());
+
             int rowsAffected = statement.executeUpdate();
             if (rowsAffected == 0) {
                 throw new SQLException("No items to update");
@@ -76,18 +77,17 @@ public class JdbcAddressRepository implements AddressRepository {
 
     @Override
     public Address get(Integer id) {
-        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM ADDRESS WHERE ID = ?")) {
-            Address merceders = null;
+        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM ADDRESS WHERE ID_ADDRESS = ?")) {
+            Address address1 = null;
 
             statement.setInt(1, id);
 
             var resultSet= statement.executeQuery();
             if (resultSet.next()) {
-                merceders = new cat.uvic.teknos.shoeshop.domain.jdbc.models.Address();
-                merceders.setId(resultSet.getInt("ID"));
-
+                address1 = new cat.uvic.teknos.shoeshop.domain.jdbc.models.Address();
+                address1.setId(resultSet.getInt("ID_ADDRESS"));
             }
-            return merceders;
+            return address1;
         } catch (SQLException e) {
             throw new RuntimeException("Error", e);
         }
@@ -96,19 +96,21 @@ public class JdbcAddressRepository implements AddressRepository {
     @Override
     public Set<Address> getAll() {
         try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM ADDRESS")) {
-            var cars = new HashSet<Address>();
+            var addresses = new HashSet<Address>();
 
 
             var resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                var mercedes = new cat.uvic.teknos.shoeshop.domain.jdbc.models.Address();
-                mercedes.setId(resultSet.getInt("ID"));
+                var address1 = new cat.uvic.teknos.shoeshop.domain.jdbc.models.Address();
+                address1.setId(resultSet.getInt("ID_ADDRESS"));
 
-                cars.add(mercedes);
+
+                addresses.add(address1);
             }
-            return cars;
+            return addresses;
         } catch (SQLException e) {
             throw new RuntimeException("Error", e);
         }
+
     }
 }

@@ -4,6 +4,7 @@ import java.io.Serializable;
 public class Client implements cat.uvic.teknos.shoeshop.models.Client, Serializable{
 
     private int id;
+    private int dni;
     private String name;
     private String phone;
     @Override
@@ -16,6 +17,16 @@ public class Client implements cat.uvic.teknos.shoeshop.models.Client, Serializa
 
         this.id=id;
 
+    }
+
+    @Override
+    public int getDni() {
+        return dni;
+    }
+
+    @Override
+    public void setDni(int dni) {
+        this.dni=dni;
     }
 
     @Override
