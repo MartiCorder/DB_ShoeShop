@@ -21,8 +21,9 @@ class JdbcShoeStoreRepositoryTest {
     private final Connection connection;
 
 
-    public JdbcShoeStoreRepositoryTest(Connection connection) {
+    public JdbcShoeStoreRepositoryTest(Connection connection) throws SQLException {
         this.connection = connection;
+        this.connection.setAutoCommit(false);
     }
 
     @Test
@@ -85,7 +86,7 @@ class JdbcShoeStoreRepositoryTest {
     }
 
     @Test
-    void get() {
+    void get() throws SQLException {
 
         var repository = new JdbcShoeStoreRepository(connection);
 

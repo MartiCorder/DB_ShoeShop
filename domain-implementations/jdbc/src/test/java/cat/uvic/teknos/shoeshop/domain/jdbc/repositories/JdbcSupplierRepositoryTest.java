@@ -17,8 +17,9 @@ class JdbcSupplierRepositoryTest {
 
     private final Connection connection;
 
-    public JdbcSupplierRepositoryTest(Connection connection) {
+    public JdbcSupplierRepositoryTest(Connection connection) throws SQLException {
         this.connection = connection;
+        this.connection.setAutoCommit(false);
     }
 
     @Test
@@ -74,7 +75,7 @@ class JdbcSupplierRepositoryTest {
     }
 
     @Test
-    void get() {
+    void get() throws SQLException {
 
         var repository = new JdbcSupplierRepository(connection);
 

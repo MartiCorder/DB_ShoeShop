@@ -16,8 +16,9 @@ public class JdbcShoeStoreRepository implements ShoeStoreRepository {
 
     private final Connection connection;
 
-    public JdbcShoeStoreRepository(Connection connection) {
+    public JdbcShoeStoreRepository(Connection connection) throws SQLException {
         this.connection = connection;
+        this.connection.setAutoCommit(false);
     }
 
     @Override
@@ -40,7 +41,7 @@ public class JdbcShoeStoreRepository implements ShoeStoreRepository {
             statement.setString(4, model.getLocation());
             statement.setInt(5, model.getInventoryId());
             statement.executeUpdate();
-
+            connection.commit();
             var keys = statement.getGeneratedKeys();
             if (keys.next()) {
                 model.setId(keys.getInt(1));
@@ -61,6 +62,7 @@ public class JdbcShoeStoreRepository implements ShoeStoreRepository {
             statement.setInt(5, model.getId());
 
             int rowsAffected = statement.executeUpdate();
+            connection.commit();
             if (rowsAffected == 0) {
                 throw new SQLException("No items to update");
             }
@@ -75,6 +77,7 @@ public class JdbcShoeStoreRepository implements ShoeStoreRepository {
                 "DELETE FROM SHOE_STORE WHERE ID_STORE = ?")) {
             statement.setInt(1, model.getId());
             int rowsAffected = statement.executeUpdate();
+            connection.commit();
             if (rowsAffected == 0) {
                 System.out.println("No item to delete");
             } else {

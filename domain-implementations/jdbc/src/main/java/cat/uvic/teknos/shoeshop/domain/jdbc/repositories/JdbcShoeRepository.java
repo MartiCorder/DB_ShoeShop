@@ -16,8 +16,9 @@ public class JdbcShoeRepository implements ShoeRepository {
 
     private final Connection connection;
 
-    public JdbcShoeRepository(Connection connection) {
+    public JdbcShoeRepository(Connection connection) throws SQLException {
         this.connection = connection;
+        this.connection.setAutoCommit(false);
     }
 
     @Override
@@ -40,6 +41,7 @@ public class JdbcShoeRepository implements ShoeRepository {
             statement.setString(5, model.getColor());
             statement.setString(6, model.getSize());
             statement.executeUpdate();
+            connection.commit();
 
             var keys = statement.getGeneratedKeys();
             if (keys.next()) {
@@ -62,6 +64,7 @@ public class JdbcShoeRepository implements ShoeRepository {
             statement.setInt(6, model.getId());
 
             int rowsAffected = statement.executeUpdate();
+            connection.commit();
             if (rowsAffected == 0) {
                 throw new SQLException("No items to update");
             }
@@ -77,6 +80,7 @@ public class JdbcShoeRepository implements ShoeRepository {
             statement.setInt(1, model.getId());
 
             int rowsAffected = statement.executeUpdate();
+            connection.commit();
             if (rowsAffected == 0) {
                 System.out.println("No item to delete");
             } else {

@@ -14,6 +14,7 @@ dependencies {
     implementation ("org.junit.jupiter:junit-jupiter:5.10.0")
 
     testImplementation("mysql:mysql-connector-java:8.0.32")
+    implementation ("mysql:mysql-connector-java:8.0.26")
     //testImplementation("org.mockito:mockito-core:5.11.0")
     testImplementation("org.mockito:mockito-junit-jupiter:5.11.0")
     testImplementation("com.h2database:h2:2.2.224")

@@ -21,8 +21,9 @@ class JdbcInventoryRepositoryTest {
     private final Connection connection;
 
 
-    public JdbcInventoryRepositoryTest(Connection connection) {
+    public JdbcInventoryRepositoryTest(Connection connection) throws SQLException {
         this.connection = connection;
+        this.connection.setAutoCommit(false);
     }
 
     @Test
@@ -78,7 +79,7 @@ class JdbcInventoryRepositoryTest {
     }
 
     @Test
-    void get() {
+    void get() throws SQLException {
 
         var repository = new JdbcInventoryRepository(connection);
 

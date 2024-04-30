@@ -14,8 +14,9 @@ public class JdbcAddressRepository implements AddressRepository {
 
     private final Connection connection;
 
-    public JdbcAddressRepository(Connection connection){
+    public JdbcAddressRepository(Connection connection) throws SQLException {
         this.connection = connection;
+        this.connection.setAutoCommit(false);
     }
 
     @Override
@@ -28,6 +29,7 @@ public class JdbcAddressRepository implements AddressRepository {
     }
 
     private void insert(Address model) {
+
         try (PreparedStatement statement = connection.prepareStatement(
                 "INSERT INTO ADDRESS (ID_ADDRESS, LOCATION) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS)){
 
@@ -35,6 +37,7 @@ public class JdbcAddressRepository implements AddressRepository {
             statement.setString(2, model.getLocation());
 
             statement.executeUpdate();
+            connection.commit();
 
             var keys = statement.getGeneratedKeys();
             if (keys.next()){
@@ -52,6 +55,7 @@ public class JdbcAddressRepository implements AddressRepository {
             statement.setString(1, model.getLocation());
 
             int rowsAffected = statement.executeUpdate();
+            connection.commit();
             if (rowsAffected == 0) {
                 throw new SQLException("No items to update");
             }
@@ -65,6 +69,7 @@ public class JdbcAddressRepository implements AddressRepository {
         try (PreparedStatement statement = connection.prepareStatement("DELETE FROM ADDRESS WHERE ID_ADDRESS = ?")) {
             statement.setInt(1, model.getId());
             int rowsAffected = statement.executeUpdate();
+            connection.commit();
             if (rowsAffected == 0) {
                 System.out.println("No item to delete");
             } else {

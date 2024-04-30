@@ -25,8 +25,9 @@ class JdbcAddressRepositoryTest {
     private final Connection connection;
 
 
-    public JdbcAddressRepositoryTest(Connection connection) {
+    public JdbcAddressRepositoryTest(Connection connection) throws SQLException {
         this.connection = connection;
+        this.connection.setAutoCommit(false);
     }
 
     @Test
@@ -61,7 +62,7 @@ class JdbcAddressRepositoryTest {
 
         Address address1 = new Address();
 
-        address1.setId(1);
+        address1.setId(2);
         address1.setLocation("Barcelona");
 
         var repository = new JdbcAddressRepository(connection);
@@ -85,7 +86,7 @@ class JdbcAddressRepositoryTest {
     }
 
     @Test
-    void get() {
+    void get() throws SQLException {
 
         var repository = new JdbcAddressRepository(connection);
         assertNotNull(repository.get(1));
@@ -93,7 +94,7 @@ class JdbcAddressRepositoryTest {
     }
 
     @Test
-    void getAll() {
+    void getAll() throws SQLException {
 
         var repository = new JdbcAddressRepository(connection);
 

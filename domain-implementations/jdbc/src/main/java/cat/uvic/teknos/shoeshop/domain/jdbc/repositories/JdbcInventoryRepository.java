@@ -20,8 +20,9 @@ public class JdbcInventoryRepository implements InventoryRepository{
 
     private final Connection connection;
 
-    public JdbcInventoryRepository(Connection connection){
+    public JdbcInventoryRepository(Connection connection) throws SQLException {
         this.connection = connection;
+        this.connection.setAutoCommit(false);
     }
 
     @Override
@@ -39,6 +40,7 @@ public class JdbcInventoryRepository implements InventoryRepository{
             statement.setInt(1, model.getId());
             statement.setInt(2, model.getCapacity());
             statement.executeUpdate();
+            connection.commit();
 
             var keys = statement.getGeneratedKeys();
             if (keys.next()){
@@ -55,6 +57,7 @@ public class JdbcInventoryRepository implements InventoryRepository{
             statement.setInt(2, model.getId());
 
             int rowsAffected = statement.executeUpdate();
+            connection.commit();
             if (rowsAffected == 0) {
                 throw new SQLException("No items to update");
             }
@@ -68,6 +71,7 @@ public class JdbcInventoryRepository implements InventoryRepository{
         try (PreparedStatement statement = connection.prepareStatement("DELETE FROM INVENTORY WHERE ID_INVENTORY = ?")) {
             statement.setInt(1, model.getId());
             int rowsAffected = statement.executeUpdate();
+            connection.commit();
             if (rowsAffected == 0) {
                 System.out.println("No item to delete");
             } else {

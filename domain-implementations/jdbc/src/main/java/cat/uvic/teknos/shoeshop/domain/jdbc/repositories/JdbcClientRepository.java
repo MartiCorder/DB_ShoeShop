@@ -19,8 +19,9 @@ public class JdbcClientRepository implements ClientRepository{
 
     private final Connection connection;
 
-    public JdbcClientRepository(Connection connection) {
+    public JdbcClientRepository(Connection connection) throws SQLException {
         this.connection = connection;
+        this.connection.setAutoCommit(false);
     }
 
     @Override
@@ -42,7 +43,7 @@ public class JdbcClientRepository implements ClientRepository{
             statement.setString(4, model.getPhone());
 
             statement.executeUpdate();
-
+            connection.commit();
             var keys = statement.getGeneratedKeys();
             if (keys.next()){
                 model.setId(keys.getInt(1));
@@ -62,6 +63,7 @@ public class JdbcClientRepository implements ClientRepository{
             statement.setInt(4, model.getId());
 
             int rowsAffected = statement.executeUpdate();
+            connection.commit();
             if (rowsAffected == 0) {
                 throw new SQLException("No items to update");
             }
@@ -75,6 +77,7 @@ public class JdbcClientRepository implements ClientRepository{
         try (PreparedStatement statement = connection.prepareStatement("DELETE FROM CLIENT WHERE ID_CLIENT = ?")) {
             statement.setInt(1, model.getId());
             int rowsAffected = statement.executeUpdate();
+            connection.commit();
             if (rowsAffected == 0) {
                 System.out.println("No item to delete");
             } else {

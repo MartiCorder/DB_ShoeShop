@@ -16,8 +16,9 @@ public class JdbcModelRepository implements ModelRepository {
 
     private final Connection connection;
 
-    public JdbcModelRepository(Connection connection) {
+    public JdbcModelRepository(Connection connection) throws SQLException {
         this.connection = connection;
+        this.connection.setAutoCommit(false);
     }
 
     @Override
@@ -35,6 +36,7 @@ public class JdbcModelRepository implements ModelRepository {
             statement.setString(2, model.getName());
             statement.setString(3, model.getBrand());
             statement.executeUpdate();
+            connection.commit();
 
             var keys = statement.getGeneratedKeys();
             if (keys.next()) {
@@ -51,6 +53,7 @@ public class JdbcModelRepository implements ModelRepository {
             statement.setString(2, model.getBrand());
             statement.setInt(3, model.getId());
             int rowsAffected = statement.executeUpdate();
+            connection.commit();
             if (rowsAffected == 0) {
                 throw new SQLException("No items to update");
             }
@@ -64,6 +67,7 @@ public class JdbcModelRepository implements ModelRepository {
         try (PreparedStatement statement = connection.prepareStatement("DELETE FROM MODEL WHERE ID_MODEL = ?")) {
             statement.setInt(1, model.getId());
             int rowsAffected = statement.executeUpdate();
+            connection.commit();
             if (rowsAffected == 0) {
                 System.out.println("No item to delete");
             } else {

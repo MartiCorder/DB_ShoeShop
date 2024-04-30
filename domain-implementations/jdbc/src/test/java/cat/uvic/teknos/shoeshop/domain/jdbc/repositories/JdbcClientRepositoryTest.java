@@ -23,8 +23,9 @@ class JdbcClientRepositoryTest {
     private final Connection connection;
 
 
-    public JdbcClientRepositoryTest(Connection connection) {
+    public JdbcClientRepositoryTest(Connection connection) throws SQLException {
         this.connection = connection;
+        this.connection.setAutoCommit(false);
     }
 
     @Test
@@ -85,7 +86,7 @@ class JdbcClientRepositoryTest {
     }
 
     @Test
-    void get() {
+    void get() throws SQLException {
 
         var repository = new JdbcClientRepository(connection);
 
