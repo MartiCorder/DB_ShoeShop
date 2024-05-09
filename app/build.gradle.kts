@@ -9,6 +9,8 @@ plugins {
 dependencies {
     implementation("org.apache.commons:commons-text")
     implementation(project(":utilities"))
+    implementation(project(":domain-implementations:jdbc"))
+    implementation("de.vandermeer:asciitable:0.3.2")
 }
 
 application {
