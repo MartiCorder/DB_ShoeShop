@@ -80,8 +80,6 @@ public class JdbcClientRepository implements ClientRepository{
             connection.commit();
             if (rowsAffected == 0) {
                 System.out.println("No item to delete");
-            } else {
-                System.out.println("Correct delete");
             }
         } catch (SQLException e) {
             throw new RuntimeException("Error", e);

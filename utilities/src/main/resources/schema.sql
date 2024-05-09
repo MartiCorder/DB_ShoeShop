@@ -17,12 +17,10 @@ SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET TIME_ZONE = "+00:00";
 
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES UTF8MB4 */;
-
 
 CREATE TABLE INVENTORY (
                            ID_INVENTORY INT AUTO_INCREMENT PRIMARY KEY,
@@ -56,7 +54,8 @@ CREATE TABLE SUPPLIER (
 );
 
 CREATE TABLE CLIENT (
-                        DNI VARCHAR(20) PRIMARY KEY,
+                        ID_CLIENT INT AUTO_INCREMENT PRIMARY KEY,
+                        DNI VARCHAR(20),
                         NAME VARCHAR(255),
                         PHONE VARCHAR(15),
                         ID_ADDRESS INT,
@@ -64,7 +63,7 @@ CREATE TABLE CLIENT (
 );
 
 CREATE TABLE SHOE (
-                      ID_SHOE INT AUTO_INCREMENT PRIMARY KEY,
+                      ID_SHOE INT PRIMARY KEY,
                       ID_MODEL INT,
                       ID_INVENTORY INT,
                       PRICE DECIMAL(10, 2),
@@ -74,21 +73,6 @@ CREATE TABLE SHOE (
                       FOREIGN KEY (ID_INVENTORY) REFERENCES INVENTORY(ID_INVENTORY)
 );
 
-CREATE TABLE LINK_STORE_SUPPLIER (
-                                     ID_STORE INT,
-                                     ID_SUPPLIER INT,
-                                     PRIMARY KEY (ID_STORE, ID_SUPPLIER),
-                                     FOREIGN KEY (ID_STORE) REFERENCES SHOE_STORE(ID_STORE),
-                                     FOREIGN KEY (ID_SUPPLIER) REFERENCES SUPPLIER(ID_SUPPLIER)
-);
-
-CREATE TABLE LINK_CLIENT_STORE (
-                                   DNI VARCHAR(20),
-                                   ID_STORE INT,
-                                   PRIMARY KEY (DNI, ID_STORE),
-                                   FOREIGN KEY (DNI) REFERENCES CLIENT(DNI),
-                                   FOREIGN KEY (ID_STORE) REFERENCES SHOE_STORE(ID_STORE)
-);
 
 
 

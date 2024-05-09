@@ -83,8 +83,6 @@ public class JdbcShoeRepository implements ShoeRepository {
             connection.commit();
             if (rowsAffected == 0) {
                 System.out.println("No item to delete");
-            } else {
-                System.out.println("Shoe deleted successfully");
             }
         } catch (SQLException e) {
             throw new RuntimeException("Error deleting Shoe", e);

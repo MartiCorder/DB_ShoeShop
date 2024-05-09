@@ -1,34 +1,35 @@
 package cat.uvic.teknos.shoeshop.backoffice;
 
 import cat.uvic.teknos.shoeshop.models.ModelFactory;
-import cat.uvic.teknos.shoeshop.repositories.ClientRepository;
+import cat.uvic.teknos.shoeshop.repositories.ModelRepository;
 import de.vandermeer.asciitable.AsciiTable;
 import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
 
 import java.io.BufferedReader;
 import java.io.PrintStream;
 import static cat.uvic.teknos.shoeshop.backoffice.IOUtils.*;
-public class ClientManager {
+public class ModelManager {
+
 
     private final PrintStream out;
     private final BufferedReader in;
-    private final ClientRepository clientRepository;
+    private final ModelRepository modelRepository;
     private final ModelFactory modelFactory;
 
 
-    public ClientManager(BufferedReader in, PrintStream out, ClientRepository clientRepository, ModelFactory modelFactory) {
+    public ModelManager(BufferedReader in, PrintStream out, ModelRepository modelRepository, ModelFactory modelFactory) {
         this.out = out;
         this.in = in;
-        this.clientRepository = clientRepository;
+        this.modelRepository = modelRepository;
         this.modelFactory = modelFactory;
 
     }
     public void start(){
-        out.println("Client: ");
+        out.println("Model: ");
 
         var command = "";
         do {
-            showClientMenu();
+            showModelMenu();
             command = readLine(in);
 
             switch (command){
@@ -41,18 +42,17 @@ public class ClientManager {
         }
         while (!command.equals("exit"));
 
-        out.println("Exiting client");
+        out.println("Exiting model");
     }
 
     private void getAll() {
-
         var asciiTable = new AsciiTable();
         asciiTable.addRule();
-        asciiTable.addRow("ID", "DNI", "Name", "Phone");
+        asciiTable.addRow("ID", "Name", "Brand");
         asciiTable.addRule();
 
-        for (var client : clientRepository.getAll()) {
-            asciiTable.addRow(client.getId(), client.getDni(), client.getName(), client.getPhone());
+        for (var model : modelRepository.getAll()) {
+            asciiTable.addRow(model.getId(), model.getName(), model.getBrand());
             asciiTable.addRule();
         }
 
@@ -63,57 +63,55 @@ public class ClientManager {
     }
 
     private void delete() {
-        var client = modelFactory.createClient();
+        var model = modelFactory.createModel();
 
-        out.println("Enter the ID of the client to delete:");
+        out.println("Enter the ID of the model to delete:");
         int id = Integer.parseInt(readLine(in));
-        client.setId(id);
+        model.setId(id);
 
-        clientRepository.delete(client);
-        out.println("Successfully deleted ");
+        modelRepository.delete(model);
+        out.println("Successfully deleted");
+
     }
 
     private void update() {
         try {
-            var client = modelFactory.createClient();
-
-            out.println("Enter the ID of the client to update:");
-            int id = Integer.parseInt(readLine(in));
-            client.setId(id);
+            var model = modelFactory.createModel();
 
             out.println("Name");
-            client.setName(readLine(in));
+            model.setName(readLine(in));
 
-            out.println("Phone");
-            client.setPhone(readLine(in));
+            out.println("Brand");
+            model.setBrand(readLine(in));
 
+            modelRepository.save(model);
             out.println("Successfully updated");
-            clientRepository.save(client);
+
         } catch (NumberFormatException e) {
-            out.println("Invalid client ID. Please enter a valid integer ID.");
+            out.println("Invalid model ID. Please enter a valid integer ID.");
         } catch (Exception e) {
-            out.println("An error occurred while updating the client: " + e.getMessage());
+            out.println("An error occurred while updating the model: " + e.getMessage());
         }
     }
 
     private void insert() {
 
-        var client = modelFactory.createClient();
+        var model = modelFactory.createModel();
 
-        out.println("Client ID");
-        client.setId(Integer.parseInt(readLine(in)));
+        out.println("Model ID");
+        model.setId(Integer.parseInt(readLine(in)));
 
         out.println("Name");
-        client.setName(readLine(in));
+        model.setName(readLine(in));
 
-        out.println("Phone");
-        client.setPhone(readLine(in));
+        out.println("Brand");
+        model.setBrand(readLine(in));
 
+        modelRepository.save(model);
         out.println("Successfully inserted");
-        clientRepository.save(client);
     }
 
-    private void showClientMenu() {
+    private void showModelMenu() {
         out.println("1. Insert");
         out.println("2. Update");
         out.println("3. Delete");

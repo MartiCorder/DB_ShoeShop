@@ -4,7 +4,7 @@ import cat.uvic.teknos.shoeshop.backoffice.exceptions.BackOfficeException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-public class IOUtilis {
+public class IOUtils {
     static String readLine(BufferedReader in) {
         String command;
         try {

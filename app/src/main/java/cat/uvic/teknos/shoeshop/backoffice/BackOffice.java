@@ -3,10 +3,9 @@ package cat.uvic.teknos.shoeshop.backoffice;
 import java.io.*;
 import java.sql.SQLException;
 
-import cat.uvic.teknos.shoeshop.backoffice.exceptions.BackOfficeException;
 import cat.uvic.teknos.shoeshop.models.ModelFactory;
 import cat.uvic.teknos.shoeshop.repositories.RepositoryFactory;
-import static cat.uvic.teknos.shoeshop.backoffice.IOUtilis.*;
+import static cat.uvic.teknos.shoeshop.backoffice.IOUtils.*;
 public class BackOffice {
     private final BufferedReader in;
     private final PrintStream out;
@@ -50,22 +49,22 @@ public class BackOffice {
     }
 
     private void managerInventory() throws SQLException {
-        new DriverManager(in, out, repositoryFactory.getInventoryRepository(),modelFactory).start();
+        new InventoryManager(in, out, repositoryFactory.getInventoryRepository(),modelFactory).start();
 
     }
 
     private void managerModel() throws SQLException {
-        new CarManager(in, out, repositoryFactory.getModelRepository(),modelFactory).start();
+        new ModelManager(in, out, repositoryFactory.getModelRepository(),modelFactory).start();
     }
 
     private void managerShoe() throws SQLException {
-        new TeamManager(in, out, repositoryFactory.getShoeRepository(), modelFactory).start();
+        new ShoeManager(in, out, repositoryFactory.getShoeRepository(), modelFactory).start();
     }
     private void managerShoeStore() throws SQLException {
-        new TeamManager(in, out, repositoryFactory.getShoeStoreRepository(), modelFactory).start();
+        new ShoeStoreManager(in, out, repositoryFactory.getShoeStoreRepository(), modelFactory).start();
     }
     private void managerSupplier() throws SQLException {
-        new TeamManager(in, out, repositoryFactory.getSupplierRepository(), modelFactory).start();
+        new SupplierManager(in, out, repositoryFactory.getSupplierRepository(), modelFactory).start();
     }
     private void showWelcomeMessage() {
         out.println("Welcome to the ShoeShop Black Office");

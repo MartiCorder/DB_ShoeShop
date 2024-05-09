@@ -1,34 +1,34 @@
 package cat.uvic.teknos.shoeshop.backoffice;
 
 import cat.uvic.teknos.shoeshop.models.ModelFactory;
-import cat.uvic.teknos.shoeshop.repositories.ClientRepository;
+import cat.uvic.teknos.shoeshop.repositories.SupplierRepository;
 import de.vandermeer.asciitable.AsciiTable;
 import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
 
 import java.io.BufferedReader;
 import java.io.PrintStream;
 import static cat.uvic.teknos.shoeshop.backoffice.IOUtils.*;
-public class ClientManager {
 
+public class SupplierManager {
     private final PrintStream out;
     private final BufferedReader in;
-    private final ClientRepository clientRepository;
+    private final SupplierRepository supplierRepository;
     private final ModelFactory modelFactory;
 
 
-    public ClientManager(BufferedReader in, PrintStream out, ClientRepository clientRepository, ModelFactory modelFactory) {
+    public SupplierManager(BufferedReader in, PrintStream out, SupplierRepository supplierRepository, ModelFactory modelFactory) {
         this.out = out;
         this.in = in;
-        this.clientRepository = clientRepository;
+        this.supplierRepository = supplierRepository;
         this.modelFactory = modelFactory;
 
     }
     public void start(){
-        out.println("Client: ");
+        out.println("Supplier: ");
 
         var command = "";
         do {
-            showClientMenu();
+            showSupplierMenu();
             command = readLine(in);
 
             switch (command){
@@ -41,18 +41,17 @@ public class ClientManager {
         }
         while (!command.equals("exit"));
 
-        out.println("Exiting client");
+        out.println("Exiting supplier");
     }
 
     private void getAll() {
-
         var asciiTable = new AsciiTable();
         asciiTable.addRule();
-        asciiTable.addRow("ID", "DNI", "Name", "Phone");
+        asciiTable.addRow("ID", "Name", "Phone");
         asciiTable.addRule();
 
-        for (var client : clientRepository.getAll()) {
-            asciiTable.addRow(client.getId(), client.getDni(), client.getName(), client.getPhone());
+        for (var supplier : supplierRepository.getAll()) {
+            asciiTable.addRow(supplier.getId(), supplier.getName(), supplier.getPhone());
             asciiTable.addRule();
         }
 
@@ -63,57 +62,54 @@ public class ClientManager {
     }
 
     private void delete() {
-        var client = modelFactory.createClient();
+        var supplier = modelFactory.createSupplier();
 
-        out.println("Enter the ID of the client to delete:");
+        out.println("Enter the ID of the supplier to delete:");
         int id = Integer.parseInt(readLine(in));
-        client.setId(id);
+        supplier.setId(id);
 
-        clientRepository.delete(client);
-        out.println("Successfully deleted ");
+        supplierRepository.delete(supplier);
+        out.println("Successfully deleted");
     }
 
     private void update() {
         try {
-            var client = modelFactory.createClient();
+            var supplier = modelFactory.createSupplier();
 
-            out.println("Enter the ID of the client to update:");
+            out.println("Enter the ID of the supplier to update:");
             int id = Integer.parseInt(readLine(in));
-            client.setId(id);
+            supplier.setId(id);
 
             out.println("Name");
-            client.setName(readLine(in));
+            supplier.setName(readLine(in));
 
             out.println("Phone");
-            client.setPhone(readLine(in));
+            supplier.setPhone(readLine(in));
 
+            supplierRepository.save(supplier);
             out.println("Successfully updated");
-            clientRepository.save(client);
         } catch (NumberFormatException e) {
-            out.println("Invalid client ID. Please enter a valid integer ID.");
+            out.println("Invalid supplier ID. Please enter a valid integer ID.");
         } catch (Exception e) {
-            out.println("An error occurred while updating the client: " + e.getMessage());
+            out.println("An error occurred while updating the supplier: " + e.getMessage());
         }
     }
 
     private void insert() {
 
-        var client = modelFactory.createClient();
-
-        out.println("Client ID");
-        client.setId(Integer.parseInt(readLine(in)));
+        var supplier = modelFactory.createSupplier();
 
         out.println("Name");
-        client.setName(readLine(in));
+        supplier.setName(readLine(in));
 
         out.println("Phone");
-        client.setPhone(readLine(in));
+        supplier.setPhone(readLine(in));
 
+        supplierRepository.save(supplier);
         out.println("Successfully inserted");
-        clientRepository.save(client);
     }
 
-    private void showClientMenu() {
+    private void showSupplierMenu() {
         out.println("1. Insert");
         out.println("2. Update");
         out.println("3. Delete");

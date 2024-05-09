@@ -1,38 +1,36 @@
 package cat.uvic.teknos.shoeshop.backoffice;
 
+
 import cat.uvic.teknos.shoeshop.models.ModelFactory;
-import cat.uvic.teknos.shoeshop.repositories.AddressRepository;
+import cat.uvic.teknos.shoeshop.repositories.InventoryRepository;
 import de.vandermeer.asciitable.AsciiTable;
 import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
 
 import java.io.BufferedReader;
 import java.io.PrintStream;
-
-import static cat.uvic.teknos.shoeshop.backoffice.IOUtils.readLine;
-
-
-public class AddressManager {
+import static cat.uvic.teknos.shoeshop.backoffice.IOUtils.*;
+public class InventoryManager {
 
     private final PrintStream out;
     private final BufferedReader in;
-    private final AddressRepository addressRepository;
+    private final InventoryRepository inventoryRepository;
     private final ModelFactory modelFactory;
 
 
-    public AddressManager(BufferedReader in, PrintStream out, AddressRepository addressRepository, ModelFactory modelFactory) {
+    public InventoryManager(BufferedReader in, PrintStream out, InventoryRepository inventoryRepository, ModelFactory modelFactory) {
         this.out = out;
         this.in = in;
-        this.addressRepository = addressRepository;
+        this.inventoryRepository = inventoryRepository;
         this.modelFactory = modelFactory;
 
     }
     public void start(){
-        out.println("Address: ");
 
+        out.println("Inventory: ");
 
         var command = "";
         do {
-            showAddressMenu();
+            showInventoryMenu();
             command = readLine(in);
 
             switch (command){
@@ -45,17 +43,17 @@ public class AddressManager {
         }
         while (!command.equals("exit"));
 
-        out.println("Exiting address");
+        out.println("Exiting inventory");
     }
 
     private void getAll() {
         var asciiTable = new AsciiTable();
         asciiTable.addRule();
-        asciiTable.addRow("Id", "Location");
+        asciiTable.addRow("ID", "Capacity");
         asciiTable.addRule();
 
-        for (var address : addressRepository.getAll()) {
-            asciiTable.addRow(address.getId(), address.getLocation());
+        for (var inventory : inventoryRepository.getAll()) {
+            asciiTable.addRow(inventory.getId(), inventory.getCapacity());
             asciiTable.addRule();
         }
 
@@ -66,51 +64,45 @@ public class AddressManager {
     }
 
     private void delete() {
-        var address = modelFactory.createAddress();
 
-        out.println("Enter the ID of the address to delete:");
+        var inventory = modelFactory.createInventory();
+
+        out.println("Enter the ID of the inventory to delete:");
         int id = Integer.parseInt(readLine(in));
-        address.setId(id);
+        inventory.setId(id);
 
-        addressRepository.delete(address);
-        out.println("Successfully deleted");
+        inventoryRepository.delete(inventory);
     }
 
     private void update() {
         try {
-            var address = modelFactory.createAddress();
+            var inventory = modelFactory.createInventory();
 
-            out.println("Enter the ID of the address to update:");
-            int id = Integer.parseInt(readLine(in));
-            address.setId(id);
+            out.println("Capacity");
+            inventory.setCapacity(Integer.parseInt(readLine(in)));
 
-            out.println("Location");
-            address.setLocation(readLine(in));
-
-            addressRepository.save(address);
             out.println("Successfully updated");
-
+            inventoryRepository.save(inventory);
         } catch (NumberFormatException e) {
-            out.println("Invalid address ID. Please enter a valid integer ID.");
+            out.println("Invalid inventory ID. Please enter a valid integer ID.");
         } catch (Exception e) {
-            out.println("An error occurred while updating the address: " + e.getMessage());
+            out.println("An error occurred while updating the inventory: " + e.getMessage());
         }
-
     }
 
     private void insert() {
 
-        var address = modelFactory.createAddress();
+        var inventory = modelFactory.createInventory();
 
-        out.println("Location");
-        address.setLocation(readLine(in));
+        out.println("Capacity");
+        inventory.setCapacity(Integer.parseInt(readLine(in)));
 
-        addressRepository.save(address);
+        inventoryRepository.save(inventory);
         out.println("Successfully inserted");
 
     }
 
-    private void showAddressMenu() {
+    private void showInventoryMenu() {
         out.println("1. Insert");
         out.println("2. Update");
         out.println("3. Delete");
