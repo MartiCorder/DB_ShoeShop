@@ -106,6 +106,7 @@ public class JdbcAddressRepository implements AddressRepository {
             while (resultSet.next()) {
                 var address1 = new cat.uvic.teknos.shoeshop.domain.jdbc.models.Address();
                 address1.setId(resultSet.getInt("ID_ADDRESS"));
+                address1.setLocation(resultSet.getString("LOCATION"));
 
                 addresses.add(address1);
             }

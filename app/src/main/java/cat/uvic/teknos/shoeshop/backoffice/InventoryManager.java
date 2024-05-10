@@ -1,6 +1,5 @@
 package cat.uvic.teknos.shoeshop.backoffice;
 
-
 import cat.uvic.teknos.shoeshop.models.ModelFactory;
 import cat.uvic.teknos.shoeshop.repositories.InventoryRepository;
 import de.vandermeer.asciitable.AsciiTable;
@@ -8,7 +7,9 @@ import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
 
 import java.io.BufferedReader;
 import java.io.PrintStream;
+
 import static cat.uvic.teknos.shoeshop.backoffice.IOUtils.*;
+
 public class InventoryManager {
 
     private final PrintStream out;
@@ -16,37 +17,36 @@ public class InventoryManager {
     private final InventoryRepository inventoryRepository;
     private final ModelFactory modelFactory;
 
-
     public InventoryManager(BufferedReader in, PrintStream out, InventoryRepository inventoryRepository, ModelFactory modelFactory) {
         this.out = out;
         this.in = in;
         this.inventoryRepository = inventoryRepository;
         this.modelFactory = modelFactory;
-
     }
-    public void start(){
 
-        out.println("Inventory: ");
+    public void start() {
+        out.println("\n*** Inventory Management ***\n");
 
         var command = "";
         do {
             showInventoryMenu();
             command = readLine(in);
 
-            switch (command){
+            switch (command) {
                 case "1" -> insert();
                 case "2" -> update();
                 case "3" -> delete();
                 case "4" -> getAll();
             }
 
-        }
-        while (!command.equals("exit"));
+        } while (!command.equals("exit"));
 
-        out.println("Exiting inventory");
+        out.println("\n*** Exiting Inventory Management ***\n");
     }
 
     private void getAll() {
+        out.println("\n*** List of Inventories ***\n");
+
         var asciiTable = new AsciiTable();
         asciiTable.addRule();
         asciiTable.addRow("ID", "Capacity");
@@ -60,10 +60,11 @@ public class InventoryManager {
         asciiTable.setTextAlignment(TextAlignment.CENTER);
 
         String render = asciiTable.render();
-        System.out.println(render);
+        out.println(render);
     }
 
     private void delete() {
+        out.println("\n*** Delete Inventory ***\n");
 
         var inventory = modelFactory.createInventory();
 
@@ -72,40 +73,51 @@ public class InventoryManager {
         inventory.setId(id);
 
         inventoryRepository.delete(inventory);
+        out.println("\nSuccessfully deleted.\n");
     }
 
     private void update() {
+        out.println("\n*** Update Inventory ***\n");
+
         try {
             var inventory = modelFactory.createInventory();
 
-            out.println("Capacity");
+            out.println("Enter the ID of the inventory to update:");
+            int id = Integer.parseInt(readLine(in));
+            inventory.setId(id);
+
+            out.println("Enter new Capacity:");
             inventory.setCapacity(Integer.parseInt(readLine(in)));
 
-            out.println("Successfully updated");
             inventoryRepository.save(inventory);
+            out.println("\nSuccessfully updated.\n");
+
         } catch (NumberFormatException e) {
-            out.println("Invalid inventory ID. Please enter a valid integer ID.");
+            out.println("\nInvalid inventory ID. Please enter a valid integer ID.\n");
         } catch (Exception e) {
-            out.println("An error occurred while updating the inventory: " + e.getMessage());
+            out.println("\nAn error occurred while updating the inventory: " + e.getMessage() + "\n");
         }
     }
 
     private void insert() {
+        out.println("\n*** Insert Inventory ***\n");
 
         var inventory = modelFactory.createInventory();
 
-        out.println("Capacity");
+        out.println("Enter the Capacity:");
         inventory.setCapacity(Integer.parseInt(readLine(in)));
 
         inventoryRepository.save(inventory);
-        out.println("Successfully inserted");
-
+        out.println("\nSuccessfully inserted.\n");
     }
 
     private void showInventoryMenu() {
-        out.println("1. Insert");
-        out.println("2. Update");
-        out.println("3. Delete");
-        out.println("4. GetAll");
+        out.println("\n*** Inventory Management Menu ***\n");
+        out.println("1. Insert Inventory");
+        out.println("2. Update Inventory");
+        out.println("3. Delete Inventory");
+        out.println("4. Get All Inventories");
+        out.println("Type 'exit' to quit.");
+        out.println();
     }
 }

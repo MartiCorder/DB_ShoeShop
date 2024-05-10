@@ -118,7 +118,8 @@ public class JdbcSupplierRepository implements SupplierRepository {
             while (resultSet.next()) {
                 var supplier1 = new cat.uvic.teknos.shoeshop.domain.jdbc.models.Supplier();
                 supplier1.setId(resultSet.getInt("ID_SUPPLIER"));
-
+                supplier1.setName(resultSet.getString("NAME"));
+                supplier1.setPhone(resultSet.getString("PHONE"));
                 suppliers.add(supplier1);
             }
             return suppliers;

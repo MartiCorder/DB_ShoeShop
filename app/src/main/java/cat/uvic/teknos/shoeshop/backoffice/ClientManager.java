@@ -7,7 +7,9 @@ import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
 
 import java.io.BufferedReader;
 import java.io.PrintStream;
+
 import static cat.uvic.teknos.shoeshop.backoffice.IOUtils.*;
+
 public class ClientManager {
 
     private final PrintStream out;
@@ -15,36 +17,35 @@ public class ClientManager {
     private final ClientRepository clientRepository;
     private final ModelFactory modelFactory;
 
-
     public ClientManager(BufferedReader in, PrintStream out, ClientRepository clientRepository, ModelFactory modelFactory) {
         this.out = out;
         this.in = in;
         this.clientRepository = clientRepository;
         this.modelFactory = modelFactory;
-
     }
-    public void start(){
-        out.println("Client: ");
+
+    public void start() {
+        out.println("\n*** Client Management ***\n");
 
         var command = "";
         do {
             showClientMenu();
             command = readLine(in);
 
-            switch (command){
+            switch (command) {
                 case "1" -> insert();
                 case "2" -> update();
                 case "3" -> delete();
                 case "4" -> getAll();
             }
 
-        }
-        while (!command.equals("exit"));
+        } while (!command.equals("exit"));
 
-        out.println("Exiting client");
+        out.println("\n*** Exiting Client Management ***\n");
     }
 
     private void getAll() {
+        out.println("\n*** List of Clients ***\n");
 
         var asciiTable = new AsciiTable();
         asciiTable.addRule();
@@ -59,10 +60,12 @@ public class ClientManager {
         asciiTable.setTextAlignment(TextAlignment.CENTER);
 
         String render = asciiTable.render();
-        System.out.println(render);
+        out.println(render);
     }
 
     private void delete() {
+        out.println("\n*** Delete Client ***\n");
+
         var client = modelFactory.createClient();
 
         out.println("Enter the ID of the client to delete:");
@@ -70,10 +73,12 @@ public class ClientManager {
         client.setId(id);
 
         clientRepository.delete(client);
-        out.println("Successfully deleted ");
+        out.println("\nSuccessfully deleted.\n");
     }
 
     private void update() {
+        out.println("\n*** Update Client ***\n");
+
         try {
             var client = modelFactory.createClient();
 
@@ -81,42 +86,47 @@ public class ClientManager {
             int id = Integer.parseInt(readLine(in));
             client.setId(id);
 
-            out.println("Name");
+            out.println("Enter new Name:");
             client.setName(readLine(in));
 
-            out.println("Phone");
+            out.println("Enter new Phone:");
             client.setPhone(readLine(in));
 
-            out.println("Successfully updated");
             clientRepository.save(client);
+            out.println("\nSuccessfully updated.\n");
+
         } catch (NumberFormatException e) {
-            out.println("Invalid client ID. Please enter a valid integer ID.");
+            out.println("\nInvalid client ID. Please enter a valid integer ID.\n");
         } catch (Exception e) {
-            out.println("An error occurred while updating the client: " + e.getMessage());
+            out.println("\nAn error occurred while updating the client: " + e.getMessage() + "\n");
         }
     }
 
     private void insert() {
+        out.println("\n*** Insert Client ***\n");
 
         var client = modelFactory.createClient();
 
-        out.println("Client ID");
-        client.setId(Integer.parseInt(readLine(in)));
+        out.println("Enter the DNI:");
+        client.setDni((readLine(in)));
 
-        out.println("Name");
+        out.println("Enter the Name:");
         client.setName(readLine(in));
 
-        out.println("Phone");
+        out.println("Enter the Phone:");
         client.setPhone(readLine(in));
 
-        out.println("Successfully inserted");
         clientRepository.save(client);
+        out.println("\nSuccessfully inserted.\n");
     }
 
     private void showClientMenu() {
-        out.println("1. Insert");
-        out.println("2. Update");
-        out.println("3. Delete");
-        out.println("4. GetAll");
+        out.println("\n*** Client Management Menu ***\n");
+        out.println("1. Insert Client");
+        out.println("2. Update Client");
+        out.println("3. Delete Client");
+        out.println("4. Get All Clients");
+        out.println("Type 'exit' to quit.");
+        out.println();
     }
 }
