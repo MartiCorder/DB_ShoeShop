@@ -1,6 +1,5 @@
 package cat.uvic.teknos.shoeshop.backoffice;
 
-import cat.uvic.teknos.shoeshop.backoffice.BackOffice;
 import cat.uvic.teknos.shoeshop.domain.jdbc.models.JdbcModelFactory;
 import cat.uvic.teknos.shoeshop.domain.jdbc.repositories.JdbcRepositoryFactory;
 import cat.uvic.teknos.shoeshop.models.ModelFactory;

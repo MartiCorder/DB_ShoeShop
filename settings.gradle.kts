@@ -12,4 +12,5 @@ plugins {
 
 rootProject.name = "gradle-shoe_shop"
 include("app", "domain", "utilities", ":domain-implementations:file",":domain-implementations:jdbc")
-
+include("domain-implementations:JPA")
+findProject(":domain-implementations:JPA")?.name = "JPA"
