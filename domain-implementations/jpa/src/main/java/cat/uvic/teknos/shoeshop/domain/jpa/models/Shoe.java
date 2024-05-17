@@ -1,0 +1,107 @@
+package cat.uvic.teknos.shoeshop.domain.jpa.models;
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "SHOE")
+public class Shoe implements cat.uvic.teknos.shoeshop.models.Shoe {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
+    private int id;
+
+    @Column(name = "ID_MODEL")
+    private int modelId;
+
+    @Column(name = "ID_INVENTORY")
+    private int inventoryId;
+
+    @Column(name = "PRICE")
+    private double price;
+
+    @Column(name = "COLOR")
+    private String color;
+
+    @Column(name = "SIZE")
+    private String size;
+
+    @ManyToOne
+    @JoinColumn(name = "ID_MODEL")
+    private Model model;
+
+    @ManyToOne
+    @JoinColumn(name = "ID_INVENTORY")
+    private Inventory inventory;
+
+    public Shoe() {
+    }
+
+    public Shoe(int modelId, int inventoryId, double price, String color, String size) {
+        this.modelId = modelId;
+        this.inventoryId = inventoryId;
+        this.price = price;
+        this.color = color;
+        this.size = size;
+    }
+
+    @Override
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    @Override
+    public int getModelId() {
+        return modelId;
+    }
+
+    @Override
+    public void setModelId(int modelId) {
+        this.modelId = modelId;
+    }
+
+    @Override
+    public int getInventoryId() {
+        return inventoryId;
+    }
+
+    @Override
+    public void setInventoryId(int inventoryId) {
+        this.inventoryId = inventoryId;
+    }
+
+    @Override
+    public double getPrice() {
+        return price;
+    }
+
+    @Override
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    @Override
+    public String getColor() {
+        return color;
+    }
+
+    @Override
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    @Override
+    public String getSize() {
+        return size;
+    }
+
+    @Override
+    public void setSize(String size) {
+        this.size = size;
+    }
+}
