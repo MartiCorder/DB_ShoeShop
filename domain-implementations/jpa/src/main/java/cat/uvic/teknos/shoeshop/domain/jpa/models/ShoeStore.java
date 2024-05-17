@@ -1,14 +1,15 @@
 package cat.uvic.teknos.shoeshop.domain.jpa.models;
 
 import jakarta.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "SHOE_STORE")
-public class ShoeStore implements cat.uvic.teknos.shoeshop.models.ShoeStore {
+public class ShoeStore implements cat.uvic.teknos.shoeshop.models.ShoeStore, Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
+    @Column(name = "ID_STORE")
     private int id;
 
     @Column(name = "NAME")
@@ -20,21 +21,12 @@ public class ShoeStore implements cat.uvic.teknos.shoeshop.models.ShoeStore {
     @Column(name = "LOCATION")
     private String location;
 
+    @ManyToOne
+    @JoinColumn(name = "ID_SUPPLIER")
+    private Supplier supplier;
+
     @Column(name = "ID_INVENTORY")
     private int inventoryId;
-
-    @OneToOne
-    @JoinColumn(name = "ID_INVENTORY")
-    private Inventory inventory;
-    public ShoeStore() {
-    }
-
-    public ShoeStore(String name, String owner, String location, int inventoryId) {
-        this.name = name;
-        this.owner = owner;
-        this.location = location;
-        this.inventoryId = inventoryId;
-    }
 
     @Override
     public int getId() {
@@ -84,5 +76,13 @@ public class ShoeStore implements cat.uvic.teknos.shoeshop.models.ShoeStore {
     @Override
     public void setInventoryId(int inventoryId) {
         this.inventoryId = inventoryId;
+    }
+
+    public Supplier getSupplier() {
+        return supplier;
+    }
+
+    public void setSupplier(Supplier supplier) {
+        this.supplier = supplier;
     }
 }

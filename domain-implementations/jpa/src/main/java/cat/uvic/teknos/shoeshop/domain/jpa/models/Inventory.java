@@ -10,7 +10,7 @@ public class Inventory implements cat.uvic.teknos.shoeshop.models.Inventory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
+    @Column(name = "ID_INVENTORY")
     private int id;
 
     @Column(name = "CAPACITY")

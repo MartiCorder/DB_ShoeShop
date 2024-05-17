@@ -1,50 +1,53 @@
 package cat.uvic.teknos.shoeshop.domain.models;
 
 import cat.uvic.teknos.shoeshop.domain.jpa.models.Address;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import org.junit.jupiter.api.*;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
-class AddressTest {
+class DeleteTest {
     private static EntityManagerFactory entityManagerFactory;
 
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    static void setUpBeforeClass() {
         entityManagerFactory = Persistence.createEntityManagerFactory("shoeshopjpa");
     }
 
-    @AfterEach
-    void tearDown() {
+    @AfterAll
+    static void tearDownAfterClass() {
         entityManagerFactory.close();
     }
 
     @Test
-    void insertAddressTest() {
-        // EntityManager
-        var entityManager = entityManagerFactory.createEntityManager();
+    void deleteAddressTest() {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         try {
+
             entityManager.getTransaction().begin();
 
-            Address address = new Address();
-            address.setLocation("Carrer Roure, 23");
+            Address address = entityManager.find(Address.class, 1);//Id de l'eliminat
 
-            entityManager.persist(address);
+
+            entityManager.remove(address);
 
             entityManager.getTransaction().commit();
 
-            assertTrue(address.getId() > 0);
 
-            Address retrievedAddress = entityManager.find(Address.class, address.getId());
-            assertNotNull(retrievedAddress);
-            assertEquals(retrievedAddress.getLocation(), address.getLocation());
+            Address deletedAddress = entityManager.find(Address.class, 1);//El mateix
+            assertNull(deletedAddress);
         } catch (Exception e) {
             entityManager.getTransaction().rollback();
+            fail("Failed to delete address: " + e.getMessage());
         } finally {
             entityManager.close();
         }
     }
+
+
 }
 

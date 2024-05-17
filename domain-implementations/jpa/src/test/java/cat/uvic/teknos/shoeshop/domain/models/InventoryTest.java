@@ -1,13 +1,13 @@
 package cat.uvic.teknos.shoeshop.domain.models;
 
-import cat.uvic.teknos.shoeshop.domain.jpa.models.Address;
+import cat.uvic.teknos.shoeshop.domain.jpa.models.Inventory;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class AddressTest {
+class InventoryTest {
     private static EntityManagerFactory entityManagerFactory;
 
     @BeforeEach
@@ -21,25 +21,25 @@ class AddressTest {
     }
 
     @Test
-    void insertAddressTest() {
-        // EntityManager
+    void insertInventoryTest() {
+
         var entityManager = entityManagerFactory.createEntityManager();
 
         try {
             entityManager.getTransaction().begin();
 
-            Address address = new Address();
-            address.setLocation("Carrer Roure, 23");
+            Inventory inventory = new Inventory();
+            inventory.setCapacity(100);
 
-            entityManager.persist(address);
+            entityManager.persist(inventory);
 
             entityManager.getTransaction().commit();
 
-            assertTrue(address.getId() > 0);
+            assertTrue(inventory.getId() > 0);
 
-            Address retrievedAddress = entityManager.find(Address.class, address.getId());
-            assertNotNull(retrievedAddress);
-            assertEquals(retrievedAddress.getLocation(), address.getLocation());
+            Inventory retrievedInventory = entityManager.find(Inventory.class, inventory.getId());
+            assertNotNull(retrievedInventory);
+            assertEquals(inventory.getCapacity(), retrievedInventory.getCapacity());
         } catch (Exception e) {
             entityManager.getTransaction().rollback();
         } finally {
@@ -47,4 +47,3 @@ class AddressTest {
         }
     }
 }
-

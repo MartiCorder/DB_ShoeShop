@@ -1,13 +1,14 @@
 package cat.uvic.teknos.shoeshop.domain.models;
 
-import cat.uvic.teknos.shoeshop.domain.jpa.models.Address;
+
+import cat.uvic.teknos.shoeshop.domain.jpa.models.Client;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class AddressTest {
+class ClientTest {
     private static EntityManagerFactory entityManagerFactory;
 
     @BeforeEach
@@ -21,25 +22,29 @@ class AddressTest {
     }
 
     @Test
-    void insertAddressTest() {
-        // EntityManager
+    void insertClientTest() {
+
         var entityManager = entityManagerFactory.createEntityManager();
 
         try {
             entityManager.getTransaction().begin();
 
-            Address address = new Address();
-            address.setLocation("Carrer Roure, 23");
+            Client client = new Client();
+            client.setDni("14525678F");
+            client.setName("Marti");
+            client.setPhone("744485606");
 
-            entityManager.persist(address);
+            entityManager.persist(client);
 
             entityManager.getTransaction().commit();
 
-            assertTrue(address.getId() > 0);
+            assertTrue(client.getId() > 0);
 
-            Address retrievedAddress = entityManager.find(Address.class, address.getId());
-            assertNotNull(retrievedAddress);
-            assertEquals(retrievedAddress.getLocation(), address.getLocation());
+            Client retrievedClient = entityManager.find(Client.class, client.getId());
+            assertNotNull(retrievedClient);
+            assertEquals(client.getDni(), retrievedClient.getDni());
+            assertEquals(client.getName(), retrievedClient.getName());
+            assertEquals(client.getPhone(), retrievedClient.getPhone());
         } catch (Exception e) {
             entityManager.getTransaction().rollback();
         } finally {

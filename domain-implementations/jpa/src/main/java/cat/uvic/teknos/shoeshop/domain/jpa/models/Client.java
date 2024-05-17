@@ -9,7 +9,7 @@ public class Client implements cat.uvic.teknos.shoeshop.models.Client {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
+    @Column(name = "ID_CLIENT")
     private int id;
 
     @Column(name = "DNI")
@@ -21,7 +21,7 @@ public class Client implements cat.uvic.teknos.shoeshop.models.Client {
     @Column(name = "PHONE")
     private String phone;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "ID_ADDRESS")
     private Address address;
 

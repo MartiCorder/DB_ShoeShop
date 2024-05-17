@@ -1,13 +1,13 @@
 package cat.uvic.teknos.shoeshop.domain.models;
 
-import cat.uvic.teknos.shoeshop.domain.jpa.models.Address;
+import cat.uvic.teknos.shoeshop.domain.jpa.models.Model;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class AddressTest {
+class ModelTest {
     private static EntityManagerFactory entityManagerFactory;
 
     @BeforeEach
@@ -21,25 +21,27 @@ class AddressTest {
     }
 
     @Test
-    void insertAddressTest() {
+    void insertModelTest() {
         // EntityManager
         var entityManager = entityManagerFactory.createEntityManager();
 
         try {
             entityManager.getTransaction().begin();
 
-            Address address = new Address();
-            address.setLocation("Carrer Roure, 23");
+            Model model = new Model();
+            model.setName("Air Force");
+            model.setBrand("Nike");
 
-            entityManager.persist(address);
+            entityManager.persist(model);
 
             entityManager.getTransaction().commit();
 
-            assertTrue(address.getId() > 0);
+            assertTrue(model.getId() > 0);
 
-            Address retrievedAddress = entityManager.find(Address.class, address.getId());
-            assertNotNull(retrievedAddress);
-            assertEquals(retrievedAddress.getLocation(), address.getLocation());
+            Model retrievedModel = entityManager.find(Model.class, model.getId());
+            assertNotNull(retrievedModel);
+            assertEquals(model.getName(), retrievedModel.getName());
+            assertEquals(model.getBrand(), retrievedModel.getBrand());
         } catch (Exception e) {
             entityManager.getTransaction().rollback();
         } finally {
@@ -47,4 +49,3 @@ class AddressTest {
         }
     }
 }
-

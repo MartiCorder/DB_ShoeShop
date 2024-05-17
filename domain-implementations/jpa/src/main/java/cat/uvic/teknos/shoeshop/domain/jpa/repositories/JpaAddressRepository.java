@@ -9,14 +9,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class JpaAddressRepository implements AddressRepository {
-    private final EntityManagerFactory entitymanagerFactory;
+    private final EntityManagerFactory entityManagerFactory;
 
     public JpaAddressRepository(EntityManagerFactory entityManagerFactory){
-        this.entitymanagerFactory = entityManagerFactory;
+        this.entityManagerFactory = entityManagerFactory;
     }
     @Override
     public void save(Address model) {
-        var entityManager= entitymanagerFactory.createEntityManager();
+        var entityManager= entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         entityManager.persist(model);
         entityManager.getTransaction().commit();
@@ -24,7 +24,7 @@ public class JpaAddressRepository implements AddressRepository {
 
     @Override
     public void delete(Address model) {
-        var entityManager = entitymanagerFactory.createEntityManager();
+        var entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         entityManager.remove(entityManager.contains(model) ? model : entityManager.merge(model));
         entityManager.getTransaction().commit();
@@ -32,7 +32,7 @@ public class JpaAddressRepository implements AddressRepository {
 
     @Override
     public Address get(Integer id) {
-        EntityManager entityManager = entitymanagerFactory.createEntityManager();
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
         Address address = entityManager.find(Address.class, id);
         entityManager.close();
         return address;
@@ -40,7 +40,7 @@ public class JpaAddressRepository implements AddressRepository {
 
     @Override
     public Set<Address> getAll() {
-        EntityManager entityManager = entitymanagerFactory.createEntityManager();
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         Set<Address> addresses = new HashSet<>(entityManager.createQuery("SELECT a FROM Address a", Address.class).getResultList());
         entityManager.getTransaction().commit();

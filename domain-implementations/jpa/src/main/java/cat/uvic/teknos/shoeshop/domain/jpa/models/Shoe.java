@@ -8,14 +8,8 @@ public class Shoe implements cat.uvic.teknos.shoeshop.models.Shoe {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
+    @Column(name = "ID_SHOE")
     private int id;
-
-    @Column(name = "ID_MODEL")
-    private int modelId;
-
-    @Column(name = "ID_INVENTORY")
-    private int inventoryId;
 
     @Column(name = "PRICE")
     private double price;
@@ -37,9 +31,9 @@ public class Shoe implements cat.uvic.teknos.shoeshop.models.Shoe {
     public Shoe() {
     }
 
-    public Shoe(int modelId, int inventoryId, double price, String color, String size) {
-        this.modelId = modelId;
-        this.inventoryId = inventoryId;
+    public Shoe(Model model, Inventory inventory, double price, String color, String size) {
+        this.model = model;
+        this.inventory = inventory;
         this.price = price;
         this.color = color;
         this.size = size;
@@ -57,22 +51,28 @@ public class Shoe implements cat.uvic.teknos.shoeshop.models.Shoe {
 
     @Override
     public int getModelId() {
-        return modelId;
+        return model != null ? model.getId() : 0;
     }
 
     @Override
     public void setModelId(int modelId) {
-        this.modelId = modelId;
+        if (this.model == null) {
+            this.model = new Model();
+        }
+        this.model.setId(modelId);
     }
 
     @Override
     public int getInventoryId() {
-        return inventoryId;
+        return inventory != null ? inventory.getId() : 0;
     }
 
     @Override
     public void setInventoryId(int inventoryId) {
-        this.inventoryId = inventoryId;
+        if (this.inventory == null) {
+            this.inventory = new Inventory();
+        }
+        this.inventory.setId(inventoryId);
     }
 
     @Override

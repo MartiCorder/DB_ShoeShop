@@ -1,47 +1,50 @@
 package cat.uvic.teknos.shoeshop.domain.models;
 
 import cat.uvic.teknos.shoeshop.domain.jpa.models.Address;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import org.junit.jupiter.api.*;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.List;
 
-class AddressTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+class GetAllTest {
     private static EntityManagerFactory entityManagerFactory;
 
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    static void setUpBeforeClass() {
         entityManagerFactory = Persistence.createEntityManagerFactory("shoeshopjpa");
     }
 
-    @AfterEach
-    void tearDown() {
+    @AfterAll
+    static void tearDownAfterClass() {
         entityManagerFactory.close();
     }
 
     @Test
-    void insertAddressTest() {
-        // EntityManager
-        var entityManager = entityManagerFactory.createEntityManager();
+    void getAllAddressTest() {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         try {
+
             entityManager.getTransaction().begin();
 
-            Address address = new Address();
-            address.setLocation("Carrer Roure, 23");
 
-            entityManager.persist(address);
+            List<Address> addresses = entityManager.createQuery("SELECT a FROM Address a", Address.class)
+                    .getResultList();
+
 
             entityManager.getTransaction().commit();
 
-            assertTrue(address.getId() > 0);
 
-            Address retrievedAddress = entityManager.find(Address.class, address.getId());
-            assertNotNull(retrievedAddress);
-            assertEquals(retrievedAddress.getLocation(), address.getLocation());
+            assertNotNull(addresses);
+            assertEquals(1, addresses.size());
         } catch (Exception e) {
             entityManager.getTransaction().rollback();
+            e.printStackTrace();
         } finally {
             entityManager.close();
         }
