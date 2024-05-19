@@ -1,12 +1,15 @@
 package cat.uvic.teknos.shoeshop.backoffice;
 
+import cat.uvic.teknos.shoeshop.models.Shoe;
 import cat.uvic.teknos.shoeshop.models.ModelFactory;
 import cat.uvic.teknos.shoeshop.repositories.ShoeRepository;
-import de.vandermeer.asciitable.AsciiTable;
-import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
+
+import com.github.freva.asciitable.AsciiTable;
+import com.github.freva.asciitable.Column;
 
 import java.io.BufferedReader;
 import java.io.PrintStream;
+import java.util.Arrays;
 
 import static cat.uvic.teknos.shoeshop.backoffice.IOUtils.*;
 
@@ -47,20 +50,16 @@ public class ShoeManager {
     private void getAll() {
         out.println("\n*** List of Shoes ***\n");
 
-        var asciiTable = new AsciiTable();
-        asciiTable.addRule();
-        asciiTable.addRow("ID", "Model ID", "Inventory ID", "Price", "Color", "Size");
-        asciiTable.addRule();
+        var shoes = shoeRepository.getAll();
 
-        for (var shoe : shoeRepository.getAll()) {
-            asciiTable.addRow(shoe.getId(), shoe.getModelId(), shoe.getInventoryId(), shoe.getPrice(), shoe.getColor(), shoe.getSize());
-            asciiTable.addRule();
-        }
-
-        asciiTable.setTextAlignment(TextAlignment.CENTER);
-
-        String render = asciiTable.render();
-        out.println(render);
+        out.println(AsciiTable.getTable(shoes, Arrays.asList(
+                new Column().header("Id").with(shoe -> String.valueOf(shoe.getId())),
+                new Column().header("Model ID").with(shoe -> String.valueOf(shoe.getModelId())),
+                new Column().header("Inventory ID").with(shoe -> String.valueOf(shoe.getInventoryId())),
+                new Column().header("Price").with(shoe -> String.valueOf(shoe.getPrice())),
+                new Column().header("Color").with(Shoe::getColor),
+                new Column().header("Size").with(Shoe::getSize)
+        )));
     }
 
     private void delete() {

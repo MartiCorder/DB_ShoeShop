@@ -1,12 +1,15 @@
 package cat.uvic.teknos.shoeshop.backoffice;
 
+import cat.uvic.teknos.shoeshop.models.Model;
 import cat.uvic.teknos.shoeshop.models.ModelFactory;
 import cat.uvic.teknos.shoeshop.repositories.ModelRepository;
-import de.vandermeer.asciitable.AsciiTable;
-import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
+
+import com.github.freva.asciitable.AsciiTable;
+import com.github.freva.asciitable.Column;
 
 import java.io.BufferedReader;
 import java.io.PrintStream;
+import java.util.Arrays;
 
 import static cat.uvic.teknos.shoeshop.backoffice.IOUtils.*;
 
@@ -47,20 +50,13 @@ public class ModelManager {
     private void getAll() {
         out.println("\n*** List of Models ***\n");
 
-        var asciiTable = new AsciiTable();
-        asciiTable.addRule();
-        asciiTable.addRow("ID", "Name", "Brand");
-        asciiTable.addRule();
+        var models = modelRepository.getAll();
 
-        for (var model : modelRepository.getAll()) {
-            asciiTable.addRow(model.getId(), model.getName(), model.getBrand());
-            asciiTable.addRule();
-        }
-
-        asciiTable.setTextAlignment(TextAlignment.CENTER);
-
-        String render = asciiTable.render();
-        out.println(render);
+        out.println(AsciiTable.getTable(models, Arrays.asList(
+                new Column().header("Id").with(model -> String.valueOf(model.getId())),
+                new Column().header("Name").with(Model::getName),
+                new Column().header("Brand").with(Model::getBrand)
+        )));
     }
 
     private void delete() {

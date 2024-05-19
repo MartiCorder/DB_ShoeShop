@@ -1,12 +1,15 @@
 package cat.uvic.teknos.shoeshop.backoffice;
 
+import cat.uvic.teknos.shoeshop.models.Address;
 import cat.uvic.teknos.shoeshop.models.ModelFactory;
 import cat.uvic.teknos.shoeshop.repositories.AddressRepository;
-import de.vandermeer.asciitable.AsciiTable;
-import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
 
 import java.io.BufferedReader;
 import java.io.PrintStream;
+import java.util.Arrays;
+
+import com.github.freva.asciitable.AsciiTable;
+import com.github.freva.asciitable.Column;
 
 import static cat.uvic.teknos.shoeshop.backoffice.IOUtils.readLine;
 
@@ -44,23 +47,15 @@ public class AddressManager {
         out.println("\n*** Exiting Address Management ***\n");
     }
 
+
     private void getAll() {
-        out.println("\n*** List of Addresses ***\n");
+        out.println("\n*** List of Address ***\n");
+        var addresses = addressRepository.getAll();
 
-        var asciiTable = new AsciiTable();
-        asciiTable.addRule();
-        asciiTable.addRow("Id", "Location");
-        asciiTable.addRule();
-
-        for (var address : addressRepository.getAll()) {
-            asciiTable.addRow(address.getId(), address.getLocation());
-            asciiTable.addRule();
-        }
-
-        asciiTable.setTextAlignment(TextAlignment.CENTER);
-
-        String render = asciiTable.render();
-        System.out.println(render);
+        out.println(AsciiTable.getTable(addresses, Arrays.asList(
+                new Column().header("Id").with(address -> String.valueOf(address.getId())),
+                new Column().header("Location").with(Address::getLocation)
+        )));
     }
 
     private void delete() {

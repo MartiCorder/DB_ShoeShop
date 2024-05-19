@@ -1,12 +1,15 @@
 package cat.uvic.teknos.shoeshop.backoffice;
 
+import cat.uvic.teknos.shoeshop.models.Client;
 import cat.uvic.teknos.shoeshop.models.ModelFactory;
 import cat.uvic.teknos.shoeshop.repositories.ClientRepository;
-import de.vandermeer.asciitable.AsciiTable;
-import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
+
+import com.github.freva.asciitable.AsciiTable;
+import com.github.freva.asciitable.Column;
 
 import java.io.BufferedReader;
 import java.io.PrintStream;
+import java.util.Arrays;
 
 import static cat.uvic.teknos.shoeshop.backoffice.IOUtils.*;
 
@@ -47,20 +50,14 @@ public class ClientManager {
     private void getAll() {
         out.println("\n*** List of Clients ***\n");
 
-        var asciiTable = new AsciiTable();
-        asciiTable.addRule();
-        asciiTable.addRow("ID", "DNI", "Name", "Phone");
-        asciiTable.addRule();
+        var clients = clientRepository.getAll();
 
-        for (var client : clientRepository.getAll()) {
-            asciiTable.addRow(client.getId(), client.getDni(), client.getName(), client.getPhone());
-            asciiTable.addRule();
-        }
-
-        asciiTable.setTextAlignment(TextAlignment.CENTER);
-
-        String render = asciiTable.render();
-        out.println(render);
+        out.println(AsciiTable.getTable(clients, Arrays.asList(
+                new Column().header("Id").with(client -> String.valueOf(client.getId())),
+                new Column().header("D.N.I").with(Client::getDni),
+                new Column().header("Name").with(Client::getName),
+                new Column().header("Phone").with(Client::getPhone)
+        )));
     }
 
     private void delete() {

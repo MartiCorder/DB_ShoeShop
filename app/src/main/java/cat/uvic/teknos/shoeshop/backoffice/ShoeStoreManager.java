@@ -1,12 +1,16 @@
 package cat.uvic.teknos.shoeshop.backoffice;
 
+import cat.uvic.teknos.shoeshop.models.ShoeStore;
 import cat.uvic.teknos.shoeshop.models.ModelFactory;
 import cat.uvic.teknos.shoeshop.repositories.ShoeStoreRepository;
-import de.vandermeer.asciitable.AsciiTable;
-import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
+
+import com.github.freva.asciitable.AsciiTable;
+import com.github.freva.asciitable.Column;
 
 import java.io.BufferedReader;
 import java.io.PrintStream;
+import java.util.Arrays;
+
 import static cat.uvic.teknos.shoeshop.backoffice.IOUtils.*;
 
 public class ShoeStoreManager {
@@ -44,28 +48,16 @@ public class ShoeStoreManager {
     }
 
     private void getAll() {
-        out.println("\n*** List of Shoe Stores ***\n");
+        out.println("\n*** List of Shoe Store ***\n");
+        var shoestores = shoeStoreRepository.getAll();
 
-        var asciiTable = new AsciiTable();
-        asciiTable.addRule();
-        asciiTable.addRow("ID", "Name", "Owner", "Location", "Inventory ID");
-        asciiTable.addRule();
-
-        for (var shoeStore : shoeStoreRepository.getAll()) {
-            asciiTable.addRow(
-                    shoeStore.getId(),
-                    shoeStore.getName(),
-                    shoeStore.getOwner(),
-                    shoeStore.getLocation(),
-                    shoeStore.getInventoryId()
-            );
-            asciiTable.addRule();
-        }
-
-        asciiTable.setTextAlignment(TextAlignment.CENTER);
-
-        var render = asciiTable.render();
-        out.println(render);
+        out.println(AsciiTable.getTable(shoestores, Arrays.asList(
+                new Column().header("Id").with(shoestore -> String.valueOf(shoestore.getId())),
+                new Column().header("Name").with(ShoeStore::getName),
+                new Column().header("Owner").with(ShoeStore::getOwner),
+                new Column().header("Location").with(ShoeStore::getLocation),
+                new Column().header("Inventory ID").with(shoestore -> String.valueOf(shoestore.getInventoryId()))
+        )));
     }
 
     private void delete() {

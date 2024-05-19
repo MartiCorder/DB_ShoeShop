@@ -1,12 +1,15 @@
 package cat.uvic.teknos.shoeshop.backoffice;
 
+import cat.uvic.teknos.shoeshop.models.Inventory;
 import cat.uvic.teknos.shoeshop.models.ModelFactory;
 import cat.uvic.teknos.shoeshop.repositories.InventoryRepository;
-import de.vandermeer.asciitable.AsciiTable;
-import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
+
+import com.github.freva.asciitable.AsciiTable;
+import com.github.freva.asciitable.Column;
 
 import java.io.BufferedReader;
 import java.io.PrintStream;
+import java.util.Arrays;
 
 import static cat.uvic.teknos.shoeshop.backoffice.IOUtils.*;
 
@@ -45,22 +48,14 @@ public class InventoryManager {
     }
 
     private void getAll() {
-        out.println("\n*** List of Inventories ***\n");
+        out.println("\n*** List of Inventory ***\n");
 
-        var asciiTable = new AsciiTable();
-        asciiTable.addRule();
-        asciiTable.addRow("ID", "Capacity");
-        asciiTable.addRule();
+        var inventories = inventoryRepository.getAll();
 
-        for (var inventory : inventoryRepository.getAll()) {
-            asciiTable.addRow(inventory.getId(), inventory.getCapacity());
-            asciiTable.addRule();
-        }
-
-        asciiTable.setTextAlignment(TextAlignment.CENTER);
-
-        String render = asciiTable.render();
-        out.println(render);
+        out.println(AsciiTable.getTable(inventories, Arrays.asList(
+                new Column().header("Id").with(inventory -> String.valueOf(inventory.getId())),
+                new Column().header("Capacity").with(inventory -> String.valueOf(inventory.getCapacity()))
+        )));
     }
 
     private void delete() {

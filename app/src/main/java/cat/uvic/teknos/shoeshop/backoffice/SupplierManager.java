@@ -1,14 +1,17 @@
 package cat.uvic.teknos.shoeshop.backoffice;
 
+import cat.uvic.teknos.shoeshop.models.Supplier;
 import cat.uvic.teknos.shoeshop.models.ModelFactory;
 import cat.uvic.teknos.shoeshop.repositories.SupplierRepository;
-import de.vandermeer.asciitable.AsciiTable;
-import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
+
+import com.github.freva.asciitable.AsciiTable;
+import com.github.freva.asciitable.Column;
 
 import java.io.BufferedReader;
 import java.io.PrintStream;
-import static cat.uvic.teknos.shoeshop.backoffice.IOUtils.*;
+import java.util.Arrays;
 
+import static cat.uvic.teknos.shoeshop.backoffice.IOUtils.*;
 public class SupplierManager {
 
     private final PrintStream out;
@@ -45,21 +48,13 @@ public class SupplierManager {
 
     private void getAll() {
         out.println("\n*** List of Suppliers ***\n");
+        var suppliers = supplierRepository.getAll();
 
-        var asciiTable = new AsciiTable();
-        asciiTable.addRule();
-        asciiTable.addRow("ID", "Name", "Phone");
-        asciiTable.addRule();
-
-        for (var supplier : supplierRepository.getAll()) {
-            asciiTable.addRow(supplier.getId(), supplier.getName(), supplier.getPhone());
-            asciiTable.addRule();
-        }
-
-        asciiTable.setTextAlignment(TextAlignment.CENTER);
-
-        String render = asciiTable.render();
-        out.println(render);
+        out.println(AsciiTable.getTable(suppliers, Arrays.asList(
+                new Column().header("Id").with(supplier -> String.valueOf(supplier.getId())),
+                new Column().header("Name").with(Supplier::getName),
+                new Column().header("Phone").with(Supplier::getPhone)
+        )));
     }
 
     private void delete() {
