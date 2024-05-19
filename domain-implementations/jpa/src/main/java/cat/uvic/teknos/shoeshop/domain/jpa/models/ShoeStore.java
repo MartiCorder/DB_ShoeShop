@@ -2,6 +2,7 @@ package cat.uvic.teknos.shoeshop.domain.jpa.models;
 
 import jakarta.persistence.*;
 import java.io.Serializable;
+import java.util.Set;
 
 @Entity
 @Table(name = "SHOE_STORE")
@@ -27,6 +28,17 @@ public class ShoeStore implements cat.uvic.teknos.shoeshop.models.ShoeStore, Ser
 
     @Column(name = "ID_INVENTORY")
     private int inventoryId;
+
+    @ManyToMany(mappedBy = "shoeStores")
+    private Set<Client> clients;
+
+    @ManyToMany
+    @JoinTable(
+            name = "SHOE_STORE_INVENTORY",
+            joinColumns = @JoinColumn(name = "SHOE_STORE_ID"),
+            inverseJoinColumns = @JoinColumn(name = "INVENTORY_ID")
+    )
+    private Set<Inventory> inventories;
 
     @Override
     public int getId() {
@@ -84,5 +96,21 @@ public class ShoeStore implements cat.uvic.teknos.shoeshop.models.ShoeStore, Ser
 
     public void setSupplier(Supplier supplier) {
         this.supplier = supplier;
+    }
+
+    public Set<Client> getClients() {
+        return clients;
+    }
+
+    public void setClients(Set<Client> clients) {
+        this.clients = clients;
+    }
+
+    public Set<Inventory> getInventories() {
+        return inventories;
+    }
+
+    public void setInventories(Set<Inventory> inventories) {
+        this.inventories = inventories;
     }
 }

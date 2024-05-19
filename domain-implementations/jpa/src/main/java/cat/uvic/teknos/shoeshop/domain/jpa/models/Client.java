@@ -1,7 +1,7 @@
 package cat.uvic.teknos.shoeshop.domain.jpa.models;
 
 import jakarta.persistence.*;
-
+import java.util.Set;
 
 @Entity
 @Table(name = "CLIENT")
@@ -24,6 +24,14 @@ public class Client implements cat.uvic.teknos.shoeshop.models.Client {
     @ManyToOne
     @JoinColumn(name = "ID_ADDRESS")
     private Address address;
+
+    @ManyToMany
+    @JoinTable(
+            name = "CLIENT_SHOE_STORE",
+            joinColumns = @JoinColumn(name = "CLIENT_ID"),
+            inverseJoinColumns = @JoinColumn(name = "SHOE_STORE_ID")
+    )
+    private Set<ShoeStore> shoeStores;
 
     public Client() {
     }
@@ -72,5 +80,13 @@ public class Client implements cat.uvic.teknos.shoeshop.models.Client {
     @Override
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public Set<ShoeStore> getShoeStores() {
+        return shoeStores;
+    }
+
+    public void setShoeStores(Set<ShoeStore> shoeStores) {
+        this.shoeStores = shoeStores;
     }
 }

@@ -1,8 +1,8 @@
 package cat.uvic.teknos.shoeshop.domain.jpa.models;
 
 import jakarta.persistence.*;
-
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "INVENTORY")
@@ -18,6 +18,9 @@ public class Inventory implements cat.uvic.teknos.shoeshop.models.Inventory {
 
     @OneToMany(mappedBy = "inventory")
     private List<Shoe> shoes;
+
+    @ManyToMany(mappedBy = "inventories")
+    private Set<ShoeStore> shoeStores;
 
     public Inventory() {
     }
@@ -44,5 +47,13 @@ public class Inventory implements cat.uvic.teknos.shoeshop.models.Inventory {
     @Override
     public void setCapacity(int capacity) {
         this.capacity = capacity;
+    }
+
+    public Set<ShoeStore> getShoeStores() {
+        return shoeStores;
+    }
+
+    public void setShoeStores(Set<ShoeStore> shoeStores) {
+        this.shoeStores = shoeStores;
     }
 }
