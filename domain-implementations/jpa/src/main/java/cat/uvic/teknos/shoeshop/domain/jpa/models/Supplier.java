@@ -10,7 +10,7 @@ public class Supplier implements cat.uvic.teknos.shoeshop.models.Supplier, Seria
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID_SUPPLIER")
+    @Column(name = "SUPPLIER_ID")
     private int id;
 
     @Column(name = "NAME")
@@ -19,7 +19,7 @@ public class Supplier implements cat.uvic.teknos.shoeshop.models.Supplier, Seria
     @Column(name = "PHONE")
     private String phone;
 
-    @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "suppliers")
     private Set<ShoeStore> shoeStores;
 
     @Override

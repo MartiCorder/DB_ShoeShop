@@ -112,9 +112,6 @@ public class ShoeStoreManager {
 
         var shoeStore = modelFactory.createShoeStore();
 
-        out.println("Enter the Store ID:");
-        shoeStore.setId(Integer.parseInt(readLine(in)));
-
         out.println("Enter the Name:");
         shoeStore.setName(readLine(in));
 

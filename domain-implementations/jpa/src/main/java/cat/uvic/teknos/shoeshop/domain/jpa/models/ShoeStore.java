@@ -10,7 +10,7 @@ public class ShoeStore implements cat.uvic.teknos.shoeshop.models.ShoeStore, Ser
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID_STORE")
+    @Column(name = "STORE_ID")
     private int id;
 
     @Column(name = "NAME")
@@ -22,11 +22,15 @@ public class ShoeStore implements cat.uvic.teknos.shoeshop.models.ShoeStore, Ser
     @Column(name = "LOCATION")
     private String location;
 
-    @ManyToOne
-    @JoinColumn(name = "ID_SUPPLIER")
-    private Supplier supplier;
+    @ManyToMany
+    @JoinTable(
+            name = "SHOE_STORE_SUPPLIER",
+            joinColumns = @JoinColumn(name = "SHOE_STORE_ID"),
+            inverseJoinColumns = @JoinColumn(name = "SUPPLIER_ID")
+    )
+    private Set<Supplier> suppliers;
 
-    @Column(name = "ID_INVENTORY")
+    @Column(name = "INVENTORY_ID")
     private int inventoryId;
 
     @ManyToMany(mappedBy = "shoeStores")
@@ -90,12 +94,12 @@ public class ShoeStore implements cat.uvic.teknos.shoeshop.models.ShoeStore, Ser
         this.inventoryId = inventoryId;
     }
 
-    public Supplier getSupplier() {
-        return supplier;
+    public Set<Supplier> getSuppliers() {
+        return suppliers;
     }
 
-    public void setSupplier(Supplier supplier) {
-        this.supplier = supplier;
+    public void setSuppliers(Set<Supplier> suppliers) {
+        this.suppliers = suppliers;
     }
 
     public Set<Client> getClients() {

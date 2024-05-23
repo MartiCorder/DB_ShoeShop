@@ -37,7 +37,6 @@ class ShoeStoreTest {
             shoeStore.setName("Far");
             shoeStore.setOwner("Marti Corder");
             shoeStore.setLocation("Vic");
-            shoeStore.setSupplier(supplier);
 
             entityManager.persist(shoeStore);
 
@@ -50,7 +49,7 @@ class ShoeStoreTest {
             assertEquals(shoeStore.getName(), retrievedShoeStore.getName());
             assertEquals(shoeStore.getOwner(), retrievedShoeStore.getOwner());
             assertEquals(shoeStore.getLocation(), retrievedShoeStore.getLocation());
-            assertEquals(shoeStore.getSupplier().getId(), retrievedShoeStore.getSupplier().getId());
+
         } catch (Exception e) {
             entityManager.getTransaction().rollback();
         } finally {

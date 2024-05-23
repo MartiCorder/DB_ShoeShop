@@ -32,7 +32,7 @@ public class JdbcShoeRepository implements ShoeRepository {
 
     private void insert(Shoe model) {
         try (PreparedStatement statement = connection.prepareStatement(
-                "INSERT INTO SHOE (ID_SHOE, ID_MODEL, ID_INVENTORY, PRICE, COLOR, SIZE) VALUES (?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
+                "INSERT INTO SHOE (SHOE_ID, MODEL_ID, INVENTORY_ID, PRICE, COLOR, SIZE) VALUES (?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
 
             statement.setInt(1, model.getId());
             statement.setInt(2, model.getModelId());
@@ -54,7 +54,7 @@ public class JdbcShoeRepository implements ShoeRepository {
 
     private void update(Shoe model) {
         try (PreparedStatement statement = connection.prepareStatement(
-                "UPDATE SHOE SET ID_MODEL = ?, ID_INVENTORY = ?, PRICE = ?, COLOR = ?, SIZE = ? WHERE ID_SHOE = ?")) {
+                "UPDATE SHOE SET MODEL_ID = ?, INVENTORY_ID = ?, PRICE = ?, COLOR = ?, SIZE = ? WHERE SHOE_ID = ?")) {
 
             statement.setInt(1, model.getModelId());
             statement.setInt(2, model.getInventoryId());
@@ -76,7 +76,7 @@ public class JdbcShoeRepository implements ShoeRepository {
     @Override
     public void delete(Shoe model) {
         try (PreparedStatement statement = connection.prepareStatement(
-                "DELETE FROM SHOE WHERE ID_SHOE = ?")) {
+                "DELETE FROM SHOE WHERE SHOE_ID = ?")) {
             statement.setInt(1, model.getId());
 
             int rowsAffected = statement.executeUpdate();
@@ -91,16 +91,16 @@ public class JdbcShoeRepository implements ShoeRepository {
 
     @Override
     public Shoe get(Integer id) {
-        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM SHOE WHERE ID_SHOE = ?")) {
+        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM SHOE WHERE SHOE_ID = ?")) {
             Shoe shoe = null;
             statement.setInt(1, id);
 
             var resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 shoe = new cat.uvic.teknos.shoeshop.domain.jdbc.models.Shoe();
-                shoe.setId(resultSet.getInt("ID_SHOE"));
-                shoe.setModelId(resultSet.getInt("ID_MODEL"));
-                shoe.setInventoryId(resultSet.getInt("ID_INVENTORY"));
+                shoe.setId(resultSet.getInt("SHOE_ID"));
+                shoe.setModelId(resultSet.getInt("MODEL_ID"));
+                shoe.setInventoryId(resultSet.getInt("INVENTORY_ID"));
                 shoe.setPrice(resultSet.getDouble("PRICE"));
                 shoe.setColor(resultSet.getString("COLOR"));
                 shoe.setSize(resultSet.getString("SIZE"));
@@ -119,9 +119,9 @@ public class JdbcShoeRepository implements ShoeRepository {
             var resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 var shoe = new cat.uvic.teknos.shoeshop.domain.jdbc.models.Shoe();
-                shoe.setId(resultSet.getInt("ID_SHOE"));
-                shoe.setModelId(resultSet.getInt("ID_MODEL"));
-                shoe.setInventoryId(resultSet.getInt("ID_INVENTORY"));
+                shoe.setId(resultSet.getInt("SHOE_ID"));
+                shoe.setModelId(resultSet.getInt("MODEL_ID"));
+                shoe.setInventoryId(resultSet.getInt("INVENTORY_ID"));
                 shoe.setPrice(resultSet.getDouble("PRICE"));
                 shoe.setColor(resultSet.getString("COLOR"));
                 shoe.setSize(resultSet.getString("SIZE"));

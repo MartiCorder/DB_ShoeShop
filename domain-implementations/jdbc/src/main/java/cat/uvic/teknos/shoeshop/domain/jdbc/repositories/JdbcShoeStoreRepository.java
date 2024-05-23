@@ -32,7 +32,7 @@ public class JdbcShoeStoreRepository implements ShoeStoreRepository {
 
     private void insert(ShoeStore model) {
         try (PreparedStatement statement = connection.prepareStatement(
-                "INSERT INTO SHOE_STORE (ID_STORE, NAME, OWNER, LOCATION, ID_INVENTORY) VALUES (?, ?, ?, ?, ?)",
+                "INSERT INTO SHOE_STORE (SHOE_STORE_ID, NAME, OWNER, LOCATION, INVENTORY_ID) VALUES (?, ?, ?, ?, ?)",
                 Statement.RETURN_GENERATED_KEYS)) {
 
             statement.setInt(1, model.getId());
@@ -53,7 +53,7 @@ public class JdbcShoeStoreRepository implements ShoeStoreRepository {
 
     private void update(ShoeStore model) {
         try (PreparedStatement statement = connection.prepareStatement(
-                "UPDATE SHOE_STORE SET NAME = ?, OWNER = ?, LOCATION = ?, ID_INVENTORY = ? WHERE ID_STORE = ?")) {
+                "UPDATE SHOE_STORE SET NAME = ?, OWNER = ?, LOCATION = ?, INVENTORY_ID = ? WHERE SHOE_STORE_ID = ?")) {
 
             statement.setString(1, model.getName());
             statement.setString(2, model.getOwner());
@@ -74,7 +74,7 @@ public class JdbcShoeStoreRepository implements ShoeStoreRepository {
     @Override
     public void delete(ShoeStore model) {
         try (PreparedStatement statement = connection.prepareStatement(
-                "DELETE FROM SHOE_STORE WHERE ID_STORE = ?")) {
+                "DELETE FROM SHOE_STORE WHERE SHOE_STORE_ID = ?")) {
             statement.setInt(1, model.getId());
             int rowsAffected = statement.executeUpdate();
             connection.commit();
@@ -88,7 +88,7 @@ public class JdbcShoeStoreRepository implements ShoeStoreRepository {
 
     @Override
     public ShoeStore get(Integer id) {
-        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM SHOE_STORE WHERE ID_STORE = ?")) {
+        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM SHOE_STORE WHERE SHOE_STORE_ID = ?")) {
             ShoeStore shoeStore = null;
 
             statement.setInt(1, id);
@@ -96,11 +96,11 @@ public class JdbcShoeStoreRepository implements ShoeStoreRepository {
             var resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 shoeStore = new cat.uvic.teknos.shoeshop.domain.jdbc.models.ShoeStore();
-                shoeStore.setId(resultSet.getInt("ID_STORE"));
+                shoeStore.setId(resultSet.getInt("SHOE_STORE_ID"));
                 shoeStore.setName(resultSet.getString("NAME"));
                 shoeStore.setOwner(resultSet.getString("OWNER"));
                 shoeStore.setLocation(resultSet.getString("LOCATION"));
-                shoeStore.setInventoryId(resultSet.getInt("ID_INVENTORY"));
+                shoeStore.setInventoryId(resultSet.getInt("INVENTORY_ID"));
             }
             return shoeStore;
         } catch (SQLException e) {
@@ -116,11 +116,11 @@ public class JdbcShoeStoreRepository implements ShoeStoreRepository {
             var resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 var shoeStore = new cat.uvic.teknos.shoeshop.domain.jdbc.models.ShoeStore();
-                shoeStore.setId(resultSet.getInt("ID_STORE"));
+                shoeStore.setId(resultSet.getInt("SHOE_STORE_ID"));
                 shoeStore.setName(resultSet.getString("NAME"));
                 shoeStore.setOwner(resultSet.getString("OWNER"));
                 shoeStore.setLocation(resultSet.getString("LOCATION"));
-                shoeStore.setInventoryId(resultSet.getInt("ID_INVENTORY"));
+                shoeStore.setInventoryId(resultSet.getInt("INVENTORY_ID"));
 
                 shoeStores.add(shoeStore);
             }

@@ -10,7 +10,7 @@ public class Address implements cat.uvic.teknos.shoeshop.models.Address {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID_ADDRESS")
+    @Column(name = "ADDRESS_ID")
     private int id;
 
     @Column(name = "LOCATION")

@@ -31,7 +31,7 @@ public class JdbcAddressRepository implements AddressRepository {
     private void insert(Address model) {
 
         try (PreparedStatement statement = connection.prepareStatement(
-                "INSERT INTO ADDRESS (ID_ADDRESS, LOCATION) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS)){
+                "INSERT INTO ADDRESS (ADDRESS_ID, LOCATION) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS)){
 
             statement.setInt(1,model.getId());
             statement.setString(2, model.getLocation());
@@ -49,7 +49,7 @@ public class JdbcAddressRepository implements AddressRepository {
     }
 
     private void update(Address model) {
-        try (PreparedStatement statement = connection.prepareStatement("UPDATE ADDRESS SET LOCATION= ? WHERE ID_ADDRESS=?", Statement.RETURN_GENERATED_KEYS)){
+        try (PreparedStatement statement = connection.prepareStatement("UPDATE ADDRESS SET LOCATION= ? WHERE ADDRESS_ID=?", Statement.RETURN_GENERATED_KEYS)){
 
             statement.setInt(2, model.getId());
             statement.setString(1, model.getLocation());
@@ -66,7 +66,7 @@ public class JdbcAddressRepository implements AddressRepository {
 
     @Override
     public void delete(Address model) {
-        try (PreparedStatement statement = connection.prepareStatement("DELETE FROM ADDRESS WHERE ID_ADDRESS = ?")) {
+        try (PreparedStatement statement = connection.prepareStatement("DELETE FROM ADDRESS WHERE ADDRESS_ID = ?")) {
             statement.setInt(1, model.getId());
             int rowsAffected = statement.executeUpdate();
             connection.commit();
@@ -80,7 +80,7 @@ public class JdbcAddressRepository implements AddressRepository {
 
     @Override
     public Address get(Integer id) {
-        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM ADDRESS WHERE ID_ADDRESS = ?")) {
+        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM ADDRESS WHERE ADDRESS_ID = ?")) {
             Address address1 = null;
 
             statement.setInt(1, id);
@@ -88,7 +88,7 @@ public class JdbcAddressRepository implements AddressRepository {
             var resultSet= statement.executeQuery();
             if (resultSet.next()) {
                 address1 = new cat.uvic.teknos.shoeshop.domain.jdbc.models.Address();
-                address1.setId(resultSet.getInt("ID_ADDRESS"));
+                address1.setId(resultSet.getInt("ADDRESS_ID"));
             }
             return address1;
         } catch (SQLException e) {
@@ -105,7 +105,7 @@ public class JdbcAddressRepository implements AddressRepository {
             var resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 var address1 = new cat.uvic.teknos.shoeshop.domain.jdbc.models.Address();
-                address1.setId(resultSet.getInt("ID_ADDRESS"));
+                address1.setId(resultSet.getInt("ADDRESS_ID"));
                 address1.setLocation(resultSet.getString("LOCATION"));
 
                 addresses.add(address1);

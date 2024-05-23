@@ -34,7 +34,7 @@ public class JdbcSupplierRepository implements SupplierRepository {
 
     private void insert(Supplier model) {
         try (PreparedStatement statement = connection.prepareStatement(
-                "INSERT INTO SUPPLIER (ID_SUPPLIER, NAME, PHONE) VALUES  (?, ?, ?)",
+                "INSERT INTO SUPPLIER (SUPPLIER_ID, NAME, PHONE) VALUES  (?, ?, ?)",
                 Statement.RETURN_GENERATED_KEYS)){
 
             statement.setInt(1, model.getId());
@@ -54,7 +54,7 @@ public class JdbcSupplierRepository implements SupplierRepository {
 
     private void update(Supplier model) {
         try (PreparedStatement statement = connection.prepareStatement(
-                "UPDATE SUPPLIER SET NAME = ?, PHONE=? WHERE ID_SUPPLIER=?",
+                "UPDATE SUPPLIER SET NAME = ?, PHONE=? WHERE SUPPLIER_ID=?",
                 Statement.RETURN_GENERATED_KEYS)){
 
             statement.setString(1, model.getName());
@@ -74,7 +74,7 @@ public class JdbcSupplierRepository implements SupplierRepository {
     @Override
     public void delete(Supplier model) {
         try (PreparedStatement statement = connection.prepareStatement(
-                "DELETE FROM SUPPLIER WHERE ID_SUPPLIER = ?")) {
+                "DELETE FROM SUPPLIER WHERE SUPPLIER_ID = ?")) {
 
             statement.setInt(1, model.getId());
 
@@ -91,7 +91,7 @@ public class JdbcSupplierRepository implements SupplierRepository {
     @Override
     public Supplier get(Integer id) {
         try (PreparedStatement statement = connection.prepareStatement(
-                "SELECT * FROM SUPPLIER WHERE ID_SUPPLIER = ?")) {
+                "SELECT * FROM SUPPLIER WHERE SUPPLIER_ID = ?")) {
             Supplier supplier1 = null;
 
             statement.setInt(1, id);
@@ -99,7 +99,7 @@ public class JdbcSupplierRepository implements SupplierRepository {
             var resultSet= statement.executeQuery();
             if (resultSet.next()) {
                 supplier1 = new cat.uvic.teknos.shoeshop.domain.jdbc.models.Supplier();
-                supplier1.setId(resultSet.getInt("ID_SUPPLIER"));
+                supplier1.setId(resultSet.getInt("SUPPLIER_ID"));
 
             }
             return supplier1;
@@ -117,7 +117,7 @@ public class JdbcSupplierRepository implements SupplierRepository {
             var resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 var supplier1 = new cat.uvic.teknos.shoeshop.domain.jdbc.models.Supplier();
-                supplier1.setId(resultSet.getInt("ID_SUPPLIER"));
+                supplier1.setId(resultSet.getInt("SUPPLIER_ID"));
                 supplier1.setName(resultSet.getString("NAME"));
                 supplier1.setPhone(resultSet.getString("PHONE"));
                 suppliers.add(supplier1);

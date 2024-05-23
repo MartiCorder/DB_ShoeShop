@@ -10,7 +10,7 @@ public class Model implements cat.uvic.teknos.shoeshop.models.Model {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID_MODEL")
+    @Column(name = "MODEL_ID")
     private int id;
 
     @Column(name = "NAME")

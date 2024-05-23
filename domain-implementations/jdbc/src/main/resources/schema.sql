@@ -74,6 +74,31 @@ CREATE TABLE SHOE (
                       FOREIGN KEY (ID_INVENTORY) REFERENCES INVENTORY(ID_INVENTORY)
 );
 
+
+CREATE TABLE SHOE_STORE_CLIENT (
+                                   SHOE_STORE_ID INT,
+                                   CLIENT_ID INT,
+                                   PRIMARY KEY (SHOE_STORE_ID, CLIENT_ID),
+                                   FOREIGN KEY (SHOE_STORE_ID) REFERENCES SHOE_STORE(ID_STORE),
+                                   FOREIGN KEY (CLIENT_ID) REFERENCES CLIENT(ID_CLIENT)
+);
+
+CREATE TABLE SHOE_STORE_INVENTORY (
+                                      SHOE_STORE_ID INT,
+                                      INVENTORY_ID INT,
+                                      PRIMARY KEY (SHOE_STORE_ID, INVENTORY_ID),
+                                      FOREIGN KEY (SHOE_STORE_ID) REFERENCES SHOE_STORE(ID_STORE),
+                                      FOREIGN KEY (INVENTORY_ID) REFERENCES INVENTORY(ID_INVENTORY)
+);
+
+CREATE TABLE SHOE_STORE_SUPPLIER (
+                                     SHOE_STORE_ID INT,
+                                     SUPPLIER_ID INT,
+                                     PRIMARY KEY (SHOE_STORE_ID, SUPPLIER_ID),
+                                     FOREIGN KEY (SHOE_STORE_ID) REFERENCES SHOE_STORE(ID_STORE),
+                                     FOREIGN KEY (SUPPLIER_ID) REFERENCES SUPPLIER(ID_SUPPLIER)
+);
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

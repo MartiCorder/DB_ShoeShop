@@ -35,7 +35,7 @@ public class JdbcClientRepository implements ClientRepository{
     }
 
     private void insert(Client model) {
-        try (PreparedStatement statement = connection.prepareStatement("INSERT INTO CLIENT (ID_CLIENT, DNI,  NAME, PHONE) VALUES  (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)){
+        try (PreparedStatement statement = connection.prepareStatement("INSERT INTO CLIENT (CLIENT_ID, DNI,  NAME, PHONE) VALUES  (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)){
 
             statement.setInt(1, model.getId());
             statement.setString(2, model.getDni());
@@ -54,7 +54,7 @@ public class JdbcClientRepository implements ClientRepository{
     }
 
     private void update(Client model) {
-        try (PreparedStatement statement = connection.prepareStatement("UPDATE CLIENT SET DNI=?, NAME=?, PHONE=? WHERE ID_CLIENT=?", Statement.RETURN_GENERATED_KEYS)){
+        try (PreparedStatement statement = connection.prepareStatement("UPDATE CLIENT SET DNI=?, NAME=?, PHONE=? WHERE CLIENT_ID=?", Statement.RETURN_GENERATED_KEYS)){
 
 
             statement.setString(1, model.getDni());
@@ -74,7 +74,7 @@ public class JdbcClientRepository implements ClientRepository{
 
     @Override
     public void delete(Client model) {
-        try (PreparedStatement statement = connection.prepareStatement("DELETE FROM CLIENT WHERE ID_CLIENT = ?")) {
+        try (PreparedStatement statement = connection.prepareStatement("DELETE FROM CLIENT WHERE CLIENT_ID = ?")) {
             statement.setInt(1, model.getId());
             int rowsAffected = statement.executeUpdate();
             connection.commit();
@@ -88,7 +88,7 @@ public class JdbcClientRepository implements ClientRepository{
 
     @Override
     public Client get(Integer id) {
-        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM CLIENT WHERE ID_CLIENT = ?")) {
+        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM CLIENT WHERE CLIENT_ID = ?")) {
             Client client1 = null;
 
             statement.setInt(1, id);
@@ -96,7 +96,7 @@ public class JdbcClientRepository implements ClientRepository{
             var resultSet= statement.executeQuery();
             if (resultSet.next()) {
                 client1 = new cat.uvic.teknos.shoeshop.domain.jdbc.models.Client();
-                client1.setId(resultSet.getInt("ID_CLIENT"));
+                client1.setId(resultSet.getInt("CLIENT_ID"));
 
             }
             return client1;
@@ -114,7 +114,7 @@ public class JdbcClientRepository implements ClientRepository{
             var resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 var client1 = new cat.uvic.teknos.shoeshop.domain.jdbc.models.Client();
-                client1.setId(resultSet.getInt("ID_CLIENT"));
+                client1.setId(resultSet.getInt("CLIENT_ID"));
                 client1.setDni(resultSet.getString("DNI"));
                 client1.setName(resultSet.getString("NAME"));
                 client1.setPhone(resultSet.getString("PHONE"));

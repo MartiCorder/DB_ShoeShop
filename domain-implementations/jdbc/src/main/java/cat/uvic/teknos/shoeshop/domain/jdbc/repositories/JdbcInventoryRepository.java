@@ -35,7 +35,7 @@ public class JdbcInventoryRepository implements InventoryRepository{
     }
 
     private void insert(Inventory model) {
-        try (PreparedStatement statement = connection.prepareStatement("INSERT INTO INVENTORY (ID_INVENTORY, CAPACITY) VALUES  (?, ?)", Statement.RETURN_GENERATED_KEYS)){
+        try (PreparedStatement statement = connection.prepareStatement("INSERT INTO INVENTORY (INVENTORY_ID, CAPACITY) VALUES  (?, ?)", Statement.RETURN_GENERATED_KEYS)){
 
             statement.setInt(1, model.getId());
             statement.setInt(2, model.getCapacity());
@@ -52,7 +52,7 @@ public class JdbcInventoryRepository implements InventoryRepository{
     }
 
     private void update(Inventory model) {
-        try (PreparedStatement statement = connection.prepareStatement("UPDATE INVENTORY SET CAPACITY = ? WHERE ID_INVENTORY=?", Statement.RETURN_GENERATED_KEYS)){
+        try (PreparedStatement statement = connection.prepareStatement("UPDATE INVENTORY SET CAPACITY = ? WHERE INVENTORY_ID=?", Statement.RETURN_GENERATED_KEYS)){
             statement.setInt(1, model.getCapacity());
             statement.setInt(2, model.getId());
 
@@ -68,7 +68,7 @@ public class JdbcInventoryRepository implements InventoryRepository{
 
     @Override
     public void delete(Inventory model) {
-        try (PreparedStatement statement = connection.prepareStatement("DELETE FROM INVENTORY WHERE ID_INVENTORY = ?")) {
+        try (PreparedStatement statement = connection.prepareStatement("DELETE FROM INVENTORY WHERE INVENTORY_ID = ?")) {
             statement.setInt(1, model.getId());
             int rowsAffected = statement.executeUpdate();
             connection.commit();
@@ -82,7 +82,7 @@ public class JdbcInventoryRepository implements InventoryRepository{
 
     @Override
     public Inventory get(Integer id) {
-        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM INVENTORY WHERE ID_INVENTORY = ?")) {
+        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM INVENTORY WHERE INVENTORY_ID = ?")) {
             Inventory inventory = null;
 
             statement.setInt(1, id);
@@ -90,7 +90,7 @@ public class JdbcInventoryRepository implements InventoryRepository{
             var resultSet= statement.executeQuery();
             if (resultSet.next()) {
                 inventory = new cat.uvic.teknos.shoeshop.domain.jdbc.models.Inventory();
-                inventory.setId(resultSet.getInt("ID_INVENTORY"));
+                inventory.setId(resultSet.getInt("INVENTORY_ID"));
 
             }
             return inventory;
@@ -108,7 +108,7 @@ public class JdbcInventoryRepository implements InventoryRepository{
             var resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 var inventory1 = new cat.uvic.teknos.shoeshop.domain.jdbc.models.Inventory();
-                inventory1.setId(resultSet.getInt("ID_INVENTORY"));
+                inventory1.setId(resultSet.getInt("INVENTORY_ID"));
 
                 inventory.add(inventory1);
             }

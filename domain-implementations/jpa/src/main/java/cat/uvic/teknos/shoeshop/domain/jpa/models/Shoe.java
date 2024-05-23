@@ -8,7 +8,7 @@ public class Shoe implements cat.uvic.teknos.shoeshop.models.Shoe {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID_SHOE")
+    @Column(name = "SHOE_ID")
     private int id;
 
     @Column(name = "PRICE")
@@ -21,11 +21,11 @@ public class Shoe implements cat.uvic.teknos.shoeshop.models.Shoe {
     private String size;
 
     @ManyToOne
-    @JoinColumn(name = "ID_MODEL")
+    @JoinColumn(name = "MODEL_ID")
     private Model model;
 
     @ManyToOne
-    @JoinColumn(name = "ID_INVENTORY")
+    @JoinColumn(name = "INVENTPRY_ID")
     private Inventory inventory;
 
     public Shoe() {
