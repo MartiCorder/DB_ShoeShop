@@ -57,7 +57,7 @@ class JdbcAddressRepositoryTest {
 
         Address address1 = new Address();
 
-        address1.setId(2);
+        address1.setId(1);
         address1.setLocation("Barcelona");
 
         var repository = new JdbcAddressRepository(connection);
@@ -71,7 +71,7 @@ class JdbcAddressRepositoryTest {
     void delete() throws SQLException {
 
         Address address1 = new Address();
-        address1.setId(2);
+        address1.setId(1);
 
         var repository = new JdbcAddressRepository(connection);
         repository.delete(address1);

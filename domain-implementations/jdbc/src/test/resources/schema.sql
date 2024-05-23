@@ -24,78 +24,77 @@ SET TIME_ZONE = "+00:00";
 /*!40101 SET NAMES UTF8MB4 */;
 
 CREATE TABLE INVENTORY (
-                           ID_INVENTORY INT AUTO_INCREMENT PRIMARY KEY,
+                           INVENTORY_ID INT AUTO_INCREMENT PRIMARY KEY,
                            CAPACITY INT
 );
 
 CREATE TABLE ADDRESS (
-                         ID_ADDRESS INT AUTO_INCREMENT PRIMARY KEY,
+                         ADDRESS_ID INT AUTO_INCREMENT PRIMARY KEY,
                          LOCATION VARCHAR(255)
 );
 
 CREATE TABLE MODEL (
-                       ID_MODEL INT AUTO_INCREMENT PRIMARY KEY,
+                       MODEL_ID INT AUTO_INCREMENT PRIMARY KEY,
                        NAME VARCHAR(255),
                        BRAND VARCHAR(255)
 );
 
 CREATE TABLE SHOE_STORE (
-                            ID_STORE INT AUTO_INCREMENT PRIMARY KEY,
+                            SHOE_STORE_ID INT AUTO_INCREMENT PRIMARY KEY,
                             NAME VARCHAR(255),
                             OWNER VARCHAR(255),
                             LOCATION VARCHAR(255),
-                            ID_INVENTORY INT,
-                            FOREIGN KEY (ID_INVENTORY) REFERENCES INVENTORY(ID_INVENTORY)
+                            INVENTORY_ID INT
 );
 
 CREATE TABLE SUPPLIER (
-                          ID_SUPPLIER INT AUTO_INCREMENT PRIMARY KEY,
+                          SUPPLIER_ID INT AUTO_INCREMENT PRIMARY KEY,
                           NAME VARCHAR(255),
                           PHONE VARCHAR(15)
 );
 
 CREATE TABLE CLIENT (
-                        ID_CLIENT INT AUTO_INCREMENT PRIMARY KEY,
+                        CLIENT_ID INT AUTO_INCREMENT PRIMARY KEY,
                         DNI VARCHAR(20),
                         NAME VARCHAR(255),
                         PHONE VARCHAR(15),
-                        ID_ADDRESS INT,
-                        FOREIGN KEY (ID_ADDRESS) REFERENCES ADDRESS(ID_ADDRESS)
+                        ADDRESS_ID INT,
+                        FOREIGN KEY (ADDRESS_ID) REFERENCES ADDRESS(ADDRESS_ID)
 );
 
 CREATE TABLE SHOE (
-                      ID_SHOE INT PRIMARY KEY,
-                      ID_MODEL INT,
-                      ID_INVENTORY INT,
+                      SHOE_ID INT PRIMARY KEY,
+                      MODEL_ID INT,
+                      INVENTORY_ID INT,
                       PRICE DECIMAL(10, 2),
                       COLOR VARCHAR(50),
                       SIZE VARCHAR(10),
-                      FOREIGN KEY (ID_MODEL) REFERENCES MODEL(ID_MODEL),
-                      FOREIGN KEY (ID_INVENTORY) REFERENCES INVENTORY(ID_INVENTORY)
+                      FOREIGN KEY (MODEL_ID) REFERENCES MODEL(MODEL_ID),
+                      FOREIGN KEY (INVENTORY_ID) REFERENCES INVENTORY(INVENTORY_ID)
 );
 
 CREATE TABLE SHOE_STORE_CLIENT (
                                    SHOE_STORE_ID INT,
                                    CLIENT_ID INT,
                                    PRIMARY KEY (SHOE_STORE_ID, CLIENT_ID),
-                                   FOREIGN KEY (SHOE_STORE_ID) REFERENCES SHOE_STORE(ID_STORE),
-                                   FOREIGN KEY (CLIENT_ID) REFERENCES CLIENT(ID_CLIENT)
+                                   FOREIGN KEY (SHOE_STORE_ID) REFERENCES SHOE_STORE(SHOE_STORE_ID),
+                                   FOREIGN KEY (CLIENT_ID) REFERENCES CLIENT(CLIENT_ID)
 );
 
 CREATE TABLE SHOE_STORE_INVENTORY (
                                       SHOE_STORE_ID INT,
                                       INVENTORY_ID INT,
                                       PRIMARY KEY (SHOE_STORE_ID, INVENTORY_ID),
-                                      FOREIGN KEY (SHOE_STORE_ID) REFERENCES SHOE_STORE(ID_STORE),
-                                      FOREIGN KEY (INVENTORY_ID) REFERENCES INVENTORY(ID_INVENTORY)
+                                      FOREIGN KEY (SHOE_STORE_ID) REFERENCES SHOE_STORE(SHOE_STORE_ID),
+                                      FOREIGN KEY (INVENTORY_ID) REFERENCES INVENTORY(INVENTORY_ID)
 );
 
 CREATE TABLE SHOE_STORE_SUPPLIER (
                                      SHOE_STORE_ID INT,
                                      SUPPLIER_ID INT,
                                      PRIMARY KEY (SHOE_STORE_ID, SUPPLIER_ID),
-                                     FOREIGN KEY (SHOE_STORE_ID) REFERENCES SHOE_STORE(ID_STORE),
-                                     FOREIGN KEY (SUPPLIER_ID) REFERENCES SUPPLIER(ID_SUPPLIER)
+                                     FOREIGN KEY (SHOE_STORE_ID) REFERENCES SHOE_STORE(SHOE_STORE_ID),
+                                     FOREIGN KEY (SUPPLIER_ID) REFERENCES SUPPLIER(SUPPLIER_ID)
 );
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
