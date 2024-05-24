@@ -10,7 +10,7 @@ import java.util.Properties;
 
 public class JdbcRepositoryFactory implements RepositoryFactory {
 
-    private Connection connection;
+    private final Connection connection;
     public JdbcRepositoryFactory(){
         try {
             var properties = new Properties();
@@ -24,24 +24,10 @@ public class JdbcRepositoryFactory implements RepositoryFactory {
             throw new RuntimeException(e);
         }
     }
-    @Override
-    public AddressRepository getAddressRepository() throws SQLException {
-        return new JdbcAddressRepository(connection);
-    }
 
     @Override
     public ClientRepository getClientRepository() throws SQLException {
         return new JdbcClientRepository(connection);
-    }
-
-    @Override
-    public InventoryRepository getInventoryRepository() throws SQLException {
-        return new JdbcInventoryRepository(connection);
-    }
-
-    @Override
-    public ModelRepository getModelRepository() throws SQLException {
-        return new JdbcModelRepository(connection);
     }
 
     @Override
@@ -52,11 +38,6 @@ public class JdbcRepositoryFactory implements RepositoryFactory {
     @Override
     public ShoeStoreRepository getShoeStoreRepository() throws SQLException {
         return new JdbcShoeStoreRepository(connection);
-    }
-
-    @Override
-    public SupplierRepository getSupplierRepository() throws SQLException {
-        return new JdbcSupplierRepository(connection);
     }
 
 }

@@ -20,8 +20,13 @@ public interface ShoeStore {
 
     void setLocation(String location);
 
-    int getInventoryId();
+    Set<Supplier> getSuppliers();
+    void setSuppliers(Set<Supplier> suppliers);
 
-    void setInventoryId(int id_inventory);
+    Set<Client> getClients();
+    void setClients(Set<Client> clients);
+
+    Set<Inventory> getInventories();
+    void setInventories(Set<Inventory> inventories);
 
 }

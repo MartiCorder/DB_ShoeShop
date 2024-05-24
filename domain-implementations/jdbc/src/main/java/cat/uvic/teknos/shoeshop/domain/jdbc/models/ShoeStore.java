@@ -1,6 +1,11 @@
 package cat.uvic.teknos.shoeshop.domain.jdbc.models;
 
+import cat.uvic.teknos.shoeshop.models.Client;
+import cat.uvic.teknos.shoeshop.models.Inventory;
+import cat.uvic.teknos.shoeshop.models.Supplier;
+
 import java.io.Serializable;
+import java.util.Set;
 
 public class ShoeStore implements cat.uvic.teknos.shoeshop.models.ShoeStore, Serializable {
 
@@ -11,7 +16,11 @@ public class ShoeStore implements cat.uvic.teknos.shoeshop.models.ShoeStore, Ser
 
     private String location;
 
-    private int inventoryId;
+    private Set<Inventory> inventories;
+
+    private Set<Supplier> suppliers;
+
+    private Set<Client> clients;
     @Override
 
 
@@ -59,14 +68,32 @@ public class ShoeStore implements cat.uvic.teknos.shoeshop.models.ShoeStore, Ser
     }
 
     @Override
-    public int getInventoryId() {
-        return inventoryId;
+    public Set<Supplier> getSuppliers() {
+        return suppliers;
     }
 
     @Override
-    public void setInventoryId(int id_inventory) {
+    public void setSuppliers(Set<Supplier> suppliers) {
+        this.suppliers=suppliers;
+    }
 
-        this.inventoryId=id_inventory;
+    @Override
+    public Set<Client> getClients() {
+        return clients;
+    }
 
+    @Override
+    public void setClients(Set<Client> clients) {
+        this.clients=clients;
+    }
+
+    @Override
+    public Set<Inventory> getInventories() {
+        return inventories;
+    }
+
+    @Override
+    public void setInventories(Set<Inventory> inventories) {
+        this.inventories=inventories;
     }
 }

@@ -43,8 +43,7 @@ CREATE TABLE SHOE_STORE (
                             SHOE_STORE_ID INT AUTO_INCREMENT PRIMARY KEY,
                             NAME VARCHAR(255),
                             OWNER VARCHAR(255),
-                            LOCATION VARCHAR(255),
-                            INVENTORY_ID INT
+                            LOCATION VARCHAR(255)
 );
 
 CREATE TABLE SUPPLIER (

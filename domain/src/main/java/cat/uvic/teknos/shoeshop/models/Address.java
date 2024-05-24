@@ -9,4 +9,5 @@ public interface Address {
     String getLocation();
     void setLocation(String location);
 
+
 }

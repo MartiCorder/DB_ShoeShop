@@ -14,5 +14,4 @@ public interface Model {
 
     void setBrand (String brand);
 
-
 }

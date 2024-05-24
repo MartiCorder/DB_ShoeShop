@@ -1,29 +1,40 @@
 USE Shoe_Shop;
+INSERT INTO INVENTORY (CAPACITY) VALUES (500);
+INSERT INTO INVENTORY (CAPACITY) VALUES (300);
+INSERT INTO INVENTORY (CAPACITY) VALUES (1000);
 
-INSERT INTO INVENTORY (INVENTORY_ID, CAPACITY) VALUES
-                                                   (1, 120),
-                                                   (2, 8);
-INSERT INTO ADDRESS (ADDRESS_ID, LOCATION) VALUES (1, 'Taradell');
+INSERT INTO ADDRESS (LOCATION) VALUES ('Carrer de la Marina, 1, Barcelona');
+INSERT INTO ADDRESS (LOCATION) VALUES ('Avinguda Diagonal, 200, Barcelona');
+INSERT INTO ADDRESS (LOCATION) VALUES ('Passeig de Gràcia, 50, Barcelona');
 
-INSERT INTO MODEL (MODEL_ID, NAME, BRAND) VALUES
-                                              (1, 'Air Force', 'Nike'),
-                                              (2, 'Cuck Converse', 'Converse'),
-                                              (3, 'Dunk', 'Nike');
+INSERT INTO MODEL (NAME, BRAND) VALUES ('Air Max', 'Nike');
+INSERT INTO MODEL (NAME, BRAND) VALUES ('Superstar', 'Adidas');
+INSERT INTO MODEL (NAME, BRAND) VALUES ('Classic', 'Reebok');
 
-INSERT INTO SHOE_STORE (SHOE_STORE_ID, NAME, OWNER, LOCATION) VALUES
-                                                                  (1, 'Footwear Corder', 'Martí Corder', 'Vic'),
-                                                                  (2, 'Footwear Corder', 'Martí Corder', 'Taradell');
+INSERT INTO SHOE_STORE (NAME, OWNER, LOCATION) VALUES ('Foot MDN', 'Martí Corder', 'Carrer de la Marina, 1, Barcelona');
+INSERT INTO SHOE_STORE (NAME, OWNER, LOCATION) VALUES ('Foot MDN', 'Martí Corder', 'Avinguda Diagonal, 200, Barcelona');
+INSERT INTO SHOE_STORE (NAME, OWNER, LOCATION) VALUES ('Foot MDN', 'Martí Corder', 'Passeig de Gràcia, 50, Barcelona');
 
-INSERT INTO SUPPLIER (SUPPLIER_ID, NAME, PHONE) VALUES
-                                                    (1, 'Nike Supplier', '933881025'),
-                                                    (2, 'Shoes Branding', '9876543210');
+INSERT INTO SUPPLIER (NAME, PHONE) VALUES ('Global Shoes', '123456789');
+INSERT INTO SUPPLIER (NAME, PHONE) VALUES ('Top Footwear', '987654321');
+INSERT INTO SUPPLIER (NAME, PHONE) VALUES ('Best Shoes Supply', '555444333');
 
-INSERT INTO CLIENT (CLIENT_ID, DNI, NAME, PHONE) VALUES
-                                                     (1, '48044773X', 'Roger Gost', '630089333'),
-                                                     (2, '45678933R', 'Oriol SAla', '683773443'),
-                                                     (3, '44287764P', 'Andreu Vilaregut', '678875432');
+INSERT INTO CLIENT (DNI, NAME, PHONE, ADDRESS_ID) VALUES ('12345678A', 'Alice Brown', '666555444', 1);
+INSERT INTO CLIENT (DNI, NAME, PHONE, ADDRESS_ID) VALUES ('87654321B', 'Bob White', '444555666', 2);
+INSERT INTO CLIENT (DNI, NAME, PHONE, ADDRESS_ID) VALUES ('11223344C', 'Charlie Black', '333222111', 3);
 
-INSERT INTO SHOE (SHOE_ID, MODEL_ID, INVENTORY_ID, PRICE, COLOR, SIZE) VALUES
-                                                                                 (1, 1, 1, 99.99, 'White', '42'),
-                                                                                 (2, 2, 2, 120, 'Black', '45');
+INSERT INTO SHOE (SHOE_ID, MODEL_ID, INVENTORY_ID, PRICE, COLOR, SIZE) VALUES (1, 1, 1, 120.00, 'Red', '42');
+INSERT INTO SHOE (SHOE_ID, MODEL_ID, INVENTORY_ID, PRICE, COLOR, SIZE) VALUES (2, 2, 2, 90.00, 'White', '40');
+INSERT INTO SHOE (SHOE_ID, MODEL_ID, INVENTORY_ID, PRICE, COLOR, SIZE) VALUES (3, 3, 3, 110.00, 'Black', '44');
 
+INSERT INTO SHOE_STORE_CLIENT (SHOE_STORE_ID, CLIENT_ID) VALUES (1, 1);
+INSERT INTO SHOE_STORE_CLIENT (SHOE_STORE_ID, CLIENT_ID) VALUES (2, 2);
+INSERT INTO SHOE_STORE_CLIENT (SHOE_STORE_ID, CLIENT_ID) VALUES (3, 3);
+
+INSERT INTO SHOE_STORE_INVENTORY (SHOE_STORE_ID, INVENTORY_ID) VALUES (1, 1);
+INSERT INTO SHOE_STORE_INVENTORY (SHOE_STORE_ID, INVENTORY_ID) VALUES (2, 2);
+INSERT INTO SHOE_STORE_INVENTORY (SHOE_STORE_ID, INVENTORY_ID) VALUES (3, 3);
+
+INSERT INTO SHOE_STORE_SUPPLIER (SHOE_STORE_ID, SUPPLIER_ID) VALUES (1, 1);
+INSERT INTO SHOE_STORE_SUPPLIER (SHOE_STORE_ID, SUPPLIER_ID) VALUES (2, 2);
+INSERT INTO SHOE_STORE_SUPPLIER (SHOE_STORE_ID, SUPPLIER_ID) VALUES (3, 3);

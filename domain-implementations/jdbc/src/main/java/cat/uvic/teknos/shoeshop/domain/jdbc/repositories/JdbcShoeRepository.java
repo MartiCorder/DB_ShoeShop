@@ -18,120 +18,26 @@ public class JdbcShoeRepository implements ShoeRepository {
 
     public JdbcShoeRepository(Connection connection) throws SQLException {
         this.connection = connection;
-        this.connection.setAutoCommit(false);
     }
 
     @Override
     public void save(Shoe model) {
-        if (model.getId() <= 0) {
-            insert(model);
-        } else {
-            update(model);
-        }
-    }
 
-    private void insert(Shoe model) {
-        try (PreparedStatement statement = connection.prepareStatement(
-                "INSERT INTO SHOE (SHOE_ID, MODEL_ID, INVENTORY_ID, PRICE, COLOR, SIZE) VALUES (?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
-
-            statement.setInt(1, model.getId());
-            statement.setInt(2, model.getModelId());
-            statement.setInt(3, model.getInventoryId());
-            statement.setDouble(4, model.getPrice());
-            statement.setString(5, model.getColor());
-            statement.setString(6, model.getSize());
-            statement.executeUpdate();
-            connection.commit();
-
-            var keys = statement.getGeneratedKeys();
-            if (keys.next()) {
-                model.setId(keys.getInt(1));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Error inserting Shoe", e);
-        }
-    }
-
-    private void update(Shoe model) {
-        try (PreparedStatement statement = connection.prepareStatement(
-                "UPDATE SHOE SET MODEL_ID = ?, INVENTORY_ID = ?, PRICE = ?, COLOR = ?, SIZE = ? WHERE SHOE_ID = ?")) {
-
-            statement.setInt(1, model.getModelId());
-            statement.setInt(2, model.getInventoryId());
-            statement.setDouble(3, model.getPrice());
-            statement.setString(4, model.getColor());
-            statement.setString(5, model.getSize());
-            statement.setInt(6, model.getId());
-
-            int rowsAffected = statement.executeUpdate();
-            connection.commit();
-            if (rowsAffected == 0) {
-                throw new SQLException("No items to update");
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Error updating Shoe", e);
-        }
     }
 
     @Override
     public void delete(Shoe model) {
-        try (PreparedStatement statement = connection.prepareStatement(
-                "DELETE FROM SHOE WHERE SHOE_ID = ?")) {
-            statement.setInt(1, model.getId());
 
-            int rowsAffected = statement.executeUpdate();
-            connection.commit();
-            if (rowsAffected == 0) {
-                System.out.println("No item to delete");
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Error deleting Shoe", e);
-        }
     }
 
     @Override
     public Shoe get(Integer id) {
-        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM SHOE WHERE SHOE_ID = ?")) {
-            Shoe shoe = null;
-            statement.setInt(1, id);
-
-            var resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                shoe = new cat.uvic.teknos.shoeshop.domain.jdbc.models.Shoe();
-                shoe.setId(resultSet.getInt("SHOE_ID"));
-                shoe.setModelId(resultSet.getInt("MODEL_ID"));
-                shoe.setInventoryId(resultSet.getInt("INVENTORY_ID"));
-                shoe.setPrice(resultSet.getDouble("PRICE"));
-                shoe.setColor(resultSet.getString("COLOR"));
-                shoe.setSize(resultSet.getString("SIZE"));
-            }
-            return shoe;
-        } catch (SQLException e) {
-            throw new RuntimeException("Error fetching Shoe", e);
-        }
+        return null;
     }
 
     @Override
     public Set<Shoe> getAll() {
-        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM SHOE")) {
-            var shoes = new HashSet<Shoe>();
-
-            var resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                var shoe = new cat.uvic.teknos.shoeshop.domain.jdbc.models.Shoe();
-                shoe.setId(resultSet.getInt("SHOE_ID"));
-                shoe.setModelId(resultSet.getInt("MODEL_ID"));
-                shoe.setInventoryId(resultSet.getInt("INVENTORY_ID"));
-                shoe.setPrice(resultSet.getDouble("PRICE"));
-                shoe.setColor(resultSet.getString("COLOR"));
-                shoe.setSize(resultSet.getString("SIZE"));
-
-                shoes.add(shoe);
-            }
-            return shoes;
-        } catch (SQLException e) {
-            throw new RuntimeException("Error fetching Shoes", e);
-        }
+        return null;
     }
 }
 

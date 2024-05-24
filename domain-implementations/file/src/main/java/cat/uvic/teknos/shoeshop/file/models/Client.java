@@ -1,5 +1,9 @@
 package cat.uvic.teknos.shoeshop.file.models;
+import cat.uvic.teknos.shoeshop.models.Address;
+import cat.uvic.teknos.shoeshop.models.ShoeStore;
+
 import java.io.Serializable;
+import java.util.Set;
 
 public class Client implements cat.uvic.teknos.shoeshop.models.Client, Serializable{
 
@@ -7,6 +11,8 @@ public class Client implements cat.uvic.teknos.shoeshop.models.Client, Serializa
     private String dni;
     private String name;
     private String phone;
+    private Address addresses;
+    private Set<ShoeStore> shoeStores;
     @Override
     public int getId() {
         return id;
@@ -49,5 +55,25 @@ public class Client implements cat.uvic.teknos.shoeshop.models.Client, Serializa
     @Override
     public void setPhone(String phone) {
         this.phone=phone;
+    }
+
+    @Override
+    public Address getAddresses() {
+        return addresses;
+    }
+
+    @Override
+    public void setAddresses(Address addresses) {
+        this.addresses=addresses;
+    }
+
+    @Override
+    public Set<ShoeStore> getShoeStores() {
+        return shoeStores;
+    }
+
+    @Override
+    public void setShoeStores(Set<ShoeStore> shoeStores) {
+        this.shoeStores=shoeStores;
     }
 }

@@ -1,11 +1,17 @@
 package cat.uvic.teknos.shoeshop.domain.jdbc.models;
+import cat.uvic.teknos.shoeshop.models.ShoeStore;
+
 import java.io.Serializable;
+import java.util.Set;
+
 public class Supplier implements cat.uvic.teknos.shoeshop.models.Supplier, Serializable{
 
     private int id;
     private String name;
 
     private String phone;
+
+    private Set<ShoeStore> shoeStores;
     @Override
     public int getId() {
         return id;
@@ -39,5 +45,15 @@ public class Supplier implements cat.uvic.teknos.shoeshop.models.Supplier, Seria
 
         this.phone=phone;
 
+    }
+
+    @Override
+    public Set<ShoeStore> getShoeStores() {
+        return shoeStores;
+    }
+
+    @Override
+    public void setShoeStores(Set<ShoeStore> shoeStores) {
+        this.shoeStores=shoeStores;
     }
 }

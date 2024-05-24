@@ -1,5 +1,7 @@
 package cat.uvic.teknos.shoeshop.models;
 
+import java.util.Set;
+
 public interface Client {
 
     int getId();
@@ -13,5 +15,11 @@ public interface Client {
 
     String getPhone();
     void setPhone(String phone);
+
+    Address getAddresses();
+    void setAddresses(Address addresses);
+
+    Set<ShoeStore> getShoeStores();
+    void setShoeStores(Set<ShoeStore> shoeStores);
 
 }

@@ -1,101 +1,64 @@
 package cat.uvic.teknos.shoeshop.file.repositories;
 
 import cat.uvic.teknos.shoeshop.models.Address;
-import cat.uvic.teknos.shoeshop.models.Shoe;
-import cat.uvic.teknos.shoeshop.models.ShoeStore;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
 
 public class AddressRepository implements cat.uvic.teknos.shoeshop.repositories.AddressRepository{
 
-    private static Map<Integer, Address> address = new HashMap<>();
+    private static Map<Integer, Address> addresses = new HashMap<>();
 
-    private String path;
+    private final String path;
 
-    public AddressRepository(String path){this.path=path;}
+    public AddressRepository(String path){
+        this.path=path;
+        load();
+    }
 
     void load(){
-
-        if (Files.exists(Path.of(path))) {
-
-            try(var inputStream = new ObjectInputStream(new FileInputStream(path))) {
-                address = (Map<Integer, Address>) inputStream.readObject();
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            } catch (ClassNotFoundException e){
+        var file = new File(path);
+        if(file.exists()) {
+            try (var inputStream = new ObjectInputStream(new FileInputStream(path))) {
+                addresses = (Map<Integer, Address>) inputStream.readObject();
+            } catch (ClassNotFoundException | IOException e) {
                 throw new RuntimeException(e);
             }
         }
-
-
     }
     void write(){
-
-
-        try(var outputStream = new ObjectOutputStream(new FileOutputStream(path))) {
-            outputStream.writeObject(address);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+        try (var outputStream = new ObjectOutputStream(new FileOutputStream(path))){
+            outputStream.writeObject(path);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
     @Override
     public void save(Address model) {
-        if (model.getId() <= 0){
-            var newId=address.keySet().stream().mapToInt(k -> k).max().orElse(0)+1;
-            address.put(newId, model);
+        if(model.getId() <= 0){
+            var newId = addresses.keySet().stream().mapToInt(k -> k).max().orElse(0) + 1;
+            model.setId(newId);
+            addresses.put(newId, model);
         }else{
-            address.put(model.getId(), model);
+            addresses.put(model.getId(), model);
         }
         write();
-
     }
-    public void update(){
-        var currentDirectory = System.getProperty("user.dir") + "/src/main/resources/";
-        try (var outputStream = new ObjectOutputStream(new FileOutputStream(path))) {
-            outputStream.writeObject(address);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
 
     @Override
     public void delete(Address model) {
 
-        //var currentDirectory = System.getProperty("user.dir") + "/src/main/resources/";
-
-        try (var outputStream = new ObjectOutputStream(new FileOutputStream(path))) {
-
-            for (Iterator<Map.Entry<Integer, Address>> iterator = address.entrySet().iterator(); iterator.hasNext(); ) {
-                Map.Entry<Integer, Address> entry = iterator.next();
-                if (entry.getValue().equals(model)) {
-                    iterator.remove();
-                    break;
-                }
-            }
-
-            outputStream.writeObject(address);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        addresses.remove(model.getId());
+        write();
     }
 
     @Override
     public Address get(Integer id) {
-        return address.get(id);
+        return addresses.get(id);
     }
 
     @Override
     public Set<Address> getAll() {
-        return Set.copyOf(address.values());
+        return Set.copyOf(addresses.values());
     }
 }

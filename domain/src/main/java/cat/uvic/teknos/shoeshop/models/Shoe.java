@@ -1,5 +1,7 @@
 package cat.uvic.teknos.shoeshop.models;
 
+import java.util.Set;
+
 public interface Shoe {
 
     int getId();
@@ -7,13 +9,6 @@ public interface Shoe {
     void setId(int id_shoe);
 
 
-    int getModelId();
-
-    void setModelId(int id_model);
-
-    int getInventoryId();
-
-    void setInventoryId(int id_inventory);
     double getPrice();
 
     void setPrice(double price);
@@ -25,6 +20,12 @@ public interface Shoe {
     String getSize();
 
     void setSize(String size);
+
+    Set<Inventory> getInventories();
+    void setInventories(Set<Inventory> inventories);
+
+    Model getModels();
+    void setModels(Model models);
 
 
 }

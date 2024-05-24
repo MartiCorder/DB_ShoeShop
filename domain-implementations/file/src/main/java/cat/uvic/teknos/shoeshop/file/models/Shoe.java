@@ -1,20 +1,25 @@
 package cat.uvic.teknos.shoeshop.file.models;
 
+import cat.uvic.teknos.shoeshop.models.Inventory;
+import cat.uvic.teknos.shoeshop.models.Model;
+
 import java.io.Serializable;
+import java.util.Set;
 
 public class Shoe implements cat.uvic.teknos.shoeshop.models.Shoe, Serializable {
 
     private int id;
 
-    private int modelId;
-
-    private  int inventoryId;
 
     private double price;
 
     private String color;
 
     private String size;
+
+    private Model models;
+
+    private Set<Inventory> inventories;
     @Override
     public int getId() {
         return id;
@@ -27,29 +32,6 @@ public class Shoe implements cat.uvic.teknos.shoeshop.models.Shoe, Serializable 
 
     }
 
-
-    @Override
-    public int getModelId() {
-        return modelId;
-    }
-
-    @Override
-    public void setModelId(int id_model) {
-
-        this.modelId=id_model;
-    }
-
-    @Override
-    public int getInventoryId() {
-        return inventoryId;
-    }
-
-    @Override
-    public void setInventoryId(int id_inventory) {
-
-        this.inventoryId=id_inventory;
-
-    }
 
     @Override
     public double getPrice() {
@@ -83,5 +65,25 @@ public class Shoe implements cat.uvic.teknos.shoeshop.models.Shoe, Serializable 
 
         this.size=size;
 
+    }
+
+    @Override
+    public Set<Inventory> getInventories() {
+        return inventories;
+    }
+
+    @Override
+    public void setInventories(Set<Inventory> inventories) {
+        this.inventories=inventories;
+    }
+
+    @Override
+    public Model getModels() {
+        return models;
+    }
+
+    @Override
+    public void setModels(Model models) {
+        this.models=models;
     }
 }
