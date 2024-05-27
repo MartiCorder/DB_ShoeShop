@@ -19,7 +19,7 @@ public interface Client {
     Address getAddresses();
     void setAddresses(Address addresses);
 
-    Set<ShoeStore> getShoeStores();
-    void setShoeStores(Set<ShoeStore> shoeStores);
+    ShoeStore getShoeStores();
+    void setShoeStores(ShoeStore shoeStores);
 
 }

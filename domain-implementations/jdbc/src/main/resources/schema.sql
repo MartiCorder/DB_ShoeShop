@@ -23,6 +23,8 @@ SET TIME_ZONE = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES UTF8MB4 */;
 
+
+
 CREATE TABLE INVENTORY (
                            INVENTORY_ID INT AUTO_INCREMENT PRIMARY KEY,
                            CAPACITY INT
@@ -44,6 +46,7 @@ CREATE TABLE SHOE_STORE (
                             NAME VARCHAR(255),
                             OWNER VARCHAR(255),
                             LOCATION VARCHAR(255)
+
 );
 
 CREATE TABLE SUPPLIER (
@@ -58,11 +61,13 @@ CREATE TABLE CLIENT (
                         NAME VARCHAR(255),
                         PHONE VARCHAR(15),
                         ADDRESS_ID INT,
-                        FOREIGN KEY (ADDRESS_ID) REFERENCES ADDRESS(ADDRESS_ID)
+                        SHOE_STORE_ID INT,
+                        FOREIGN KEY (ADDRESS_ID) REFERENCES ADDRESS(ADDRESS_ID),
+                        FOREIGN KEY (SHOE_STORE_ID) REFERENCES SHOE_STORE(SHOE_STORE_ID)
 );
 
 CREATE TABLE SHOE (
-                      SHOE_ID INT PRIMARY KEY,
+                      SHOE_ID INT AUTO_INCREMENT PRIMARY KEY,
                       MODEL_ID INT,
                       INVENTORY_ID INT,
                       PRICE DECIMAL(10, 2),
@@ -70,14 +75,6 @@ CREATE TABLE SHOE (
                       SIZE VARCHAR(10),
                       FOREIGN KEY (MODEL_ID) REFERENCES MODEL(MODEL_ID),
                       FOREIGN KEY (INVENTORY_ID) REFERENCES INVENTORY(INVENTORY_ID)
-);
-
-CREATE TABLE SHOE_STORE_CLIENT (
-                                   SHOE_STORE_ID INT,
-                                   CLIENT_ID INT,
-                                   PRIMARY KEY (SHOE_STORE_ID, CLIENT_ID),
-                                   FOREIGN KEY (SHOE_STORE_ID) REFERENCES SHOE_STORE(SHOE_STORE_ID),
-                                   FOREIGN KEY (CLIENT_ID) REFERENCES CLIENT(CLIENT_ID)
 );
 
 CREATE TABLE SHOE_STORE_INVENTORY (

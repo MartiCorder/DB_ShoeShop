@@ -9,6 +9,7 @@ import com.github.freva.asciitable.Column;
 
 import java.io.BufferedReader;
 import java.io.PrintStream;
+import java.sql.SQLException;
 import java.util.Arrays;
 
 import static cat.uvic.teknos.shoeshop.backoffice.IOUtils.*;
@@ -27,7 +28,7 @@ public class InventoryManager {
         this.modelFactory = modelFactory;
     }
 
-    public void start() {
+    public void start() throws SQLException {
         out.println("\n*** Inventory Management ***\n");
 
         var command = "";
@@ -47,7 +48,7 @@ public class InventoryManager {
         out.println("\n*** Exiting Inventory Management ***\n");
     }
 
-    private void getAll() {
+    private void getAll() throws SQLException {
         out.println("\n*** List of Inventory ***\n");
 
         var inventories = inventoryRepository.getAll();
@@ -58,7 +59,7 @@ public class InventoryManager {
         )));
     }
 
-    private void delete() {
+    private void delete() throws SQLException {
         out.println("\n*** Delete Inventory ***\n");
 
         var inventory = modelFactory.createInventory();
@@ -94,7 +95,7 @@ public class InventoryManager {
         }
     }
 
-    private void insert() {
+    private void insert() throws SQLException {
         out.println("\n*** Insert Inventory ***\n");
 
         var inventory = modelFactory.createInventory();

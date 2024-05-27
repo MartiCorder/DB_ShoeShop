@@ -12,7 +12,7 @@ public class Client implements cat.uvic.teknos.shoeshop.models.Client, Serializa
     private String name;
     private String phone;
     private Address addresses;
-    private Set<ShoeStore> shoeStores;
+    private ShoeStore shoeStores;
     @Override
     public int getId() {
         return id;
@@ -68,12 +68,12 @@ public class Client implements cat.uvic.teknos.shoeshop.models.Client, Serializa
     }
 
     @Override
-    public Set<ShoeStore> getShoeStores() {
+    public ShoeStore getShoeStores() {
         return shoeStores;
     }
 
     @Override
-    public void setShoeStores(Set<ShoeStore> shoeStores) {
+    public void setShoeStores(ShoeStore shoeStores) {
         this.shoeStores=shoeStores;
     }
 }
