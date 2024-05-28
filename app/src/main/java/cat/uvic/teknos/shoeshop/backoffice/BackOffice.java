@@ -30,13 +30,9 @@ public class BackOffice {
             command = readLine(in);
 
             switch (command) {
-                case "1" -> managerAddress();
-                case "2" -> managerClient();
-                case "3" -> managerInventory();
-                case "4" -> managerModel();
-                case "5" -> managerShoe();
-                case "6" -> managerShoeStore();
-                case "7" -> managerSupplier();
+                case "1" -> managerClient();
+                case "2" -> managerShoe();
+                case "3" -> managerShoeStore();
             }
 
         } while (!command.equals("exit"));
@@ -44,21 +40,10 @@ public class BackOffice {
         out.println("\n*** Program Finished ***\n");
     }
 
-    private void managerAddress() throws SQLException {
-        new AddressManager(in, out, repositoryFactory.getAddressRepository(), modelFactory).start();
-    }
-
     private void managerClient() throws SQLException {
         new ClientManager(in, out, repositoryFactory.getClientRepository(), modelFactory).start();
     }
 
-    private void managerInventory() throws SQLException {
-        new InventoryManager(in, out, repositoryFactory.getInventoryRepository(), modelFactory).start();
-    }
-
-    private void managerModel() throws SQLException {
-        new ModelManager(in, out, repositoryFactory.getModelRepository(), modelFactory).start();
-    }
 
     private void managerShoe() throws SQLException {
         new ShoeManager(in, out, repositoryFactory.getShoeRepository(), modelFactory).start();
@@ -68,25 +53,18 @@ public class BackOffice {
         new ShoeStoreManager(in, out, repositoryFactory.getShoeStoreRepository(), modelFactory).start();
     }
 
-    private void managerSupplier() throws SQLException {
-        new SupplierManager(in, out, repositoryFactory.getSupplierRepository(), modelFactory).start();
-    }
 
     private void showWelcomeMessage() {
         out.println("\n*** Welcome to the ShoeShop Back Office ***\n");
         out.println("Select a menu option:");
-        out.println();  // Afegeix un espai per separació
+        out.println();
     }
 
     private void showMainMenu() {
         out.println("\n*** Main Menu ***\n");
-        out.println("1. Address");
-        out.println("2. Client");
-        out.println("3. Inventory");
-        out.println("4. Model");
-        out.println("5. Shoe");
-        out.println("6. ShoeStore");
-        out.println("7. Supplier");
+        out.println("1. Manage Client");
+        out.println("2. Manage Shoe");
+        out.println("3. Manage Shoe Store");
         out.println("\nType 'exit' to quit.");
     }
 }

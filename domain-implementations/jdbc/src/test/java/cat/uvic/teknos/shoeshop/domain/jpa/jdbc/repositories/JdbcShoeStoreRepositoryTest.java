@@ -1,6 +1,9 @@
 package cat.uvic.teknos.shoeshop.domain.jpa.jdbc.repositories;
 
+import cat.uvic.teknos.shoeshop.domain.jdbc.models.Model;
+import cat.uvic.teknos.shoeshop.domain.jdbc.models.Shoe;
 import cat.uvic.teknos.shoeshop.domain.jdbc.repositories.JdbcClientRepository;
+import cat.uvic.teknos.shoeshop.domain.jdbc.repositories.JdbcShoeRepository;
 import cat.uvic.teknos.shoeshop.domain.jdbc.repositories.JdbcShoeStoreRepository;
 import cat.uvic.teknos.shoeshop.models.Inventory;
 import cat.uvic.teknos.shoeshop.models.ShoeStore;
@@ -33,17 +36,14 @@ class JdbcShoeStoreRepositoryTest {
     public void shouldInsert() throws SQLException {
 
         ShoeStore shoeStore = new cat.uvic.teknos.shoeshop.domain.jdbc.models.ShoeStore();
-        shoeStore.setId(1);
         shoeStore.setName("Test Store");
         shoeStore.setOwner("Test Owner");
         shoeStore.setLocation("Test Location");
 
         Inventory inventory = new cat.uvic.teknos.shoeshop.domain.jdbc.models.Inventory();
-        inventory.setId(1);
         inventory.setCapacity(100);
 
         Supplier supplier = new cat.uvic.teknos.shoeshop.domain.jdbc.models.Supplier();
-        supplier.setId(1);
         supplier.setName("Test Supplier");
         supplier.setPhone("123456789");
 
@@ -60,22 +60,55 @@ class JdbcShoeStoreRepositoryTest {
         repository.save(shoeStore);
 
     }
-
     @Test
-    public void testDeleteShoeStore() throws SQLException {
-
+    public void shouldUpdateShoe() throws SQLException {
         ShoeStore shoeStore = new cat.uvic.teknos.shoeshop.domain.jdbc.models.ShoeStore();
-        shoeStore.setId(1);
+        shoeStore.setId(3);
+        shoeStore.setName("Test Store");
+        shoeStore.setOwner("Test Owner");
+        shoeStore.setLocation("Test Location");
 
+        Inventory inventory = new cat.uvic.teknos.shoeshop.domain.jdbc.models.Inventory();
+        inventory.setId(3);
+        inventory.setCapacity(100);
+
+        Supplier supplier = new cat.uvic.teknos.shoeshop.domain.jdbc.models.Supplier();
+        supplier.setId(3);
+        supplier.setName("Test Supplier");
+        supplier.setPhone("123456789");
+
+        Set<Inventory> inventories = new HashSet<>();
+        inventories.add(inventory);
+        shoeStore.setInventories(inventories);
+
+        Set<Supplier> suppliers = new HashSet<>();
+        suppliers.add(supplier);
+        shoeStore.setSuppliers(suppliers);
 
         var repository = new JdbcShoeStoreRepository(connection);
 
+        repository.save(shoeStore);
+    }
+
+    @Test
+    public void testDeleteShoeStore() throws SQLException {
+        ShoeStore shoeStore = new cat.uvic.teknos.shoeshop.domain.jdbc.models.ShoeStore();
+        shoeStore.setId(1);
+
+        var repository = new JdbcShoeStoreRepository(connection);
         repository.delete(shoeStore);
 
+        ShoeStore deletedShoeStore = repository.get(1);
+        assertTrue(deletedShoeStore == null, "The shoe store should be deleted.");
     }
 
     @Test
     public void testGetAllShoeStores() throws SQLException {
+
+        var repository = new JdbcShoeStoreRepository(connection);
+
+        Set<ShoeStore> shoeStores = repository.getAll();
+
 
     }
 }

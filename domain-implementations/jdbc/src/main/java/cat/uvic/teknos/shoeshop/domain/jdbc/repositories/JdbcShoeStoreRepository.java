@@ -160,6 +160,24 @@ public class JdbcShoeStoreRepository implements ShoeStoreRepository {
         try {
             connection.setAutoCommit(false);
 
+            String deleteClient = "DELETE FROM CLIENT WHERE SHOE_STORE_ID = ?";
+            try (PreparedStatement stmt = connection.prepareStatement(deleteClient)) {
+                stmt.setInt(1, shoeStore.getId());
+                stmt.executeUpdate();
+            }
+
+            String deleteShoeStoreInventory = "DELETE FROM SHOE_STORE_INVENTORY WHERE SHOE_STORE_ID = ?";
+            try (PreparedStatement stmt = connection.prepareStatement(deleteShoeStoreInventory)) {
+                stmt.setInt(1, shoeStore.getId());
+                stmt.executeUpdate();
+            }
+
+            String deleteShoeStoreSupplier = "DELETE FROM SHOE_STORE_SUPPLIER WHERE SHOE_STORE_ID = ?";
+            try (PreparedStatement stmt = connection.prepareStatement(deleteShoeStoreSupplier)) {
+                stmt.setInt(1, shoeStore.getId());
+                stmt.executeUpdate();
+            }
+
             String deleteShoeStore = "DELETE FROM SHOE_STORE WHERE SHOE_STORE_ID = ?";
             try (PreparedStatement stmt = connection.prepareStatement(deleteShoeStore)) {
                 stmt.setInt(1, shoeStore.getId());
@@ -182,6 +200,7 @@ public class JdbcShoeStoreRepository implements ShoeStoreRepository {
             }
         }
     }
+
 
     @Override
     public ShoeStore get(Integer id) {

@@ -1,7 +1,6 @@
 package cat.uvic.teknos.shoeshop.domain.jpa.models;
 
 import jakarta.persistence.*;
-import java.util.Set;
 
 @Entity
 @Table(name = "CLIENT")
@@ -25,22 +24,17 @@ public class Client implements cat.uvic.teknos.shoeshop.models.Client {
     @JoinColumn(name = "ADDRESS_ID")
     private Address address;
 
-    @ManyToMany
-    @JoinTable(
-            name = "CLIENT_SHOE_STORE",
-            joinColumns = @JoinColumn(name = "CLIENT_ID"),
-            inverseJoinColumns = @JoinColumn(name = "SHOE_STORE_ID")
-    )
-    private Set<ShoeStore> shoeStores;
-
-    public Client() {
-    }
+    @ManyToOne
+    @JoinColumn(name = "SHOE_STORE_ID")
+    private ShoeStore shoeStore;
 
     public Client(String dni, String name, String phone) {
         this.dni = dni;
         this.name = name;
         this.phone = phone;
     }
+
+    public Client() {}
 
     @Override
     public int getId() {
@@ -82,11 +76,23 @@ public class Client implements cat.uvic.teknos.shoeshop.models.Client {
         this.phone = phone;
     }
 
-    public Set<ShoeStore> getShoeStores() {
-        return shoeStores;
+    @Override
+    public cat.uvic.teknos.shoeshop.models.Address getAddresses() {
+        return address;
     }
 
-    public void setShoeStores(Set<ShoeStore> shoeStores) {
-        this.shoeStores = shoeStores;
+    @Override
+    public void setAddresses(cat.uvic.teknos.shoeshop.models.Address address) {
+        this.address = (Address) address;
+    }
+
+    @Override
+    public cat.uvic.teknos.shoeshop.models.ShoeStore getShoeStores() {
+        return shoeStore;
+    }
+
+    @Override
+    public void setShoeStores(cat.uvic.teknos.shoeshop.models.ShoeStore shoeStore) {
+        this.shoeStore = (ShoeStore) shoeStore;
     }
 }

@@ -146,14 +146,22 @@ public class JdbcClientRepository implements ClientRepository {
         try {
             connection.setAutoCommit(false);
 
+            String deleteClientShoeStore = "DELETE FROM CLIENT WHERE CLIENT_ID = ?";
+            try (PreparedStatement clientShoeStoreStmt = connection.prepareStatement(deleteClientShoeStore)) {
+                clientShoeStoreStmt.setInt(1, model.getId());
+                clientShoeStoreStmt.executeUpdate();
+            }
+
             try (PreparedStatement clientStatement = connection.prepareStatement(DELETE_CLIENT)) {
                 clientStatement.setInt(1, model.getId());
                 clientStatement.executeUpdate();
             }
 
-            try (PreparedStatement addressStatement = connection.prepareStatement(DELETE_ADDRESS)) {
-                addressStatement.setInt(1, model.getAddresses().getId());
-                addressStatement.executeUpdate();
+            if (model.getAddresses() != null) {
+                try (PreparedStatement addressStatement = connection.prepareStatement(DELETE_ADDRESS)) {
+                    addressStatement.setInt(1, model.getAddresses().getId());
+                    addressStatement.executeUpdate();
+                }
             }
 
             connection.commit();
@@ -172,6 +180,8 @@ public class JdbcClientRepository implements ClientRepository {
             }
         }
     }
+
+
 
     private void insertShoeStore(ShoeStore model) throws SQLException {
         try (PreparedStatement shoeStoreStatement = connection.prepareStatement(INSERT_SHOE_STORE)) {

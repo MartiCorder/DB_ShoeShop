@@ -1,17 +1,16 @@
 package cat.uvic.teknos.shoeshop.backoffice;
 
-import cat.uvic.teknos.shoeshop.models.Shoe;
 import cat.uvic.teknos.shoeshop.models.ModelFactory;
 import cat.uvic.teknos.shoeshop.repositories.ShoeRepository;
-
 import com.github.freva.asciitable.AsciiTable;
 import com.github.freva.asciitable.Column;
 
 import java.io.BufferedReader;
 import java.io.PrintStream;
+import java.sql.SQLException;
 import java.util.Arrays;
 
-import static cat.uvic.teknos.shoeshop.backoffice.IOUtils.*;
+import static cat.uvic.teknos.shoeshop.backoffice.IOUtils.readLine;
 
 public class ShoeManager {
 
@@ -47,7 +46,7 @@ public class ShoeManager {
         out.println("\n*** Exiting Shoe Management ***\n");
     }
 
-    private void getAll() {
+    private void getAll() throws SQLException {
         out.println("\n*** List of Shoes ***\n");
 
         var shoes = shoeRepository.getAll();

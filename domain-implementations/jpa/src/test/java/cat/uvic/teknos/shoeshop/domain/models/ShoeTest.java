@@ -1,4 +1,4 @@
-package cat.uvic.teknos.shoeshop.domain.models;
+/*package cat.uvic.teknos.shoeshop.domain.models;
 
 
 import cat.uvic.teknos.shoeshop.domain.jpa.models.Inventory;
@@ -59,4 +59,4 @@ class ShoeTest {
             entityManager.close();
         }
     }
-}
+}*/

@@ -1,8 +1,7 @@
 package cat.uvic.teknos.shoeshop.domain.jpa.models;
 
 import jakarta.persistence.*;
-
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "ADDRESS")
@@ -17,13 +16,9 @@ public class Address implements cat.uvic.teknos.shoeshop.models.Address {
     private String location;
 
     @OneToMany(mappedBy = "address")
-    private List<Client> clients;
+    private Set<Client> clients;
 
     public Address() {
-    }
-
-    public Address(String location) {
-        this.location = location;
     }
 
     @Override
@@ -45,4 +40,5 @@ public class Address implements cat.uvic.teknos.shoeshop.models.Address {
     public void setLocation(String location) {
         this.location = location;
     }
+
 }

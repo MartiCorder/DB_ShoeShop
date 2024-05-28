@@ -1,8 +1,9 @@
 package cat.uvic.teknos.shoeshop.domain.jpa.models;
 
 import jakarta.persistence.*;
-import java.util.List;
 import java.util.Set;
+import  cat.uvic.teknos.shoeshop.models.Shoe;
+import  cat.uvic.teknos.shoeshop.models.ShoeStore;
 
 @Entity
 @Table(name = "INVENTORY")
@@ -17,7 +18,7 @@ public class Inventory implements cat.uvic.teknos.shoeshop.models.Inventory {
     private int capacity;
 
     @OneToMany(mappedBy = "inventory")
-    private List<Shoe> shoes;
+    private Set<Shoe> shoes;
 
     @ManyToMany(mappedBy = "inventories")
     private Set<ShoeStore> shoeStores;
@@ -49,11 +50,24 @@ public class Inventory implements cat.uvic.teknos.shoeshop.models.Inventory {
         this.capacity = capacity;
     }
 
-    public Set<ShoeStore> getShoeStores() {
+    @Override
+    public Set<cat.uvic.teknos.shoeshop.models.ShoeStore> getShoeStores() {
         return shoeStores;
     }
 
-    public void setShoeStores(Set<ShoeStore> shoeStores) {
-        this.shoeStores = shoeStores;
+    @Override
+    public void setShoeStores(Set<cat.uvic.teknos.shoeshop.models.ShoeStore> shoeStores) {
+        this.shoeStores=shoeStores;
     }
+
+    @Override
+    public Set<cat.uvic.teknos.shoeshop.models.Shoe> getShoes() {
+        return shoes;
+    }
+
+    @Override
+    public void setShoes(Set<cat.uvic.teknos.shoeshop.models.Shoe> shoes) {
+        this.shoes=shoes;
+    }
+
 }

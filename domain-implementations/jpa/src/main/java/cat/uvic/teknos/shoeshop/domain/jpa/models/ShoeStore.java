@@ -3,7 +3,9 @@ package cat.uvic.teknos.shoeshop.domain.jpa.models;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
-
+import cat.uvic.teknos.shoeshop.models.Supplier;
+import cat.uvic.teknos.shoeshop.models.Client;
+import cat.uvic.teknos.shoeshop.models.Inventory;
 @Entity
 @Table(name = "SHOE_STORE")
 public class ShoeStore implements cat.uvic.teknos.shoeshop.models.ShoeStore, Serializable {
@@ -22,6 +24,9 @@ public class ShoeStore implements cat.uvic.teknos.shoeshop.models.ShoeStore, Ser
     @Column(name = "LOCATION")
     private String location;
 
+    @OneToMany(mappedBy = "shoeStores")
+    private Set<Client> clients;
+
     @ManyToMany
     @JoinTable(
             name = "SHOE_STORE_SUPPLIER",
@@ -30,12 +35,6 @@ public class ShoeStore implements cat.uvic.teknos.shoeshop.models.ShoeStore, Ser
     )
     private Set<Supplier> suppliers;
 
-    @Column(name = "INVENTORY_ID")
-    private int inventoryId;
-
-    @ManyToMany(mappedBy = "shoeStores")
-    private Set<Client> clients;
-
     @ManyToMany
     @JoinTable(
             name = "SHOE_STORE_INVENTORY",
@@ -43,6 +42,7 @@ public class ShoeStore implements cat.uvic.teknos.shoeshop.models.ShoeStore, Ser
             inverseJoinColumns = @JoinColumn(name = "INVENTORY_ID")
     )
     private Set<Inventory> inventories;
+
 
     @Override
     public int getId() {
@@ -84,37 +84,33 @@ public class ShoeStore implements cat.uvic.teknos.shoeshop.models.ShoeStore, Ser
         this.location = location;
     }
 
-    @Override
-    public int getInventoryId() {
-        return inventoryId;
-    }
-
-    @Override
-    public void setInventoryId(int inventoryId) {
-        this.inventoryId = inventoryId;
-    }
 
     public Set<Supplier> getSuppliers() {
         return suppliers;
     }
 
-    public void setSuppliers(Set<Supplier> suppliers) {
-        this.suppliers = suppliers;
+    @Override
+    public void setSuppliers(Set<cat.uvic.teknos.shoeshop.models.Supplier> suppliers) {
+        this.suppliers=suppliers;
     }
 
     public Set<Client> getClients() {
         return clients;
     }
 
-    public void setClients(Set<Client> clients) {
-        this.clients = clients;
+    @Override
+    public void setClients(Set<cat.uvic.teknos.shoeshop.models.Client> clients) {
+        this.clients=clients;
     }
+
 
     public Set<Inventory> getInventories() {
         return inventories;
     }
 
-    public void setInventories(Set<Inventory> inventories) {
-        this.inventories = inventories;
+    @Override
+    public void setInventories(Set<cat.uvic.teknos.shoeshop.models.Inventory> inventories) {
+        this.inventories=inventories;
     }
+
 }

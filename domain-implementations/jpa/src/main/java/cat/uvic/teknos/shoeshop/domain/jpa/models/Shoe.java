@@ -2,6 +2,8 @@ package cat.uvic.teknos.shoeshop.domain.jpa.models;
 
 import jakarta.persistence.*;
 
+import java.util.Set;
+
 @Entity
 @Table(name = "SHOE")
 public class Shoe implements cat.uvic.teknos.shoeshop.models.Shoe {
@@ -25,18 +27,10 @@ public class Shoe implements cat.uvic.teknos.shoeshop.models.Shoe {
     private Model model;
 
     @ManyToOne
-    @JoinColumn(name = "INVENTPRY_ID")
+    @JoinColumn(name = "INVENTORY_ID")
     private Inventory inventory;
 
     public Shoe() {
-    }
-
-    public Shoe(Model model, Inventory inventory, double price, String color, String size) {
-        this.model = model;
-        this.inventory = inventory;
-        this.price = price;
-        this.color = color;
-        this.size = size;
     }
 
     @Override
@@ -47,32 +41,6 @@ public class Shoe implements cat.uvic.teknos.shoeshop.models.Shoe {
     @Override
     public void setId(int id) {
         this.id = id;
-    }
-
-    @Override
-    public int getModelId() {
-        return model != null ? model.getId() : 0;
-    }
-
-    @Override
-    public void setModelId(int modelId) {
-        if (this.model == null) {
-            this.model = new Model();
-        }
-        this.model.setId(modelId);
-    }
-
-    @Override
-    public int getInventoryId() {
-        return inventory != null ? inventory.getId() : 0;
-    }
-
-    @Override
-    public void setInventoryId(int inventoryId) {
-        if (this.inventory == null) {
-            this.inventory = new Inventory();
-        }
-        this.inventory.setId(inventoryId);
     }
 
     @Override
@@ -103,5 +71,25 @@ public class Shoe implements cat.uvic.teknos.shoeshop.models.Shoe {
     @Override
     public void setSize(String size) {
         this.size = size;
+    }
+
+    @Override
+    public Set<cat.uvic.teknos.shoeshop.models.Inventory> getInventories() {
+        return (Set<cat.uvic.teknos.shoeshop.models.Inventory>) inventory;
+    }
+
+    @Override
+    public void setInventories(Set<cat.uvic.teknos.shoeshop.models.Inventory> inventories) {
+        this.inventory=inventory;
+    }
+
+    @Override
+    public cat.uvic.teknos.shoeshop.models.Model getModels() {
+        return model;
+    }
+
+    @Override
+    public void setModels(cat.uvic.teknos.shoeshop.models.Model models) {
+        this.model=model;
     }
 }

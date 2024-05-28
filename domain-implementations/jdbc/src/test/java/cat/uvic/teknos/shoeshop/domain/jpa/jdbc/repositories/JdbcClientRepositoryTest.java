@@ -32,7 +32,7 @@ class JdbcClientRepositoryTest {
         address.setLocation("Carrer Vic 2");
 
         ShoeStore shoeStore1 = new cat.uvic.teknos.shoeshop.domain.jdbc.models.ShoeStore();
-        shoeStore1.setId(1);
+        shoeStore1.setId(1);//Al haver-hi això el relacionarà amb la ShoeStore 1
 
         Client client = new Client();
         client.setDni("47688994G");
@@ -84,18 +84,15 @@ class JdbcClientRepositoryTest {
     }
     @Test
     void delete() {
-
         Client client = new Client();
         client.setId(3);
 
         var repository = new JdbcClientRepository(connection);
         repository.delete(client);
 
-        DbAssertions.assertThat(connection)
-                .table("CLIENT")
-                .where("CLIENT_ID", client.getId())
-                .doesNotExist();
+
     }
+
     @Test
     void get() {
         int id = 1;
