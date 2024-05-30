@@ -7,7 +7,7 @@ plugins {
 }
 dependencies {
     implementation(project(":domain"))
-
+    implementation("com.github.freva:ascii-table:1.8.0")
     implementation("com.mysql:mysql-connector-j:8.3.0")
     implementation("org.hibernate:hibernate-core:6.5.0.Final")
 

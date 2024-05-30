@@ -24,9 +24,9 @@ public class Client implements cat.uvic.teknos.shoeshop.models.Client {
     @JoinColumn(name = "ADDRESS_ID")
     private Address address;
 
-    @ManyToOne
+    @ManyToOne(targetEntity = cat.uvic.teknos.shoeshop.domain.jpa.models.ShoeStore.class)
     @JoinColumn(name = "SHOE_STORE_ID")
-    private ShoeStore shoeStore;
+    private ShoeStore shoeStores;
 
     public Client(String dni, String name, String phone) {
         this.dni = dni;
@@ -88,11 +88,11 @@ public class Client implements cat.uvic.teknos.shoeshop.models.Client {
 
     @Override
     public cat.uvic.teknos.shoeshop.models.ShoeStore getShoeStores() {
-        return shoeStore;
+        return shoeStores;
     }
 
     @Override
     public void setShoeStores(cat.uvic.teknos.shoeshop.models.ShoeStore shoeStore) {
-        this.shoeStore = (ShoeStore) shoeStore;
+        this.shoeStores = (ShoeStore) shoeStore;
     }
 }

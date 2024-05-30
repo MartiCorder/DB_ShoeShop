@@ -19,7 +19,7 @@ public class Supplier implements cat.uvic.teknos.shoeshop.models.Supplier, Seria
     @Column(name = "PHONE")
     private String phone;
 
-    @ManyToMany(mappedBy = "suppliers")
+    @ManyToMany(mappedBy = "suppliers", targetEntity = cat.uvic.teknos.shoeshop.domain.jpa.models.ShoeStore.class)
     private Set<ShoeStore> shoeStores;
 
     @Override

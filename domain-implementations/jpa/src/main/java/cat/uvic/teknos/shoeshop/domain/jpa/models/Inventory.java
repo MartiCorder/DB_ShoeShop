@@ -17,10 +17,10 @@ public class Inventory implements cat.uvic.teknos.shoeshop.models.Inventory {
     @Column(name = "CAPACITY")
     private int capacity;
 
-    @OneToMany(mappedBy = "inventory")
+    @OneToMany(mappedBy = "inventory", targetEntity = cat.uvic.teknos.shoeshop.domain.jpa.models.Shoe.class)
     private Set<Shoe> shoes;
 
-    @ManyToMany(mappedBy = "inventories")
+    @ManyToMany(mappedBy = "inventories", targetEntity = cat.uvic.teknos.shoeshop.domain.jpa.models.ShoeStore.class)
     private Set<ShoeStore> shoeStores;
 
     public Inventory() {

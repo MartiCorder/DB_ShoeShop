@@ -54,4 +54,6 @@ public class Inventory implements cat.uvic.teknos.shoeshop.models.Inventory, Ser
     public void setShoes(Set<Shoe> shoes) {
         this.shoes=shoes;
     }
+
+
 }

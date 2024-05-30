@@ -24,10 +24,10 @@ public class ShoeStore implements cat.uvic.teknos.shoeshop.models.ShoeStore, Ser
     @Column(name = "LOCATION")
     private String location;
 
-    @OneToMany(mappedBy = "shoeStores")
+    @OneToMany(mappedBy = "shoeStores", targetEntity = cat.uvic.teknos.shoeshop.domain.jpa.models.Client.class)
     private Set<Client> clients;
 
-    @ManyToMany
+    @ManyToMany(targetEntity = cat.uvic.teknos.shoeshop.domain.jpa.models.Supplier.class)
     @JoinTable(
             name = "SHOE_STORE_SUPPLIER",
             joinColumns = @JoinColumn(name = "SHOE_STORE_ID"),
@@ -35,7 +35,7 @@ public class ShoeStore implements cat.uvic.teknos.shoeshop.models.ShoeStore, Ser
     )
     private Set<Supplier> suppliers;
 
-    @ManyToMany
+    @ManyToMany(targetEntity = cat.uvic.teknos.shoeshop.domain.jpa.models.Inventory.class)
     @JoinTable(
             name = "SHOE_STORE_INVENTORY",
             joinColumns = @JoinColumn(name = "SHOE_STORE_ID"),
