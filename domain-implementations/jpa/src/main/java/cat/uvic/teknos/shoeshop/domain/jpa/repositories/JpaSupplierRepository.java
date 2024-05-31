@@ -19,7 +19,7 @@ public class JpaSupplierRepository implements SupplierRepository {
     public void save(Supplier supplier) {
         var entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
-        entityManager.persist(supplier);
+        entityManager.merge(supplier);
         entityManager.getTransaction().commit();
         entityManager.close();
     }

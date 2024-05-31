@@ -19,11 +19,10 @@ public class JpaModelRepository implements ModelRepository {
     public void save(Model model) {
         var entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
-        entityManager.persist(model);
+        entityManager.merge(model);
         entityManager.getTransaction().commit();
         entityManager.close();
     }
-
     @Override
     public void delete(Model model) {
         var entityManager = entityManagerFactory.createEntityManager();

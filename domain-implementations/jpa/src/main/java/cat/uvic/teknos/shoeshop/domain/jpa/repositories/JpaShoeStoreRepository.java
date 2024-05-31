@@ -19,7 +19,7 @@ public class JpaShoeStoreRepository implements ShoeStoreRepository {
     public void save(ShoeStore shoeStore) {
         var entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
-        entityManager.persist(shoeStore);
+        entityManager.merge(shoeStore);
         entityManager.getTransaction().commit();
         entityManager.close();
     }

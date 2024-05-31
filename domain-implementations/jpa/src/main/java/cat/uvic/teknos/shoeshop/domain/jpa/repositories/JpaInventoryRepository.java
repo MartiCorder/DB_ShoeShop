@@ -19,7 +19,7 @@ public class JpaInventoryRepository implements InventoryRepository {
     public void save(Inventory model) {
         var entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
-        entityManager.persist(model);
+        entityManager.merge(model);
         entityManager.getTransaction().commit();
         entityManager.close();
     }

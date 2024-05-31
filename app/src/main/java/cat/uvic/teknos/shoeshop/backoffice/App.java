@@ -1,9 +1,5 @@
 package cat.uvic.teknos.shoeshop.backoffice;
 
-import cat.uvic.teknos.shoeshop.domain.jdbc.models.JdbcModelFactory;
-import cat.uvic.teknos.shoeshop.domain.jdbc.repositories.JdbcRepositoryFactory;
-import cat.uvic.teknos.shoeshop.domain.jpa.models.JpaModelFactory;
-import cat.uvic.teknos.shoeshop.domain.jpa.repositories.JpaRepositoryFactory;
 import cat.uvic.teknos.shoeshop.models.ModelFactory;
 import cat.uvic.teknos.shoeshop.repositories.RepositoryFactory;
 
@@ -13,7 +9,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 public class App {
-    public static void main(String[] args) throws ClassNotFoundException, IOException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, SQLException {
+    public static void main(String[] args) throws ClassNotFoundException, IOException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException{
         var properties = new Properties();
         properties.load(App.class.getResourceAsStream("/app.properties"));
         var repositoryFactory = (RepositoryFactory) Class.forName(properties.getProperty("repositoryFactory")).getConstructor().newInstance();

@@ -1,12 +1,19 @@
 package cat.uvic.teknos.shoeshop.repositories;
 
-import java.sql.SQLException;
+import cat.uvic.teknos.shoeshop.models.*;
+
 
 public interface RepositoryFactory {
 
-    ClientRepository getClientRepository() throws SQLException;
+    AddressRepository getAddressRepository();
 
-    ShoeRepository getShoeRepository() throws SQLException;
-    ShoeStoreRepository getShoeStoreRepository() throws SQLException;
+    SupplierRepository getSupplierRepository();
+
+    ModelRepository getModelRepository();
+    ClientRepository getClientRepository();
+    ShoeRepository getShoeRepository();
+    ShoeStoreRepository getShoeStoreRepository();
+
+    InventoryRepository getInventoryRepository();
 
 }

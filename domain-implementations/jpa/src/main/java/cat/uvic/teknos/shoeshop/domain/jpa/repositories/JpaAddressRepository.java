@@ -16,10 +16,11 @@ public class JpaAddressRepository implements AddressRepository {
     }
     @Override
     public void save(Address model) {
-        var entityManager= entityManagerFactory.createEntityManager();
+        var entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
-        entityManager.persist(model);
+        entityManager.merge(model);
         entityManager.getTransaction().commit();
+        entityManager.close();
     }
 
     @Override

@@ -31,7 +31,7 @@ public class ShoeStoreManager {
         this.modelFactory = modelFactory;
     }
 
-    public void start() throws SQLException {
+    public void start(){
         out.println("\n*** Shoe Store Management ***\n");
 
         var command = "";
@@ -69,7 +69,7 @@ public class ShoeStoreManager {
         }
     }
 
-    private void deleteShoeStore() throws SQLException {
+    private void deleteShoeStore(){
         out.println("\n*** Delete Shoe Store ***\n");
 
         var shoeStore = modelFactory.createShoeStore();
@@ -117,7 +117,7 @@ public class ShoeStoreManager {
         }
     }
 
-    private void insert() throws SQLException {
+    private void insert(){
         out.println("\n*** Insert Shoe Store ***\n");
 
         var shoeStore = modelFactory.createShoeStore();

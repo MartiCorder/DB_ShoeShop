@@ -4,13 +4,13 @@ import cat.uvic.teknos.shoeshop.models.ModelFactory;
 import cat.uvic.teknos.shoeshop.models.Shoe;
 import cat.uvic.teknos.shoeshop.models.Inventory;
 import cat.uvic.teknos.shoeshop.models.Model;
+import cat.uvic.teknos.shoeshop.repositories.RepositoryFactory;
 import cat.uvic.teknos.shoeshop.repositories.ShoeRepository;
 import com.github.freva.asciitable.AsciiTable;
 import com.github.freva.asciitable.Column;
 
 import java.io.BufferedReader;
 import java.io.PrintStream;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Set;
 
@@ -22,15 +22,17 @@ public class ShoeManager {
     private final BufferedReader in;
     private final ShoeRepository shoeRepository;
     private final ModelFactory modelFactory;
+    private final RepositoryFactory repositoryFactory;
 
-    public ShoeManager(BufferedReader in, PrintStream out, ShoeRepository shoeRepository, ModelFactory modelFactory) {
+    public ShoeManager(BufferedReader in, PrintStream out, RepositoryFactory repositoryFactory, ModelFactory modelFactory) {
         this.out = out;
         this.in = in;
-        this.shoeRepository = shoeRepository;
+        this.repositoryFactory = repositoryFactory;
+        this.shoeRepository = repositoryFactory.getShoeRepository();
         this.modelFactory = modelFactory;
     }
 
-    public void start() throws SQLException {
+    public void start(){
         out.println("\n*** Shoe Management ***\n");
 
         var command = "";
@@ -53,23 +55,21 @@ public class ShoeManager {
     private void getAll() {
         out.println("\n*** List of Shoes ***\n");
 
-        try {
-            var shoes = shoeRepository.getAll();
 
-            out.println(AsciiTable.getTable(shoes, Arrays.asList(
-                    new Column().header("Id").with(shoe -> String.valueOf(shoe.getId())),
-                    new Column().header("Model ID").with(shoe -> String.valueOf(shoe.getModels().getId())),
-                    new Column().header("Inventory ID").with(shoe -> String.valueOf(shoe.getInventories())),
-                    new Column().header("Price").with(shoe -> String.valueOf(shoe.getPrice())),
-                    new Column().header("Color").with(Shoe::getColor),
-                    new Column().header("Size").with(Shoe::getSize)
-            )));
-        } catch (SQLException e) {
-            out.println("Error fetching shoes: " + e.getMessage());
-        }
+        var shoes = shoeRepository.getAll();
+
+        out.println(AsciiTable.getTable(shoes, Arrays.asList(
+                new Column().header("Id").with(shoe -> String.valueOf(shoe.getId())),
+                new Column().header("Model ID").with(shoe -> String.valueOf(shoe.getModels().getId())),
+                new Column().header("Inventory ID").with(shoe -> String.valueOf(shoe.getInventories())),
+                new Column().header("Price").with(shoe -> String.valueOf(shoe.getPrice())),
+                new Column().header("Color").with(Shoe::getColor),
+                new Column().header("Size").with(Shoe::getSize)
+        )));
+
     }
 
-    private void deleteShoe() throws SQLException {
+    private void deleteShoe(){
         out.println("\n*** Delete Shoe ***\n");
 
         var shoe = modelFactory.createShoe();
@@ -94,13 +94,11 @@ public class ShoeManager {
             shoe.setId(id);
 
             out.println("Enter new Model ID:");
-            Model model = modelFactory.createModel();
-            model.setId(Integer.parseInt(readLine(in)));
+            var model = repositoryFactory.getModelRepository().get(Integer.parseInt(readLine(in)));
             shoe.setModels(model);
 
             out.println("Enter new Inventory ID:");
-            Inventory inventory = modelFactory.createInventory();
-            inventory.setId(Integer.parseInt(readLine(in)));
+            var inventory = repositoryFactory.getInventoryRepository().get(Integer.parseInt(readLine(in)));
             shoe.setInventories(Set.of(inventory));
 
             out.println("Enter new Price:");
@@ -123,7 +121,7 @@ public class ShoeManager {
         }
     }
 
-    private void insert() throws SQLException {
+    private void insert(){
         out.println("\n*** Insert Shoe ***\n");
 
         var shoe = modelFactory.createShoe();

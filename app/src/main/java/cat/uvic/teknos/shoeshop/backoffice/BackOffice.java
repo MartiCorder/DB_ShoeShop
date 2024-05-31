@@ -1,7 +1,6 @@
 package cat.uvic.teknos.shoeshop.backoffice;
 
 import java.io.*;
-import java.sql.SQLException;
 
 import cat.uvic.teknos.shoeshop.models.ModelFactory;
 import cat.uvic.teknos.shoeshop.repositories.RepositoryFactory;
@@ -21,7 +20,7 @@ public class BackOffice {
         this.modelFactory = modelFactory;
     }
 
-    public void start() throws SQLException {
+    public void start(){
         showWelcomeMessage();
 
         var command = "";
@@ -40,27 +39,27 @@ public class BackOffice {
         out.println("\n*** Program Finished ***\n");
     }
 
-    private void managerClient() throws SQLException {
-        new ClientManager(in, out, repositoryFactory.getClientRepository(), modelFactory).start();
+    private void managerClient(){
+        new ClientManager(in, out, repositoryFactory, modelFactory).start();
     }
 
 
-    private void managerShoe() throws SQLException {
-        new ShoeManager(in, out, repositoryFactory.getShoeRepository(), modelFactory).start();
+    private void managerShoe(){
+        new ShoeManager(in, out, repositoryFactory, modelFactory).start();
     }
 
-    private void managerShoeStore() throws SQLException {
+    private void managerShoeStore(){
         new ShoeStoreManager(in, out, repositoryFactory.getShoeStoreRepository(), modelFactory).start();
     }
 
 
-    private void showWelcomeMessage() {
+    private void showWelcomeMessage(){
         out.println("\n*** Welcome to the ShoeShop Back Office ***\n");
         out.println("Select a menu option:");
         out.println();
     }
 
-    private void showMainMenu() {
+    private void showMainMenu(){
         out.println("\n*** Main Menu ***\n");
         out.println("1. Manage Client");
         out.println("2. Manage Shoe");

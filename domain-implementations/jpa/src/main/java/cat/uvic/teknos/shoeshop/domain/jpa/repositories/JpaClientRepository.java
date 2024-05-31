@@ -19,11 +19,10 @@ public class JpaClientRepository implements ClientRepository {
     public void save(Client model) {
         var entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
-        entityManager.persist(model);
+        entityManager.merge(model);
         entityManager.getTransaction().commit();
         entityManager.close();
     }
-
     @Override
     public void delete(Client model) {
         var entityManager = entityManagerFactory.createEntityManager();

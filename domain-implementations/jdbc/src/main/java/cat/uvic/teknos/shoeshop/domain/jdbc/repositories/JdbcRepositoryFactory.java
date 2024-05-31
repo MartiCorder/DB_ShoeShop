@@ -26,18 +26,38 @@ public class JdbcRepositoryFactory implements RepositoryFactory {
     }
 
     @Override
-    public ClientRepository getClientRepository() throws SQLException {
+    public ClientRepository getClientRepository()  {
         return new JdbcClientRepository(connection);
     }
 
     @Override
-    public ShoeRepository getShoeRepository() throws SQLException {
+    public ShoeRepository getShoeRepository()  {
         return new JdbcShoeRepository(connection);
     }
 
     @Override
-    public ShoeStoreRepository getShoeStoreRepository() throws SQLException {
+    public ShoeStoreRepository getShoeStoreRepository()  {
         return new JdbcShoeStoreRepository(connection);
+    }
+
+    @Override
+    public InventoryRepository getInventoryRepository() {
+        return null;
+    }
+
+    @Override
+    public AddressRepository getAddressRepository() {
+        return null;
+    }
+
+    @Override
+    public SupplierRepository getSupplierRepository() {
+        return null;
+    }
+
+    @Override
+    public ModelRepository getModelRepository() {
+        return null;
     }
 
 }

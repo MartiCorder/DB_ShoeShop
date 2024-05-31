@@ -19,6 +19,7 @@ public class JpaShoeRepository implements ShoeRepository {
     public void save(Shoe shoe) {
         var entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
+        shoe.setModels(entityManager.merge(shoe.getModels()));
         entityManager.persist(shoe);
         entityManager.getTransaction().commit();
         entityManager.close();
@@ -51,4 +52,3 @@ public class JpaShoeRepository implements ShoeRepository {
         return shoes;
     }
 }
-
