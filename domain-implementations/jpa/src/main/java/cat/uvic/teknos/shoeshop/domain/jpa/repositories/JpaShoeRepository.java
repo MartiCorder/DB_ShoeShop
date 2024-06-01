@@ -1,5 +1,7 @@
 package cat.uvic.teknos.shoeshop.domain.jpa.repositories;
 
+import cat.uvic.teknos.shoeshop.domain.jpa.models.Inventory;
+import cat.uvic.teknos.shoeshop.domain.jpa.models.Model;
 import cat.uvic.teknos.shoeshop.models.Shoe;
 import cat.uvic.teknos.shoeshop.repositories.ShoeRepository;
 import jakarta.persistence.EntityManager;
@@ -19,10 +21,31 @@ public class JpaShoeRepository implements ShoeRepository {
     public void save(Shoe shoe) {
         var entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
-        shoe.setModels(entityManager.merge(shoe.getModels()));
-        entityManager.persist(shoe);
+
+        mergeCompositions(shoe, entityManager);
+        if (shoe.getId() <= 0) {
+            entityManager.persist(shoe);
+        } else {
+            entityManager.merge(shoe);
+        }
+
         entityManager.getTransaction().commit();
         entityManager.close();
+    }
+
+    private static void mergeCompositions(Shoe shoe, EntityManager entityManager) {
+        if (shoe.getModels() != null) {
+            shoe.setModels(entityManager.find(Model.class, shoe.getModels().getId()));
+
+        }
+        var inventories = new HashSet<cat.uvic.teknos.shoeshop.models.Inventory>();
+        if (shoe.getInventories() != null && !shoe.getInventories().isEmpty()) {
+            for (var inventory : shoe.getInventories()) {
+                inventories.add( entityManager.find(Inventory.class, inventory.getId()));
+            }
+
+            shoe.setInventories(inventories);
+        }
     }
 
     @Override

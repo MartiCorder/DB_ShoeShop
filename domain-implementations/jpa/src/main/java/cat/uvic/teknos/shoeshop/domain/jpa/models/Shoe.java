@@ -3,6 +3,8 @@ package cat.uvic.teknos.shoeshop.domain.jpa.models;
 import jakarta.persistence.*;
 
 import java.util.Set;
+import cat.uvic.teknos.shoeshop.models.Model;
+import cat.uvic.teknos.shoeshop.models.Inventory;
 
 @Entity
 @Table(name = "SHOE")
@@ -22,11 +24,17 @@ public class Shoe implements cat.uvic.teknos.shoeshop.models.Shoe {
     @Column(name = "SIZE")
     private String size;
 
-    @ManyToOne
+    @ManyToOne(targetEntity = cat.uvic.teknos.shoeshop.domain.jpa.models.Model.class)
     @JoinColumn(name = "MODEL_ID")
     private Model model;
 
-    @ManyToOne
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, targetEntity = cat.uvic.teknos.shoeshop.domain.jpa.models.Inventory.class )
+    @JoinTable(name = "SHOE_INVENTORY", joinColumns = @JoinColumn(name = "INVENTORY_ID"), inverseJoinColumns = @JoinColumn(name = "SHOE_ID"), uniqueConstraints = { @UniqueConstraint( columnNames = {"INVENTORY_ID", "SHOE_ID"})})
+    @Transient
+    private Set<Inventory> inventories;
+
+    @ManyToOne(targetEntity = cat.uvic.teknos.shoeshop.domain.jpa.models.Inventory.class )
     @JoinColumn(name = "INVENTORY_ID")
     private Inventory inventory;
 
@@ -74,13 +82,13 @@ public class Shoe implements cat.uvic.teknos.shoeshop.models.Shoe {
     }
 
     @Override
-    public Set<cat.uvic.teknos.shoeshop.models.Inventory> getInventories() {
-        return (Set<cat.uvic.teknos.shoeshop.models.Inventory>) inventory;
+    public Set<Inventory> getInventories() {
+        return inventories;
     }
 
     @Override
-    public void setInventories(Set<cat.uvic.teknos.shoeshop.models.Inventory> inventories) {
-        this.inventory=inventory;
+    public void setInventories(Set<Inventory> inventories) {
+        this.inventories = inventories;
     }
 
     @Override
@@ -89,7 +97,7 @@ public class Shoe implements cat.uvic.teknos.shoeshop.models.Shoe {
     }
 
     @Override
-    public void setModels(cat.uvic.teknos.shoeshop.models.Model models) {
+    public void setModels(cat.uvic.teknos.shoeshop.models.Model model) {
         this.model=model;
     }
 }
