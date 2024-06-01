@@ -21,8 +21,8 @@ public interface Shoe {
 
     void setSize(String size);
 
-    Set<Inventory> getInventories();
-    void setInventories(Set<Inventory> inventories);
+    Inventory getInventories();
+    void setInventories(Inventory inventories);
 
     Model getModels();
     void setModels(Model models);

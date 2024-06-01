@@ -19,7 +19,7 @@ public class Shoe implements cat.uvic.teknos.shoeshop.models.Shoe, Serializable 
 
     private Model models;
 
-    private Set<Inventory> inventories;
+    private Inventory inventories;
     @Override
     public int getId() {
         return id;
@@ -68,12 +68,12 @@ public class Shoe implements cat.uvic.teknos.shoeshop.models.Shoe, Serializable 
     }
 
     @Override
-    public Set<Inventory> getInventories() {
+    public Inventory getInventories() {
         return inventories;
     }
 
     @Override
-    public void setInventories(Set<Inventory> inventories) {
+    public void setInventories(Inventory inventories) {
         this.inventories=inventories;
     }
 

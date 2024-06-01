@@ -2,6 +2,7 @@ package cat.uvic.teknos.shoeshop.domain.jdbc.repositories;
 
 import cat.uvic.teknos.shoeshop.models.Shoe;
 import cat.uvic.teknos.shoeshop.models.Model;
+import cat.uvic.teknos.shoeshop.models.Inventory;
 import cat.uvic.teknos.shoeshop.repositories.ShoeRepository;
 import com.fcardara.dbtestutils.junit.CreateSchemaExtension;
 import com.fcardara.dbtestutils.junit.GetConnectionExtension;
@@ -39,13 +40,20 @@ public class JdbcShoeRepository implements ShoeRepository {
             } else {
                 updateModel(model);
             }
+            Inventory inventory = shoe.getInventories();
+            if (inventory.getId() <= 0) {
+                insertInventory(inventory);
+            } else {
+                updateInventory(inventory);
+            }
 
-            String insertShoe = "INSERT INTO SHOE (PRICE, COLOR, SIZE, MODEL_ID) VALUES (?, ?, ?, ?)";
+            String insertShoe = "INSERT INTO SHOE (PRICE, COLOR, SIZE, MODEL_ID, INVENTORY_ID) VALUES (?, ?, ?, ?, ?)";
             try (PreparedStatement stmt = connection.prepareStatement(insertShoe, Statement.RETURN_GENERATED_KEYS)) {
                 stmt.setDouble(1, shoe.getPrice());
                 stmt.setString(2, shoe.getColor());
                 stmt.setString(3, shoe.getSize());
                 stmt.setInt(4, model.getId());
+                stmt.setInt(5, inventory.getId());
                 stmt.executeUpdate();
 
                 try (ResultSet keys = stmt.getGeneratedKeys()) {
@@ -100,21 +108,49 @@ public class JdbcShoeRepository implements ShoeRepository {
             throw new RuntimeException(e);
         }
     }
+    private void insertInventory(Inventory inventory) {
+        String insertInventory = "INSERT INTO INVENTORY (CAPACITY) VALUES (?)";
+        try (PreparedStatement stmt = connection.prepareStatement(insertInventory, Statement.RETURN_GENERATED_KEYS)) {
+            stmt.setInt(1, inventory.getCapacity());
+            stmt.executeUpdate();
+
+            try (ResultSet keys = stmt.getGeneratedKeys()) {
+                if (keys.next()) {
+                    inventory.setId(keys.getInt(1));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void updateInventory(Inventory inventory) {
+        String updateInventory = "UPDATE INVENTORY SET CAPACITY = ? WHERE INVENTORY_ID = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(updateInventory)) {
+            stmt.setInt(1, inventory.getCapacity());
+            stmt.setInt(2, inventory.getId());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     private void update(Shoe shoe) {
         try {
             connection.setAutoCommit(false);
 
-            String updateShoe = "UPDATE SHOE SET PRICE = ?, COLOR = ?, SIZE = ?, MODEL_ID = ? WHERE SHOE_ID = ?";
+            String updateShoe = "UPDATE SHOE SET PRICE = ?, COLOR = ?, SIZE = ?, MODEL_ID = ?, INVENTORY_ID = ? WHERE SHOE_ID = ?";
             try (PreparedStatement stmt = connection.prepareStatement(updateShoe)) {
                 stmt.setDouble(1, shoe.getPrice());
                 stmt.setString(2, shoe.getColor());
                 stmt.setString(3, shoe.getSize());
                 stmt.setInt(4, shoe.getModels().getId());
-                stmt.setInt(5, shoe.getId());
+                stmt.setInt(5, shoe.getInventories().getId());
+                stmt.setInt(6, shoe.getId());
                 stmt.executeUpdate();
             }
             updateModel(shoe.getModels());
+            updateInventory(shoe.getInventories());
 
             connection.commit();
         } catch (SQLException e) {
@@ -174,6 +210,7 @@ public class JdbcShoeRepository implements ShoeRepository {
                     shoe.setColor(rs.getString("COLOR"));
                     shoe.setSize(rs.getString("SIZE"));
                     shoe.setModels(findModelById(rs.getInt("MODEL_ID")));
+                    shoe.setInventories(findInventoryById(rs.getInt("INVENTORY_ID")));
                     return shoe;
                 }
             }
@@ -201,6 +238,24 @@ public class JdbcShoeRepository implements ShoeRepository {
         }
         return null;
     }
+    private Inventory findInventoryById(int inventoryId) {
+        String query = "SELECT * FROM INVENTORY WHERE INVENTORY_ID = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, inventoryId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    Inventory inventory = new cat.uvic.teknos.shoeshop.domain.jdbc.models.Inventory();
+                    inventory.setId(rs.getInt("INVENTORY_ID"));
+                    inventory.setCapacity(rs.getInt("CAPACITY"));
+
+                    return inventory;
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
 
     @Override
     public Set<Shoe> getAll() {
@@ -215,6 +270,7 @@ public class JdbcShoeRepository implements ShoeRepository {
                 shoe.setColor(rs.getString("COLOR"));
                 shoe.setSize(rs.getString("SIZE"));
                 shoe.setModels(findModelById(rs.getInt("MODEL_ID")));
+                shoe.setInventories(findInventoryById(rs.getInt("INVENTORY_ID")));
                 shoes.add(shoe);
             }
         } catch (SQLException e) {

@@ -42,22 +42,22 @@ public class JdbcRepositoryFactory implements RepositoryFactory {
 
     @Override
     public InventoryRepository getInventoryRepository() {
-        return null;
+        return new JdbcInventoryRepository(connection);
     }
 
     @Override
     public AddressRepository getAddressRepository() {
-        return null;
+        return new JdbcAddressRepository(connection);
     }
 
     @Override
     public SupplierRepository getSupplierRepository() {
-        return null;
+        return new JdbcSupplierRepository(connection);
     }
 
     @Override
     public ModelRepository getModelRepository() {
-        return null;
+        return new JdbcModelRepository(connection);
     }
 
 }

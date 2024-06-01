@@ -2,7 +2,6 @@ package cat.uvic.teknos.shoeshop.backoffice;
 
 import cat.uvic.teknos.shoeshop.models.ModelFactory;
 import cat.uvic.teknos.shoeshop.models.ShoeStore;
-import cat.uvic.teknos.shoeshop.models.Supplier;
 import cat.uvic.teknos.shoeshop.repositories.ShoeStoreRepository;
 
 import com.github.freva.asciitable.AsciiTable;
@@ -11,9 +10,11 @@ import com.github.freva.asciitable.Column;
 
 import java.io.BufferedReader;
 import java.io.PrintStream;
-import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static cat.uvic.teknos.shoeshop.backoffice.IOUtils.readLine;
 
@@ -54,19 +55,19 @@ public class ShoeStoreManager {
     private void getAll() {
         out.println("\n*** List of Shoe Stores ***\n");
 
-        try {
-            Set<ShoeStore> shoeStores = shoeStoreRepository.getAll();
+        Set<ShoeStore> shoeStoreSet = shoeStoreRepository.getAll();
 
-            out.println(AsciiTable.getTable(shoeStores, Arrays.asList(
-                    new Column().header("Id").with(shoeStore -> String.valueOf(shoeStore.getId())),
-                    new Column().header("Name").with(ShoeStore::getName),
-                    new Column().header("Owner").with(ShoeStore::getOwner),
-                    new Column().header("Location").with(ShoeStore::getLocation),
-                    new Column().header("Inventory ID").with(shoeStore -> String.valueOf(shoeStore.getInventories()))
-            )));
-        } catch (Exception e) {
-            out.println("Error fetching shoe stores: " + e.getMessage());
-        }
+        List<ShoeStore> shoeStores = shoeStoreSet.stream()
+                .sorted(Comparator.comparingInt(ShoeStore::getId))
+                .collect(Collectors.toList());
+
+        out.println(AsciiTable.getTable(shoeStores, Arrays.asList(
+                new Column().header("Id").with(shoeStore -> String.valueOf(shoeStore.getId())),
+                new Column().header("Name").with(ShoeStore::getName),
+                new Column().header("Owner").with(ShoeStore::getOwner),
+                new Column().header("Location").with(ShoeStore::getLocation),
+                new Column().header("Inventory ID").with(shoeStore -> String.valueOf(shoeStore.getInventories()))
+        )));
     }
 
     private void deleteShoeStore(){
@@ -78,9 +79,12 @@ public class ShoeStoreManager {
         int id = Integer.parseInt(readLine(in));
         shoeStore.setId(id);
 
-        shoeStoreRepository.delete(shoeStore);
-
-        out.println("\nSuccessfully deleted.\n");
+        if (shoeStoreRepository.get(id) != null) {
+            shoeStoreRepository.delete(shoeStore);
+            out.println("\nSuccessfully deleted.\n");
+        } else {
+            out.println("\nThe Shoe Store with ID " + id + " does not exist.\n");
+        }
     }
 
     private void update() {
@@ -101,10 +105,6 @@ public class ShoeStoreManager {
 
             out.println("Enter new Location:");
             shoeStore.setLocation(readLine(in));
-
-            out.println("Enter new Inventory ID:");
-            // Here, you should get the Set<Inventory> from the repository or somewhere else and set it.
-            // shoeStore.setInventories(setOfInventories);
 
             shoeStoreRepository.save(shoeStore);
 
@@ -131,9 +131,6 @@ public class ShoeStoreManager {
         out.println("Enter the Location:");
         shoeStore.setLocation(readLine(in));
 
-        out.println("Enter the Inventory ID:");
-        // Here, you should get the Set<Inventory> from the repository or somewhere else and set it.
-        // shoeStore.setInventories(setOfInventories);
 
         shoeStoreRepository.save(shoeStore);
 

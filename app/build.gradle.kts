@@ -11,11 +11,11 @@ dependencies {
     implementation(project(":utilities"))
     implementation(project(":domain-implementations:jdbc"))
     implementation(project(":domain-implementations:JPA"))
+    implementation(project(":domain-implementations:file"))
     implementation("com.github.freva:ascii-table:1.8.0")
 
 }
 
 application {
-    // Define the main class for the application.
     mainClass = "org.example.app.App"
 }

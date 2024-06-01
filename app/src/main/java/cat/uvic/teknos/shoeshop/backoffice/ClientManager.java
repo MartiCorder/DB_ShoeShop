@@ -13,6 +13,15 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static cat.uvic.teknos.shoeshop.backoffice.IOUtils.readLine;
 
@@ -48,8 +57,6 @@ public class ClientManager {
                 case "2" -> updateClient();
                 case "3" -> deleteClient();
                 case "4" -> getAllClients();
-                case "5" -> insertAddress();
-                case "6" -> insertShoeStore();
             }
         } while (!command.equals("exit"));
 
@@ -59,7 +66,10 @@ public class ClientManager {
     private void getAllClients() {
         out.println("\n List of Clients \n");
 
-        var clients = clientRepository.getAll();
+        Set<Client> clientSet = clientRepository.getAll();
+        List<Client> clients = clientSet.stream()
+                .sorted(Comparator.comparingInt(Client::getId))
+                .collect(Collectors.toList());
 
         out.println(AsciiTable.getTable(clients, Arrays.asList(
                 new Column().header("Id").with(client -> String.valueOf(client.getId())),
@@ -67,7 +77,6 @@ public class ClientManager {
                 new Column().header("Name").with(Client::getName),
                 new Column().header("Phone").with(Client::getPhone)
         )));
-
     }
     private void deleteClient() {
         out.println("\n*** Delete Client ***\n");
@@ -128,14 +137,22 @@ public class ClientManager {
         client.setPhone(phone);
 
         Address address = insertAddress();
-        ShoeStore shoeStore = insertShoeStore();
+
+        out.println("Do you want to insert a new Shoe Store or relate to an existing one? (new/existing)");
+        String choice = readLine(in);
+
+        ShoeStore shoeStore;
+        if (choice.equalsIgnoreCase("existing")) {
+            shoeStore = selectExistingShoeStore();
+        } else {
+            shoeStore = insertShoeStore();
+        }
 
         client.setAddresses(address);
         client.setShoeStores(shoeStore);
 
         clientRepository.save(client);
         out.println("Client inserted successfully.");
-
     }
     private Address insertAddress(){
         out.println("\n*** Insert Address ***\n");
@@ -158,6 +175,32 @@ public class ClientManager {
         out.println("Shoe Store inserted successfully.");
         return shoeStore;
     }
+    private ShoeStore selectExistingShoeStore() {
+        out.println("\n*** Select Existing Shoe Store ***\n");
+
+        Set<ShoeStore> shoeStoreSet = repositoryFactory.getShoeStoreRepository().getAll();
+
+        List<ShoeStore> shoeStores = shoeStoreSet.stream()
+                .sorted(Comparator.comparingInt(ShoeStore::getId))
+                .collect(Collectors.toList());
+
+        out.println(AsciiTable.getTable(shoeStores, Arrays.asList(
+                new Column().header("Id").with(store -> String.valueOf(store.getId())),
+                new Column().header("Name").with(ShoeStore::getName),
+                new Column().header("Owner").with(ShoeStore::getOwner),
+                new Column().header("Location").with(ShoeStore::getLocation)
+        )));
+
+        out.println("Enter the ID of the Shoe Store to relate to the client:");
+        int id = Integer.parseInt(readLine(in));
+
+        ShoeStore shoeStore = repositoryFactory.getShoeStoreRepository().get(id);
+        if (shoeStore == null) {
+            out.println("Shoe Store with ID " + id + " not found.");
+        }
+
+        return shoeStore;
+    }
 
     private void showClientMenu() {
         out.println("\n*** Client Management Menu ***\n");
@@ -165,8 +208,6 @@ public class ClientManager {
         out.println("2. Update Client");
         out.println("3. Delete Client");
         out.println("4. Get All Clients");
-        out.println("5. Insert Address");
-        out.println("6. Insert Shoe Store");
         out.println("Type 'exit' to quit.");
         out.println();
     }

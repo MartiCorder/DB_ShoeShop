@@ -12,7 +12,10 @@ import com.github.freva.asciitable.Column;
 import java.io.BufferedReader;
 import java.io.PrintStream;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static cat.uvic.teknos.shoeshop.backoffice.IOUtils.readLine;
 
@@ -55,20 +58,24 @@ public class ShoeManager {
     private void getAll() {
         out.println("\n*** List of Shoes ***\n");
 
+        Set<Shoe> shoeSet = shoeRepository.getAll();
 
-        var shoes = shoeRepository.getAll();
+        List<Shoe> shoes = shoeSet.stream()
+                .sorted(Comparator.comparingInt(Shoe::getId))
+                .collect(Collectors.toList());
 
         out.println(AsciiTable.getTable(shoes, Arrays.asList(
                 new Column().header("Id").with(shoe -> String.valueOf(shoe.getId())),
                 new Column().header("Model ID").with(shoe -> String.valueOf(shoe.getModels().getId())),
-                new Column().header("Inventory ID").with(shoe -> String.valueOf(shoe.getInventories())),
+                new Column().header("Inventory ID").with(shoe -> {
+                    Inventory inventory = shoe.getInventories();
+                    return inventory != null ? String.valueOf(inventory.getId()) : "N/A";
+                }),
                 new Column().header("Price").with(shoe -> String.valueOf(shoe.getPrice())),
                 new Column().header("Color").with(Shoe::getColor),
                 new Column().header("Size").with(Shoe::getSize)
         )));
-
     }
-
     private void deleteShoe(){
         out.println("\n*** Delete Shoe ***\n");
 
@@ -78,9 +85,12 @@ public class ShoeManager {
         int id = Integer.parseInt(readLine(in));
         shoe.setId(id);
 
-        shoeRepository.delete(shoe);
-
-        out.println("\nSuccessfully deleted.\n");
+        if (shoeRepository.get(id) != null) {
+            shoeRepository.delete(shoe);
+            out.println("\nSuccessfully deleted.\n");
+        } else {
+            out.println("\nThe shoe with ID " + id + " does not exist.\n");
+        }
     }
 
     private void update() {
@@ -94,12 +104,22 @@ public class ShoeManager {
             shoe.setId(id);
 
             out.println("Enter new Model ID:");
-            var model = repositoryFactory.getModelRepository().get(Integer.parseInt(readLine(in)));
+            int modelId = Integer.parseInt(readLine(in));
+            Model model = repositoryFactory.getModelRepository().get(modelId);
+            if (model == null) {
+                out.println("Error: Model ID " + modelId + " does not exist.");
+                return;
+            }
             shoe.setModels(model);
 
             out.println("Enter new Inventory ID:");
-            var inventory = repositoryFactory.getInventoryRepository().get(Integer.parseInt(readLine(in)));
-            shoe.setInventories(Set.of(inventory));
+            int inventoryId = Integer.parseInt(readLine(in));
+            Inventory inventory = repositoryFactory.getInventoryRepository().get(inventoryId);
+            if (inventory == null) {
+                out.println("Error: Inventory ID " + inventoryId + " does not exist.");
+                return;
+            }
+            shoe.setInventories(inventory);
 
             out.println("Enter new Price:");
             shoe.setPrice(Double.parseDouble(readLine(in)));
@@ -113,42 +133,57 @@ public class ShoeManager {
             shoeRepository.save(shoe);
 
             out.println("\nSuccessfully updated.\n");
-
         } catch (NumberFormatException e) {
-            out.println("\nInvalid shoe ID. Please enter a valid integer ID.\n");
+            out.println("Invalid input. Please enter valid numbers for IDs and Price.");
         } catch (Exception e) {
-            out.println("\nAn error occurred while updating the shoe: " + e.getMessage() + "\n");
+            out.println("An error occurred: " + e.getMessage());
         }
     }
+
 
     private void insert(){
         out.println("\n*** Insert Shoe ***\n");
 
         var shoe = modelFactory.createShoe();
 
-        out.println("Enter the Model ID:");
-        Model model = modelFactory.createModel();
-        model.setId(Integer.parseInt(readLine(in)));
-        shoe.setModels(model);
+        try {
+            out.println("Enter the Model ID:");
+            int modelId = Integer.parseInt(readLine(in));
+            Model model = repositoryFactory.getModelRepository().get(modelId);
+            if (model == null) {
+                out.println("Error: Model ID " + modelId + " does not exist.");
+                return;
+            }
+            shoe.setModels(model);
 
-        out.println("Enter the Inventory ID:");
-        Inventory inventory = modelFactory.createInventory();
-        inventory.setId(Integer.parseInt(readLine(in)));
-        shoe.setInventories(Set.of(inventory));
+            out.println("Enter the Inventory ID:");
+            int inventoryId = Integer.parseInt(readLine(in));
+            Inventory inventory = repositoryFactory.getInventoryRepository().get(inventoryId);
+            if (inventory == null) {
+                out.println("Error: Inventory ID " + inventoryId + " does not exist.");
+                return;
+            }
+            shoe.setInventories(inventory);
 
-        out.println("Enter the Price:");
-        shoe.setPrice(Double.parseDouble(readLine(in)));
+            out.println("Enter the Price:");
+            shoe.setPrice(Double.parseDouble(readLine(in)));
 
-        out.println("Enter the Color:");
-        shoe.setColor(readLine(in));
+            out.println("Enter the Color:");
+            shoe.setColor(readLine(in));
 
-        out.println("Enter the Size:");
-        shoe.setSize(readLine(in));
+            out.println("Enter the Size:");
+            shoe.setSize(readLine(in));
 
-        shoeRepository.save(shoe);
+            shoeRepository.save(shoe);
 
-        out.println("\nSuccessfully inserted.\n");
+            out.println("\nSuccessfully inserted.\n");
+        } catch (NumberFormatException e) {
+            out.println("Invalid input. Please enter valid numbers for IDs and Price.");
+        } catch (Exception e) {
+            out.println("An error occurred: " + e.getMessage());
+        }
     }
+
 
     private void showShoeMenu() {
         out.println("\n*** Shoe Management Menu ***\n");
