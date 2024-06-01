@@ -32,11 +32,7 @@ public class Shoe implements cat.uvic.teknos.shoeshop.models.Shoe {
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, targetEntity = cat.uvic.teknos.shoeshop.domain.jpa.models.Inventory.class )
     @JoinTable(name = "SHOE_INVENTORY", joinColumns = @JoinColumn(name = "INVENTORY_ID"), inverseJoinColumns = @JoinColumn(name = "SHOE_ID"), uniqueConstraints = { @UniqueConstraint( columnNames = {"INVENTORY_ID", "SHOE_ID"})})
     @Transient
-
     private Inventory inventories;
-
-    private Set<Inventory> inventories;
-
 
     @ManyToOne(targetEntity = cat.uvic.teknos.shoeshop.domain.jpa.models.Inventory.class )
     @JoinColumn(name = "INVENTORY_ID")
@@ -86,20 +82,12 @@ public class Shoe implements cat.uvic.teknos.shoeshop.models.Shoe {
     }
 
     @Override
-
     public Inventory getInventories() {
-
-    public Set<Inventory> getInventories() {
-
         return inventories;
     }
 
     @Override
-
     public void setInventories(Inventory inventories) {
-
-    public void setInventories(Set<Inventory> inventories) {
-
         this.inventories = inventories;
     }
 

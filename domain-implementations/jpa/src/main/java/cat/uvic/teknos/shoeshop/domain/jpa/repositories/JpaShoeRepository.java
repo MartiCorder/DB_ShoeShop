@@ -35,20 +35,9 @@ public class JpaShoeRepository implements ShoeRepository {
     private static void mergeCompositions(Shoe shoe, EntityManager entityManager) {
         if (shoe.getModels() != null) {
             shoe.setModels(entityManager.find(Model.class, shoe.getModels().getId()));
-
         }
         if (shoe.getInventories() != null) {
             shoe.setInventories(entityManager.find(Inventory.class, shoe.getInventories().getId()));
-
-        }
-        var inventories = new HashSet<cat.uvic.teknos.shoeshop.models.Inventory>();
-        if (shoe.getInventories() != null && !shoe.getInventories().isEmpty()) {
-            for (var inventory : shoe.getInventories()) {
-                inventories.add( entityManager.find(Inventory.class, inventory.getId()));
-            }
-
-            shoe.setInventories(inventories);
-
         }
     }
 
