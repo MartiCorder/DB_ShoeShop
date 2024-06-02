@@ -3,9 +3,12 @@ package cat.uvic.teknos.shoeshop.domain.jpa.models;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
+import java.util.stream.Collectors;
+
 import cat.uvic.teknos.shoeshop.models.Supplier;
 import cat.uvic.teknos.shoeshop.models.Client;
 import cat.uvic.teknos.shoeshop.models.Inventory;
+
 @Entity
 @Table(name = "SHOE_STORE")
 public class ShoeStore implements cat.uvic.teknos.shoeshop.models.ShoeStore, Serializable {
@@ -24,10 +27,10 @@ public class ShoeStore implements cat.uvic.teknos.shoeshop.models.ShoeStore, Ser
     @Column(name = "LOCATION")
     private String location;
 
-    @OneToMany(mappedBy = "shoeStores", targetEntity = cat.uvic.teknos.shoeshop.domain.jpa.models.Client.class)
+    @OneToMany(mappedBy = "shoeStore", cascade = CascadeType.ALL, targetEntity = cat.uvic.teknos.shoeshop.domain.jpa.models.Client.class, fetch = FetchType.EAGER)
     private Set<Client> clients;
 
-    @ManyToMany(targetEntity = cat.uvic.teknos.shoeshop.domain.jpa.models.Supplier.class)
+    @ManyToMany(targetEntity = cat.uvic.teknos.shoeshop.domain.jpa.models.Supplier.class, fetch = FetchType.EAGER)
     @JoinTable(
             name = "SHOE_STORE_SUPPLIER",
             joinColumns = @JoinColumn(name = "SHOE_STORE_ID"),
@@ -35,7 +38,7 @@ public class ShoeStore implements cat.uvic.teknos.shoeshop.models.ShoeStore, Ser
     )
     private Set<Supplier> suppliers;
 
-    @ManyToMany(targetEntity = cat.uvic.teknos.shoeshop.domain.jpa.models.Inventory.class)
+    @ManyToMany(targetEntity = cat.uvic.teknos.shoeshop.domain.jpa.models.Inventory.class, fetch = FetchType.EAGER)
     @JoinTable(
             name = "SHOE_STORE_INVENTORY",
             joinColumns = @JoinColumn(name = "SHOE_STORE_ID"),
@@ -91,7 +94,9 @@ public class ShoeStore implements cat.uvic.teknos.shoeshop.models.ShoeStore, Ser
 
     @Override
     public void setSuppliers(Set<cat.uvic.teknos.shoeshop.models.Supplier> suppliers) {
-        this.suppliers=suppliers;
+        this.suppliers = suppliers.stream()
+                .map(supplier -> (Supplier) supplier)
+                .collect(Collectors.toSet());
     }
 
     public Set<Client> getClients() {
@@ -100,9 +105,10 @@ public class ShoeStore implements cat.uvic.teknos.shoeshop.models.ShoeStore, Ser
 
     @Override
     public void setClients(Set<cat.uvic.teknos.shoeshop.models.Client> clients) {
-        this.clients=clients;
+        this.clients = clients.stream()
+                .map(client -> (Client) client)
+                .collect(Collectors.toSet());
     }
-
 
     public Set<Inventory> getInventories() {
         return inventories;
@@ -110,7 +116,9 @@ public class ShoeStore implements cat.uvic.teknos.shoeshop.models.ShoeStore, Ser
 
     @Override
     public void setInventories(Set<cat.uvic.teknos.shoeshop.models.Inventory> inventories) {
-        this.inventories=inventories;
+        this.inventories = inventories.stream()
+                .map(inventory -> (Inventory) inventory)
+                .collect(Collectors.toSet());
     }
 
 }

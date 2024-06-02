@@ -15,5 +15,13 @@
         <class>cat.uvic.teknos.shoeshop.domain.jpa.models.JpaModelFactory</class>
         <class>cat.uvic.teknos.shoeshop.domain.jpa.models.Supplier</class>
 
+        <properties>
+            <property name="hibernate.archive.autodetection" value="class, hbm"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
+            <property name="jakarta.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+            <property name="" value="false"/>
+            <property name="hibernate.format_sql" value="true"/>
+        </properties>
     </persistence-unit>
+
 </persistence>

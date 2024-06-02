@@ -9,6 +9,7 @@ import jakarta.persistence.EntityManagerFactory;
 
 import java.util.HashSet;
 import java.util.Set;
+
 public class JpaShoeRepository implements ShoeRepository {
     private final EntityManagerFactory entityManagerFactory;
 
@@ -37,7 +38,8 @@ public class JpaShoeRepository implements ShoeRepository {
             shoe.setModels(entityManager.find(Model.class, shoe.getModels().getId()));
         }
         if (shoe.getInventories() != null) {
-            shoe.setInventories(entityManager.find(Inventory.class, shoe.getInventories().getId()));
+            Inventory inventory = entityManager.find(Inventory.class, shoe.getInventories().getId());
+            shoe.setInventories(inventory);
         }
     }
 

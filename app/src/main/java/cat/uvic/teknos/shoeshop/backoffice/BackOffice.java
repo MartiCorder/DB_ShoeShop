@@ -20,7 +20,7 @@ public class BackOffice {
         this.modelFactory = modelFactory;
     }
 
-    public void start(){
+    public void start() throws IOException {
         showWelcomeMessage();
 
         var command = "";
@@ -39,16 +39,16 @@ public class BackOffice {
         out.println("\n*** Program Finished ***\n");
     }
 
-    private void managerClient(){
+    private void managerClient() throws IOException {
         new ClientManager(in, out, repositoryFactory, modelFactory).start();
     }
 
 
-    private void managerShoe(){
+    private void managerShoe() throws IOException {
         new ShoeManager(in, out, repositoryFactory, modelFactory).start();
     }
 
-    private void managerShoeStore(){
+    private void managerShoeStore() throws IOException {
         new ShoeStoreManager(in, out, repositoryFactory.getShoeStoreRepository(), modelFactory).start();
     }
 

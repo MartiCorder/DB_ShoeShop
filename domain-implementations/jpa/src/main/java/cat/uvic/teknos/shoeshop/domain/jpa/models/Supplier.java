@@ -3,7 +3,10 @@ package cat.uvic.teknos.shoeshop.domain.jpa.models;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
+import java.util.stream.Collectors;
+
 import cat.uvic.teknos.shoeshop.models.ShoeStore;
+
 @Entity
 @Table(name = "SUPPLIER")
 public class Supplier implements cat.uvic.teknos.shoeshop.models.Supplier, Serializable {
@@ -19,7 +22,7 @@ public class Supplier implements cat.uvic.teknos.shoeshop.models.Supplier, Seria
     @Column(name = "PHONE")
     private String phone;
 
-    @ManyToMany(mappedBy = "suppliers", targetEntity = cat.uvic.teknos.shoeshop.domain.jpa.models.ShoeStore.class)
+    @ManyToMany(mappedBy = "suppliers", targetEntity = cat.uvic.teknos.shoeshop.domain.jpa.models.ShoeStore.class, fetch = FetchType.EAGER)
     private Set<ShoeStore> shoeStores;
 
     @Override
@@ -52,14 +55,14 @@ public class Supplier implements cat.uvic.teknos.shoeshop.models.Supplier, Seria
         this.phone = phone;
     }
 
-    @Override
-    public Set<cat.uvic.teknos.shoeshop.models.ShoeStore> getShoeStores() {
+    public Set<ShoeStore> getShoeStores() {
         return shoeStores;
     }
 
-
     @Override
     public void setShoeStores(Set<cat.uvic.teknos.shoeshop.models.ShoeStore> shoeStores) {
-        this.shoeStores=shoeStores;
+        this.shoeStores = shoeStores.stream()
+                .map(shoeStore -> (ShoeStore) shoeStore)
+                .collect(Collectors.toSet());
     }
 }

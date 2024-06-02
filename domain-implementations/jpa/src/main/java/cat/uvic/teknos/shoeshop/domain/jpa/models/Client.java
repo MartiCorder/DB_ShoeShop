@@ -20,13 +20,13 @@ public class Client implements cat.uvic.teknos.shoeshop.models.Client {
     @Column(name = "PHONE")
     private String phone;
 
-    @ManyToOne
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "ADDRESS_ID")
     private Address address;
 
-    @ManyToOne(targetEntity = cat.uvic.teknos.shoeshop.domain.jpa.models.ShoeStore.class)
+    @ManyToOne(targetEntity = cat.uvic.teknos.shoeshop.domain.jpa.models.ShoeStore.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "SHOE_STORE_ID")
-    private ShoeStore shoeStores;
+    private ShoeStore shoeStore;
 
     public Client(String dni, String name, String phone) {
         this.dni = dni;
@@ -88,11 +88,11 @@ public class Client implements cat.uvic.teknos.shoeshop.models.Client {
 
     @Override
     public cat.uvic.teknos.shoeshop.models.ShoeStore getShoeStores() {
-        return shoeStores;
+        return shoeStore;
     }
 
     @Override
     public void setShoeStores(cat.uvic.teknos.shoeshop.models.ShoeStore shoeStore) {
-        this.shoeStores = (ShoeStore) shoeStore;
+        this.shoeStore = (ShoeStore) shoeStore;
     }
 }

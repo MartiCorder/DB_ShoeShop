@@ -2,10 +2,6 @@ package cat.uvic.teknos.shoeshop.domain.jpa.models;
 
 import jakarta.persistence.*;
 
-import java.util.Set;
-import cat.uvic.teknos.shoeshop.models.Model;
-import cat.uvic.teknos.shoeshop.models.Inventory;
-
 @Entity
 @Table(name = "SHOE")
 public class Shoe implements cat.uvic.teknos.shoeshop.models.Shoe {
@@ -24,22 +20,15 @@ public class Shoe implements cat.uvic.teknos.shoeshop.models.Shoe {
     @Column(name = "SIZE")
     private String size;
 
-    @ManyToOne(targetEntity = cat.uvic.teknos.shoeshop.domain.jpa.models.Model.class)
-    @JoinColumn(name = "MODEL_ID")
-    private Model model;
-
-
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, targetEntity = cat.uvic.teknos.shoeshop.domain.jpa.models.Inventory.class )
-    @JoinTable(name = "SHOE_INVENTORY", joinColumns = @JoinColumn(name = "INVENTORY_ID"), inverseJoinColumns = @JoinColumn(name = "SHOE_ID"), uniqueConstraints = { @UniqueConstraint( columnNames = {"INVENTORY_ID", "SHOE_ID"})})
-    @Transient
-    private Inventory inventories;
-
-    @ManyToOne(targetEntity = cat.uvic.teknos.shoeshop.domain.jpa.models.Inventory.class )
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "INVENTORY_ID")
     private Inventory inventory;
 
-    public Shoe() {
-    }
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "MODEL_ID")
+    private Model model;
+
+    public Shoe() {}
 
     @Override
     public int getId() {
@@ -83,21 +72,21 @@ public class Shoe implements cat.uvic.teknos.shoeshop.models.Shoe {
 
     @Override
     public Inventory getInventories() {
-        return inventories;
+        return inventory;
     }
 
     @Override
-    public void setInventories(Inventory inventories) {
-        this.inventories = inventories;
+    public void setInventories(cat.uvic.teknos.shoeshop.models.Inventory inventory) {
+        this.inventory = (Inventory) inventory;
     }
 
     @Override
-    public cat.uvic.teknos.shoeshop.models.Model getModels() {
+    public Model getModels() {
         return model;
     }
 
     @Override
     public void setModels(cat.uvic.teknos.shoeshop.models.Model model) {
-        this.model=model;
+        this.model = (Model) model;
     }
 }

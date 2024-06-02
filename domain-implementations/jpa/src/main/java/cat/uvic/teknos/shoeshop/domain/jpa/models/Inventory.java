@@ -2,8 +2,8 @@ package cat.uvic.teknos.shoeshop.domain.jpa.models;
 
 import jakarta.persistence.*;
 import java.util.Set;
-import  cat.uvic.teknos.shoeshop.models.Shoe;
-import  cat.uvic.teknos.shoeshop.models.ShoeStore;
+import cat.uvic.teknos.shoeshop.models.Shoe;
+import cat.uvic.teknos.shoeshop.models.ShoeStore;
 
 @Entity
 @Table(name = "INVENTORY")
@@ -17,10 +17,10 @@ public class Inventory implements cat.uvic.teknos.shoeshop.models.Inventory {
     @Column(name = "CAPACITY")
     private int capacity;
 
-    @OneToMany(mappedBy = "inventory", targetEntity = cat.uvic.teknos.shoeshop.domain.jpa.models.Shoe.class)
+    @OneToMany(mappedBy = "inventory", targetEntity = cat.uvic.teknos.shoeshop.domain.jpa.models.Shoe.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Shoe> shoes;
 
-    @ManyToMany(mappedBy = "inventories", targetEntity = cat.uvic.teknos.shoeshop.domain.jpa.models.ShoeStore.class)
+    @ManyToMany(mappedBy = "inventories", targetEntity = cat.uvic.teknos.shoeshop.domain.jpa.models.ShoeStore.class, fetch = FetchType.EAGER)
     private Set<ShoeStore> shoeStores;
 
     public Inventory() {
@@ -51,23 +51,22 @@ public class Inventory implements cat.uvic.teknos.shoeshop.models.Inventory {
     }
 
     @Override
-    public Set<cat.uvic.teknos.shoeshop.models.ShoeStore> getShoeStores() {
+    public Set<ShoeStore> getShoeStores() {
         return shoeStores;
     }
 
     @Override
-    public void setShoeStores(Set<cat.uvic.teknos.shoeshop.models.ShoeStore> shoeStores) {
-        this.shoeStores=shoeStores;
+    public void setShoeStores(Set<ShoeStore> shoeStores) {
+        this.shoeStores = shoeStores;
     }
 
     @Override
-    public Set<cat.uvic.teknos.shoeshop.models.Shoe> getShoes() {
+    public Set<Shoe> getShoes() {
         return shoes;
     }
 
     @Override
-    public void setShoes(Set<cat.uvic.teknos.shoeshop.models.Shoe> shoes) {
-        this.shoes=shoes;
+    public void setShoes(Set<Shoe> shoes) {
+        this.shoes = shoes;
     }
-
 }

@@ -1,8 +1,6 @@
 package cat.uvic.teknos.shoeshop.domain.jpa.models;
 
 import jakarta.persistence.*;
-
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -20,7 +18,7 @@ public class Model implements cat.uvic.teknos.shoeshop.models.Model {
     @Column(name = "BRAND")
     private String brand;
 
-    @OneToMany(mappedBy = "model")
+    @OneToMany(mappedBy = "model", fetch = FetchType.EAGER)
     private Set<Shoe> shoes;
 
     public Model() {
@@ -60,4 +58,5 @@ public class Model implements cat.uvic.teknos.shoeshop.models.Model {
     public void setBrand(String brand) {
         this.brand = brand;
     }
+
 }

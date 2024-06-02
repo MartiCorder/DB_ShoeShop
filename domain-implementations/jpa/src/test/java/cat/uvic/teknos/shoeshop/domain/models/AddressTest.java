@@ -22,7 +22,7 @@ class AddressTest {
 
     @Test
     void insertAddressTest() {
-        // EntityManager
+
         var entityManager = entityManagerFactory.createEntityManager();
 
         try {

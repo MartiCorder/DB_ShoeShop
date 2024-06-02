@@ -1,7 +1,6 @@
 package cat.uvic.teknos.shoeshop.domain.jpa.models;
 
 import jakarta.persistence.*;
-import java.util.Set;
 
 @Entity
 @Table(name = "ADDRESS")
@@ -15,8 +14,8 @@ public class Address implements cat.uvic.teknos.shoeshop.models.Address {
     @Column(name = "LOCATION")
     private String location;
 
-    @OneToMany(mappedBy = "address")
-    private Set<Client> clients;
+    @OneToOne(mappedBy = "address", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Client client;
 
     public Address() {
     }

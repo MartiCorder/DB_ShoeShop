@@ -9,11 +9,9 @@ import com.github.freva.asciitable.Column;
 
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.PrintStream;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static cat.uvic.teknos.shoeshop.backoffice.IOUtils.readLine;
@@ -25,11 +23,14 @@ public class ShoeStoreManager {
     private final ShoeStoreRepository shoeStoreRepository;
     private final ModelFactory modelFactory;
 
-    public ShoeStoreManager(BufferedReader in, PrintStream out, ShoeStoreRepository shoeStoreRepository, ModelFactory modelFactory) {
+    private final Properties properties = new Properties();
+
+    public ShoeStoreManager(BufferedReader in, PrintStream out, ShoeStoreRepository shoeStoreRepository, ModelFactory modelFactory) throws IOException {
         this.out = out;
         this.in = in;
         this.shoeStoreRepository = shoeStoreRepository;
         this.modelFactory = modelFactory;
+        properties.load(App.class.getResourceAsStream("/app.properties"));
     }
 
     public void start(){

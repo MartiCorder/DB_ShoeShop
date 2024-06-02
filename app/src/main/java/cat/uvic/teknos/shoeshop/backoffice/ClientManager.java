@@ -12,10 +12,7 @@ import com.github.freva.asciitable.Column;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import java.util.Comparator;
@@ -33,14 +30,15 @@ public class ClientManager {
     private final ModelFactory modelFactory;
 
     private final RepositoryFactory repositoryFactory;
-
+    private final Properties properties = new Properties();
     public ClientManager(BufferedReader in, PrintStream out, RepositoryFactory repositoryFactory,
-                          ModelFactory modelFactory) {
+                          ModelFactory modelFactory) throws IOException {
         this.out = out;
         this.in = in;
         this.repositoryFactory = repositoryFactory;
         this.clientRepository = repositoryFactory.getClientRepository();
         this.modelFactory = modelFactory;
+        properties.load(App.class.getResourceAsStream("/app.properties"));
     }
 
     public void start(){
