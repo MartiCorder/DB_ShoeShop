@@ -7,7 +7,6 @@ import cat.uvic.teknos.shoeshop.repositories.ShoeStoreRepository;
 import com.github.freva.asciitable.AsciiTable;
 import com.github.freva.asciitable.Column;
 
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -22,7 +21,6 @@ public class ShoeStoreManager {
     private final BufferedReader in;
     private final ShoeStoreRepository shoeStoreRepository;
     private final ModelFactory modelFactory;
-
     private final Properties properties = new Properties();
 
     public ShoeStoreManager(BufferedReader in, PrintStream out, ShoeStoreRepository shoeStoreRepository, ModelFactory modelFactory) throws IOException {
@@ -36,7 +34,7 @@ public class ShoeStoreManager {
     public void start(){
         out.println("\n*** Shoe Store Management ***\n");
 
-        var command = "";
+        String command;
         do {
             showShoeStoreMenu();
             command = readLine(in);
@@ -74,17 +72,21 @@ public class ShoeStoreManager {
     private void deleteShoeStore(){
         out.println("\n*** Delete Shoe Store ***\n");
 
-        var shoeStore = modelFactory.createShoeStore();
+        try {
+            out.println("Enter the ID of the Shoe Store to delete:");
+            int id = Integer.parseInt(readLine(in));
 
-        out.println("Enter the ID of the Shoe Store to delete:");
-        int id = Integer.parseInt(readLine(in));
-        shoeStore.setId(id);
-
-        if (shoeStoreRepository.get(id) != null) {
-            shoeStoreRepository.delete(shoeStore);
-            out.println("\nSuccessfully deleted.\n");
-        } else {
-            out.println("\nThe Shoe Store with ID " + id + " does not exist.\n");
+            ShoeStore shoeStore = shoeStoreRepository.get(id);
+            if (shoeStore != null) {
+                shoeStoreRepository.delete(shoeStore);
+                out.println("\nSuccessfully deleted.\n");
+            } else {
+                out.println("\nThe Shoe Store with ID " + id + " does not exist.\n");
+            }
+        } catch (NumberFormatException e) {
+            out.println("\nInvalid Shoe Store ID. Please enter a valid integer ID.\n");
+        } catch (Exception e) {
+            out.println("\nAn error occurred while deleting the Shoe Store: " + e.getMessage() + "\n");
         }
     }
 
@@ -92,25 +94,27 @@ public class ShoeStoreManager {
         out.println("\n*** Update Shoe Store ***\n");
 
         try {
-            var shoeStore = modelFactory.createShoeStore();
-
             out.println("Enter the ID of the Shoe Store to update:");
             int id = Integer.parseInt(readLine(in));
-            shoeStore.setId(id);
 
-            out.println("Enter new Name:");
-            shoeStore.setName(readLine(in));
+            ShoeStore shoeStore = shoeStoreRepository.get(id);
+            if (shoeStore != null) {
+                out.println("Enter new Name:");
+                String name = readLine(in);
+                out.println("Enter new Owner:");
+                String owner = readLine(in);
+                out.println("Enter new Location:");
+                String location = readLine(in);
 
-            out.println("Enter new Owner:");
-            shoeStore.setOwner(readLine(in));
+                shoeStore.setName(name);
+                shoeStore.setOwner(owner);
+                shoeStore.setLocation(location);
 
-            out.println("Enter new Location:");
-            shoeStore.setLocation(readLine(in));
-
-            shoeStoreRepository.save(shoeStore);
-
-            out.println("\nSuccessfully updated.\n");
-
+                shoeStoreRepository.save(shoeStore);
+                out.println("\nSuccessfully updated.\n");
+            } else {
+                out.println("\nThe Shoe Store with ID " + id + " does not exist.\n");
+            }
         } catch (NumberFormatException e) {
             out.println("\nInvalid Shoe Store ID. Please enter a valid integer ID.\n");
         } catch (Exception e) {
@@ -121,21 +125,22 @@ public class ShoeStoreManager {
     private void insert(){
         out.println("\n*** Insert Shoe Store ***\n");
 
-        var shoeStore = modelFactory.createShoeStore();
+        try {
+            ShoeStore shoeStore = modelFactory.createShoeStore();
 
-        out.println("Enter the Name:");
-        shoeStore.setName(readLine(in));
+            out.println("Enter the Name:");
+            shoeStore.setName(readLine(in));
+            out.println("Enter the Owner:");
+            shoeStore.setOwner(readLine(in));
+            out.println("Enter the Location:");
+            shoeStore.setLocation(readLine(in));
 
-        out.println("Enter the Owner:");
-        shoeStore.setOwner(readLine(in));
+            shoeStoreRepository.save(shoeStore);
 
-        out.println("Enter the Location:");
-        shoeStore.setLocation(readLine(in));
-
-
-        shoeStoreRepository.save(shoeStore);
-
-        out.println("\nSuccessfully inserted.\n");
+            out.println("\nSuccessfully inserted.\n");
+        } catch (Exception e) {
+            out.println("\nAn error occurred while inserting the Shoe Store: " + e.getMessage() + "\n");
+        }
     }
 
     private void showShoeStoreMenu() {

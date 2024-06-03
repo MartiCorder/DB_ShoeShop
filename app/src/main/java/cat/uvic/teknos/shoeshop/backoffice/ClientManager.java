@@ -15,11 +15,6 @@ import java.io.PrintStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import static cat.uvic.teknos.shoeshop.backoffice.IOUtils.readLine;
 
 public class ClientManager {
@@ -31,8 +26,9 @@ public class ClientManager {
 
     private final RepositoryFactory repositoryFactory;
     private final Properties properties = new Properties();
+
     public ClientManager(BufferedReader in, PrintStream out, RepositoryFactory repositoryFactory,
-                          ModelFactory modelFactory) throws IOException {
+                         ModelFactory modelFactory) throws IOException {
         this.out = out;
         this.in = in;
         this.repositoryFactory = repositoryFactory;
@@ -44,8 +40,7 @@ public class ClientManager {
     public void start(){
         out.println("\n*** Client Management ***\n");
 
-        var command = "";
-
+        String command;
         do {
             showClientMenu();
             command = readLine(in);
@@ -62,7 +57,7 @@ public class ClientManager {
     }
 
     private void getAllClients() {
-        out.println("\n List of Clients \n");
+        out.println("\n*** List of Clients ***\n");
 
         Set<Client> clientSet = clientRepository.getAll();
         List<Client> clients = clientSet.stream()
@@ -76,128 +71,166 @@ public class ClientManager {
                 new Column().header("Phone").with(Client::getPhone)
         )));
     }
+
     private void deleteClient() {
         out.println("\n*** Delete Client ***\n");
 
-        out.println("Enter the ID of the client to delete:");
-
-        int id = Integer.parseInt(readLine(in));
-        Client client = clientRepository.get(id);
-        if (client != null) {
-            clientRepository.delete(client);
-            out.println("Client deleted successfully.");
-        } else {
-            out.println("Client with ID " + id + " not found.");
-        }
-    }
-
-    private void updateClient() {
-        out.println("\n*** Update Client ***\n");
-        out.println("Enter the ID of the client to update:");
-        int id = Integer.parseInt(readLine(in));
-        Client client = clientRepository.get(id);
-        if (client != null) {
-            out.println("Enter new DNI:");
-            String dni =readLine(in);
-            out.println("Enter new Name:");
-            String name = readLine(in);
-            out.println("Enter new Phone:");
-            String phone = readLine(in);
-
-            client.setDni(dni);
-            client.setName(name);
-            client.setPhone(phone);
-            clientRepository.save(client);
-            out.println("Client updated successfully.");
+        try {
+            out.println("Enter the ID of the client to delete:");
+            int id = Integer.parseInt(readLine(in));
+            Client client = clientRepository.get(id);
+            if (client != null) {
+                clientRepository.delete(client);
+                out.println("Client deleted successfully.");
             } else {
                 out.println("Client with ID " + id + " not found.");
             }
+        } catch (NumberFormatException e) {
+            out.println("Invalid Client ID. Please enter a valid integer ID.");
+        } catch (Exception e) {
+            out.println("An error occurred while deleting the client: " + e.getMessage());
+        }
+    }
+
+
+    private void updateClient() {
+        out.println("\n*** Update Client ***\n");
+
+        try {
+            out.println("Enter the ID of the client to update:");
+            int id = Integer.parseInt(readLine(in));
+            Client client = clientRepository.get(id);
+            if (client != null) {
+                out.println("Enter new DNI:");
+                String dni = readLine(in);
+                out.println("Enter new Name:");
+                String name = readLine(in);
+                out.println("Enter new Phone:");
+                String phone = readLine(in);
+
+                client.setDni(dni);
+                client.setName(name);
+                client.setPhone(phone);
+                clientRepository.save(client);
+                out.println("Client updated successfully.");
+            } else {
+                out.println("Client with ID " + id + " not found.");
+            }
+        } catch (NumberFormatException e) {
+            out.println("Invalid Client ID. Please enter a valid integer ID.");
+        } catch (Exception e) {
+            out.println("An error occurred while updating the client: " + e.getMessage());
+        }
     }
 
     private void insertClient() {
         out.println("\n*** Insert Client ***\n");
 
-        Client client = modelFactory.createClient();
-        out.println("Enter the DNI:");
-        String dni = readLine(in);
-        out.println("Enter the Name:");
-        String name = readLine(in);
-        out.println("Enter the Phone:");
-        String phone = readLine(in);
+        try {
+            Client client = modelFactory.createClient();
+            out.println("Enter the DNI:");
+            String dni = readLine(in);
+            out.println("Enter the Name:");
+            String name = readLine(in);
+            out.println("Enter the Phone:");
+            String phone = readLine(in);
 
-        if (dni.isBlank() || name.isBlank() || phone.isBlank()) {
-            out.println("Error: DNI, Name, and Phone cannot be empty.");
-            return;
+            if (dni.isBlank() || name.isBlank() || phone.isBlank()) {
+                out.println("Error: DNI, Name, and Phone cannot be empty.");
+                return;
+            }
+
+            client.setDni(dni);
+            client.setName(name);
+            client.setPhone(phone);
+
+            Address address = insertAddress();
+
+            out.println("Do you want to insert a new Shoe Store or relate to an existing one? (new/existing)");
+            String choice = readLine(in);
+
+            ShoeStore shoeStore;
+            if (choice.equalsIgnoreCase("existing")) {
+                shoeStore = selectExistingShoeStore();
+            } else {
+                shoeStore = insertShoeStore();
+            }
+
+            client.setAddresses(address);
+            client.setShoeStores(shoeStore);
+
+            clientRepository.save(client);
+            out.println("Client inserted successfully.");
+        } catch (Exception e) {
+            out.println("An error occurred while inserting the client: " + e.getMessage());
         }
-
-        client.setDni(dni);
-        client.setName(name);
-        client.setPhone(phone);
-
-        Address address = insertAddress();
-
-        out.println("Do you want to insert a new Shoe Store or relate to an existing one? (new/existing)");
-        String choice = readLine(in);
-
-        ShoeStore shoeStore;
-        if (choice.equalsIgnoreCase("existing")) {
-            shoeStore = selectExistingShoeStore();
-        } else {
-            shoeStore = insertShoeStore();
-        }
-
-        client.setAddresses(address);
-        client.setShoeStores(shoeStore);
-
-        clientRepository.save(client);
-        out.println("Client inserted successfully.");
     }
+
     private Address insertAddress(){
         out.println("\n*** Insert Address ***\n");
-        Address address = modelFactory.createAddress();
-        out.println("Enter the Location:");
-        address.setLocation(readLine(in));
-        out.println("Address inserted successfully.");
-        return address;
+
+        try {
+            Address address = modelFactory.createAddress();
+            out.println("Enter the Location:");
+            address.setLocation(readLine(in));
+            out.println("Address inserted successfully.");
+            return address;
+        } catch (Exception e) {
+            out.println("An error occurred while inserting the address: " + e.getMessage());
+            return null;
+        }
     }
 
     private ShoeStore insertShoeStore(){
         out.println("\n*** Insert Shoe Store ***\n");
-        ShoeStore shoeStore = modelFactory.createShoeStore();
-        out.println("Enter the Name:");
-        shoeStore.setName(readLine(in));
-        out.println("Enter the Owner:");
-        shoeStore.setOwner(readLine(in));
-        out.println("Enter the Location:");
-        shoeStore.setLocation(readLine(in));
-        out.println("Shoe Store inserted successfully.");
-        return shoeStore;
+
+        try {
+            ShoeStore shoeStore = modelFactory.createShoeStore();
+            out.println("Enter the Name:");
+            shoeStore.setName(readLine(in));
+            out.println("Enter the Owner:");
+            shoeStore.setOwner(readLine(in));
+            out.println("Enter the Location:");
+            shoeStore.setLocation(readLine(in));
+            out.println("Shoe Store inserted successfully.");
+            return shoeStore;
+        } catch (Exception e) {
+            out.println("An error occurred while inserting the shoe store: " + e.getMessage());
+            return null;
+        }
     }
+
     private ShoeStore selectExistingShoeStore() {
         out.println("\n*** Select Existing Shoe Store ***\n");
 
-        Set<ShoeStore> shoeStoreSet = repositoryFactory.getShoeStoreRepository().getAll();
+        try {
+            Set<ShoeStore> shoeStoreSet = repositoryFactory.getShoeStoreRepository().getAll();
 
-        List<ShoeStore> shoeStores = shoeStoreSet.stream()
-                .sorted(Comparator.comparingInt(ShoeStore::getId))
-                .collect(Collectors.toList());
+            List<ShoeStore> shoeStores = shoeStoreSet.stream()
+                    .sorted(Comparator.comparingInt(ShoeStore::getId))
+                    .collect(Collectors.toList());
 
-        out.println(AsciiTable.getTable(shoeStores, Arrays.asList(
-                new Column().header("Id").with(store -> String.valueOf(store.getId())),
-                new Column().header("Name").with(ShoeStore::getName),
-                new Column().header("Owner").with(ShoeStore::getOwner),
-                new Column().header("Location").with(ShoeStore::getLocation)
-        )));
+            out.println(AsciiTable.getTable(shoeStores, Arrays.asList(
+                    new Column().header("Id").with(store -> String.valueOf(store.getId())),
+                    new Column().header("Name").with(ShoeStore::getName),
+                    new Column().header("Owner").with(ShoeStore::getOwner),
+                    new Column().header("Location").with(ShoeStore::getLocation)
+            )));
 
-        out.println("Enter the ID of the Shoe Store to relate to the client:");
-        int id = Integer.parseInt(readLine(in));
-
-        ShoeStore shoeStore = repositoryFactory.getShoeStoreRepository().get(id);
-        if (shoeStore == null) {
-            out.println("Shoe Store with ID " + id + " not found.");
+            out.println("Enter the ID of the Shoe Store to relate to the client:");
+            int id = Integer.parseInt(readLine(in));
+            ShoeStore shoeStore = repositoryFactory.getShoeStoreRepository().get(id);
+            if (shoeStore == null) {
+                out.println("Shoe Store with ID " + id + " not found.");
+            }
+            return shoeStore;
+        } catch (NumberFormatException e) {
+            out.println("Invalid Shoe Store ID. Please enter a valid integer ID.");
+            return null;
+        } catch (Exception e) {
+            out.println("An error occurred while selecting the shoe store: " + e.getMessage());
+            return null;
         }
-
-        return shoeStore;
     }
 
     private void showClientMenu() {
@@ -210,4 +243,3 @@ public class ClientManager {
         out.println();
     }
 }
-

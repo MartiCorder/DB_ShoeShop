@@ -81,12 +81,9 @@ public class ShoeManager {
     private void deleteShoe(){
         out.println("\n*** Delete Shoe ***\n");
 
-        var shoe = modelFactory.createShoe();
-
         out.println("Enter the ID of the shoe to delete:");
         int id = Integer.parseInt(readLine(in));
-        shoe.setId(id);
-
+        Shoe shoe =shoeRepository.get(id);
         if (shoeRepository.get(id) != null) {
             shoeRepository.delete(shoe);
             out.println("\nSuccessfully deleted.\n");
@@ -107,20 +104,15 @@ public class ShoeManager {
 
             out.println("Enter new Model ID:");
             int modelId = Integer.parseInt(readLine(in));
-            Model model = repositoryFactory.getModelRepository().get(modelId);
-            if (model == null) {
-                out.println("Error: Model ID " + modelId + " does not exist.");
-                return;
-            }
+            Model model = modelFactory.createModel();
+            model.setId(modelId);
+            shoe.setModels(model);
             shoe.setModels(model);
 
             out.println("Enter new Inventory ID:");
             int inventoryId = Integer.parseInt(readLine(in));
-            Inventory inventory = repositoryFactory.getInventoryRepository().get(inventoryId);
-            if (inventory == null) {
-                out.println("Error: Inventory ID " + inventoryId + " does not exist.");
-                return;
-            }
+            Inventory inventory = modelFactory.createInventory();
+            model.setId(inventoryId);
             shoe.setInventories(inventory);
 
             out.println("Enter new Price:");
@@ -151,20 +143,14 @@ public class ShoeManager {
         try {
             out.println("Enter the Model ID:");
             int modelId = Integer.parseInt(readLine(in));
-            Model model = repositoryFactory.getModelRepository().get(modelId);
-            if (model == null) {
-                out.println("Error: Model ID " + modelId + " does not exist.");
-                return;
-            }
+            Model model = modelFactory.createModel();
+            model.setId(modelId);
             shoe.setModels(model);
 
             out.println("Enter the Inventory ID:");
             int inventoryId = Integer.parseInt(readLine(in));
-            Inventory inventory = repositoryFactory.getInventoryRepository().get(inventoryId);
-            if (inventory == null) {
-                out.println("Error: Inventory ID " + inventoryId + " does not exist.");
-                return;
-            }
+            Inventory inventory = modelFactory.createInventory();
+            model.setId(inventoryId);
             shoe.setInventories(inventory);
 
             out.println("Enter the Price:");
