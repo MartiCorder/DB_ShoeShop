@@ -11,6 +11,7 @@ dependencies {
     implementation(project(":utilities"))
     implementation(project(":domain-implementations:jdbc"))
     implementation(project(":domain-implementations:JPA"))
+    implementation("com.mysql:mysql-connector-j:8.3.0")
     implementation(project(":domain-implementations:file"))
     implementation("com.github.freva:ascii-table:1.8.0")
 
