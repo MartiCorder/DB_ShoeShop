@@ -8,7 +8,6 @@ plugins {
 
 dependencies {
     implementation(project(":domain"))
-    implementation(project(":domain-implementations:jdbc"))
     implementation(project(":domain-implementations:JPA"))
 
     implementation("com.athaydes.rawhttp:rawhttp-core:2.6.0")
@@ -16,5 +15,5 @@ dependencies {
 }
 
 application {
-    mainClass = "cat.uvic.teknos.shoeshop.services.Server"
+    mainClass = "cat.uvic.teknos.shoeshop.services.Server.App"
 }

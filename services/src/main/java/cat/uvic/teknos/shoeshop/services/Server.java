@@ -1,30 +1,35 @@
 package cat.uvic.teknos.shoeshop.services;
 
-import cat.uvic.teknos.shoeshop.services.exception.ResourceNotFoundException;
-import cat.uvic.teknos.shoeshop.services.exception.ServerErrorException;
-import com.sun.net.httpserver.Request;
-import rawhttp.core.RawHttp;
-import rawhttp.core.RawHttpResponse;
+import cat.uvic.teknos.shoeshop.services.exception.ServerException;
 
+import rawhttp.core.RawHttp;
 import java.io.IOException;
 import java.net.ServerSocket;
 
 public class Server {
-    public static final int PORT = 8080;
+    public final int PORT = 8080;
+    private final RequestRouter requestRouter;
+    private boolean SHUTDOWN_SERVER;
 
-    public static void main(String[] args) throws IOException {
-        var serverSocket = new ServerSocket(PORT);
-        var router = new RequestRouter();
+    public Server(RequestRouter requestRouter) {
+        this.requestRouter = requestRouter;
+    }
 
-        while (true) {
-            try (var clientSocket = serverSocket.accept()){
-                var rawHttp = new RawHttp();
-                var request = rawHttp.parseRequest(clientSocket.getInputStream());
+    public void start() {
+        try(var serverSocket = new ServerSocket(PORT)) {
 
-                var response = router.execRequest(request);
+            while (!SHUTDOWN_SERVER) {
+                try (var clientSocket = serverSocket.accept()){
+                    var rawHttp = new RawHttp();
+                    var request = rawHttp.parseRequest(clientSocket.getInputStream());
 
-                response.writeTo(clientSocket.getOutputStream());
+                    var response = requestRouter.execRequest(request);
+
+                    response.writeTo(clientSocket.getOutputStream());
+                }
             }
+        } catch (IOException e) {
+            throw new ServerException(e);
         }
     }
 }

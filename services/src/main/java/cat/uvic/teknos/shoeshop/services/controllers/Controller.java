@@ -1,10 +1,10 @@
 package cat.uvic.teknos.shoeshop.services.controllers;
 
-public interface Controller<K, V> {
+public interface Controller{
 
-    String get(K k);
+    String get(int id);
     String get();
-    void post(V value);
-    void put(K key, V value);
-    void delete(K key);
+    void post(String json);
+    void put(int id, String json);
+    void delete(int id);
 }
