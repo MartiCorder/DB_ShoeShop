@@ -21,7 +21,7 @@ public class App {
         var controllers = new HashMap<String, Controller>();
 
         // TODO: review how to deserialize json objects
-        controllers.put("students", new ClientController(repositoryFactory, modelFactory));
+        controllers.put("clients", new ClientController(repositoryFactory, modelFactory));
 
         var requestRouter = new RequestRouterImpl(controllers);
         new Server(requestRouter)
