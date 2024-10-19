@@ -8,7 +8,11 @@ import rawhttp.core.RawHttpRequest;
 import rawhttp.core.RawHttpResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.IOException;
 import java.util.Map;
+
+import cat.uvic.teknos.shoeshop.services.exception.RequestRouterImplException;
 
 public class RequestRouterImpl implements RequestRouter {
     private static RawHttp rawHttp = new RawHttp();
@@ -62,7 +66,7 @@ public class RequestRouterImpl implements RequestRouter {
 
                 case "POST":
                     // POST /clients
-                    var clientJson = request.getBody().get().asString(); // Obtenim el cos de la petició
+                    var clientJson = new String(request.getBody().get().asRawBytes()); // Convertim el cos de la petició a una cadena
                     controller.post(clientJson);
                     responseJsonBody = "{\"message\": \"Resource created successfully.\"}";
                     break;
@@ -73,7 +77,7 @@ public class RequestRouterImpl implements RequestRouter {
                     }
                     // PUT /clients/{id}
                     var clientId = Integer.parseInt(pathParts[2]);
-                    var updateJson = request.getBody().get().asString();
+                    var updateJson = new String(request.getBody().get().asRawBytes()); // Convertim el cos de la petició a una cadena
                     controller.put(clientId, updateJson);
                     responseJsonBody = "{\"message\": \"Resource updated successfully.\"}";
                     break;
@@ -114,6 +118,8 @@ public class RequestRouterImpl implements RequestRouter {
         } catch (JsonProcessingException | NumberFormatException e) {
             // Si hi ha algun error en processar el JSON o el format de l'ID
             return rawHttp.parseResponse("HTTP/1.1 400 Bad Request\r\n\r\n");
+        }catch (IOException e) {
+            throw new RequestRouterImplException("Error reading request body", e); // Llança l'excepció personalitzada
         }
     }
 
