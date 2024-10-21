@@ -2,6 +2,7 @@ package cat.uvic.teknos.shoeshop.services.controllers;
 
 import cat.uvic.teknos.shoeshop.models.Client;
 import cat.uvic.teknos.shoeshop.models.ModelFactory; // Importem ModelFactory
+import cat.uvic.teknos.shoeshop.repositories.ClientRepository;
 import cat.uvic.teknos.shoeshop.repositories.RepositoryFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -51,15 +52,25 @@ public class ClientController implements Controller {
 
     @Override
     public void post(String json) {
-        // Deserialitzem el JSON en un objecte Client
         ObjectMapper mapper = new ObjectMapper();
         try {
             Client client = mapper.readValue(json, Client.class);
 
-            // Guardem el nou client en el repositori
+            // Assegura't que el client no sigui null i que els camps necessaris estiguin configurats
+            if (client.getDni() == null || client.getName() == null) {
+                throw new IllegalArgumentException("DNI and Name are required fields");
+            }
+
             repositoryFactory.getClientRepository().save(client);
         } catch (JsonProcessingException e) {
+            e.printStackTrace(); // Log de l'error de deserialització
             throw new RuntimeException("Error deserializing client from JSON", e);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace(); // Log d'errors d'argument
+            throw new RuntimeException("Invalid client data", e);
+        } catch (Exception e) {
+            e.printStackTrace(); // Log d'altres excepcions
+            throw new RuntimeException("Error saving client", e);
         }
     }
 

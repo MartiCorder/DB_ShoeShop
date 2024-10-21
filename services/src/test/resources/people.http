@@ -1,5 +1,16 @@
 ### GET request to example server
-GET https://examples.http-client.intellij.net/get
-    ?generated-in=IntelliJ IDEA
+# curl -X GET http://localhost:8080/clients
+GET http://localhost:8080/clients
+
+###
+# curl -X POST http://localhost:8080/clients
+
+POST http://localhost:8080/clients
+Content-Type: application/json
+
+{
+  "dni": "12345678X",
+  "name": "Roger Gost"
+}
 
 ###

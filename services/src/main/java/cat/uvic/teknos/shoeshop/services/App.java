@@ -19,12 +19,9 @@ public class App {
         ModelFactory modelFactory = (ModelFactory) Class.forName(properties.getProperty("modelFactory")).getConstructor().newInstance();
 
         var controllers = new HashMap<String, Controller>();
-
-        // TODO: review how to deserialize json objects
         controllers.put("clients", new ClientController(repositoryFactory, modelFactory));
 
         var requestRouter = new RequestRouterImpl(controllers);
-        new Server(requestRouter)
-                .start();
+        new Server(requestRouter).start();
     }
 }
