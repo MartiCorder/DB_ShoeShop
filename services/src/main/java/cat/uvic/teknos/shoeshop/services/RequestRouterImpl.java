@@ -65,7 +65,7 @@ public class RequestRouterImpl implements RequestRouter {
                     break;
 
                 case "POST":
-                    // POST /clients
+                    //POST /clients
                     var clientJson = new String(request.getBody().get().asRawBytes()); // Convertim el cos de la petició a una cadena
                     controller.post(clientJson);
                     responseJsonBody = "{\"message\": \"Resource created successfully.\"}";

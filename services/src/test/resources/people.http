@@ -13,4 +13,15 @@ Content-Type: application/json
   "name": "Roger Gost"
 }
 
+
 ###
+GET http://localhost:8080/models
+
+###
+POST http://localhost:8080/models
+Content-Type: application/json
+
+{
+  "name": "Model Y",
+  "brand": "Brand B"
+}

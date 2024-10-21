@@ -4,6 +4,7 @@ import cat.uvic.teknos.shoeshop.models.ModelFactory;
 import cat.uvic.teknos.shoeshop.repositories.RepositoryFactory;
 import cat.uvic.teknos.shoeshop.services.controllers.ClientController;
 import cat.uvic.teknos.shoeshop.services.controllers.Controller;
+import cat.uvic.teknos.shoeshop.services.controllers.ModelController;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -20,6 +21,7 @@ public class App {
 
         var controllers = new HashMap<String, Controller>();
         controllers.put("clients", new ClientController(repositoryFactory, modelFactory));
+        controllers.put("models", new ModelController(repositoryFactory, modelFactory));
 
         var requestRouter = new RequestRouterImpl(controllers);
         new Server(requestRouter).start();
