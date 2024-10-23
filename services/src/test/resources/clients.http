@@ -1,0 +1,47 @@
+GET http://localhost:8080/client
+Accept: application/json
+
+###
+GET http://localhost:8080/client/1
+Accept: application/json
+###
+DELETE http://localhost:8080/client/1
+Accept: application/json
+###
+PUT http://localhost:8080/client/1
+Accept: application/json
+Content-Type: application/json
+
+{
+  "id": 1,
+  "dni": "12345678A",
+  "name": "Client A (Updated)",
+  "phone": "111222333",
+  "addresses": {
+    "location": "Street A (Updated)"
+  },
+  "shoeStores": {
+    "id": 1,
+    "name": "Shoe Store A (Updated)"
+  }
+}
+###
+POST http://localhost:8080/client
+Accept: application/json
+Content-Type: application/json
+
+{
+  "dni": "11223344C",
+  "name": "Client C",
+  "phone": "333444555",
+  "addresses": {
+    "street": "Street C",
+    "city": "City C",
+    "zip": "67890"
+  },
+  "shoeStores": {
+    "id": 3,
+    "name": "Shoe Store C"
+  }
+}
+###

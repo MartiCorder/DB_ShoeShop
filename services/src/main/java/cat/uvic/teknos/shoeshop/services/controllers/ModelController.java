@@ -54,14 +54,22 @@ public class ModelController implements Controller {
     public void post(String json) {
         ObjectMapper mapper = new ObjectMapper();
         try {
+
+            // Deserialitzem el JSON per crear un objecte Model
             Model model = mapper.readValue(json, Model.class);
 
-            // Assegura't que el model no sigui null i que els camps necessaris estiguin configurats
+            // Comprovem que els camps essencials no siguin nuls
             if (model.getName() == null || model.getBrand() == null) {
                 throw new IllegalArgumentException("Name and Brand are required fields");
             }
 
-            repositoryFactory.getModelRepository().save(model);
+            // Utilitzem ModelFactory per crear una nova instància del model si cal
+            Model newModel = modelFactory.createModel(); // ModelFactory hauria de tenir un mètode com aquest
+            newModel.setName(model.getName());
+            newModel.setBrand(model.getBrand());
+
+            // Guardem el model creat al repositori
+            repositoryFactory.getModelRepository().save(newModel);
         } catch (JsonProcessingException e) {
             e.printStackTrace(); // Log de l'error de deserialització
             throw new RuntimeException("Error deserializing model from JSON", e);

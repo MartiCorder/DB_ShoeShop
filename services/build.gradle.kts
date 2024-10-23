@@ -8,7 +8,9 @@ plugins {
 
 dependencies {
     implementation(project(":domain"))
+    implementation(project(":domain-implementations:file"))
     implementation(project(":domain-implementations:JPA"))
+    implementation(project(":domain-implementations:jdbc"))
 
     implementation("com.athaydes.rawhttp:rawhttp-core:2.6.0")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.17.2")

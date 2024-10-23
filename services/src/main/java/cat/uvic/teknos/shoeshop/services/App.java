@@ -20,10 +20,11 @@ public class App {
         ModelFactory modelFactory = (ModelFactory) Class.forName(properties.getProperty("modelFactory")).getConstructor().newInstance();
 
         var controllers = new HashMap<String, Controller>();
-        controllers.put("clients", new ClientController(repositoryFactory, modelFactory));
-        controllers.put("models", new ModelController(repositoryFactory, modelFactory));
+        controllers.put("client", new ClientController(repositoryFactory, modelFactory)); // Canviat "clients" a "client"
+        controllers.put("model", new ModelController(repositoryFactory, modelFactory)); // Canviat "models" a "model"
 
         var requestRouter = new RequestRouterImpl(controllers);
+
         new Server(requestRouter).start();
     }
 }
