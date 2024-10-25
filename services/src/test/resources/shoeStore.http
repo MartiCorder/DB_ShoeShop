@@ -1,0 +1,65 @@
+GET http://localhost:8080/shoestore
+Accept: application/json
+###
+GET http://localhost:8080/shoestore/1
+Accept: application/json
+###
+DELETE http://localhost:8080/shoestore/1
+Accept: application/json
+###
+PUT http://localhost:8080/shoestore/2
+Accept: application/json
+Content-Type: application/json
+
+{
+  "id": 2,
+  "name": "FutbolManager B",
+  "owner": "Martí C",
+  "location": "Vic",
+  "suppliers": [
+    {
+      "id": 1,
+      "name": "Undirect"
+    }
+  ],
+  "clients": [
+    {
+      "id": 3,
+      "name": "Roger Valverde"
+    }
+  ],
+  "inventories": [
+    {
+      "id": 5,
+      "capacity": 300
+    }
+  ]
+}
+###
+POST http://localhost:8080/shoestore
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "FutbolManager Direction",
+  "owner": "Martí C",
+  "location": "Madrid",
+  "suppliers": [
+    {
+      "id": 2,
+      "name": "MadridShoes"
+    }
+  ],
+  "clients": [
+    {
+      "id": 4,
+      "name": "Antonio"
+    }
+  ],
+  "inventories": [
+    {
+      "id": 6,
+      "capacity": 400
+    }
+  ]
+}

@@ -4,15 +4,30 @@ Accept: application/json
 GET http://localhost:8080/shoe/1
 Accept: application/json
 ###
-DELETE http://localhost:8080/shoe/3
+DELETE http://localhost:8080/shoe/1
 Accept: application/json
 ###
-POST http://localhost:8080/shoe
+PUT http://localhost:8080/shoe/2
+Accept: application/json
 Content-Type: application/json
 
 {
-  "NAME": "Rogers",
-  "PHONE": 686775834
+  "id": 2,
+  "name": "In Pro",
+  "brand": "New Balance",
+  "size": 42,
+  "color": "Red",
+  "price": 89.99
 }
-
 ###
+POST http://localhost:8080/shoe
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "Pro static",
+  "brand": "Asics",
+  "size": 40,
+  "color": "Blue",
+  "price": 79.99
+}

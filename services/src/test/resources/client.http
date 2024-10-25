@@ -13,36 +13,32 @@ Content-Type: application/json
 
 {
   "id": 2,
-  "dni": "12345678A",
-  "name": "Client A (Updated)",
-  "phone": "111222333",
+  "dni": "48955663F",
+  "name": "ORIOL",
+  "phone": "686771035",
   "addresses": {
     "id": 2,
-    "location": "Street A (Updated)"
+    "location": "Carrer Romeu"
   },
   "shoeStores": {
     "id": 1,
-    "name": "Shoe Store A (Updated)"
+    "name": "FutbolManager"
   }
 }
-
-
 ###
 POST http://localhost:8080/client
 Accept: application/json
 Content-Type: application/json
 
 {
-  "dni": "11223344C",
-  "name": "Client C",
-  "phone": "333444555",
+  "dni": "46781345C",
+  "name": "Roger",
+  "phone": "670051644",
   "addresses": {
-    "location": "Street C"
+    "location": "Carretera Viladrau"
   },
   "shoeStores": {
     "id": 3,
-    "name": "Shoe Store C"
+    "name": "FutbolManager Pro"
   }
 }
-
-###

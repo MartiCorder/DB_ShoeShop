@@ -7,3 +7,21 @@ Accept: application/json
 DELETE http://localhost:8080/model/1
 Accept: application/json
 ###
+PUT http://localhost:8080/model/2
+Accept: application/json
+Content-Type: application/json
+
+{
+  "id": 2,
+  "name": "Nike Air Force",
+  "brand": "Nike"
+}
+###
+POST http://localhost:8080/model
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "Adidas Originals Pro",
+  "brand": "Adidas"
+}

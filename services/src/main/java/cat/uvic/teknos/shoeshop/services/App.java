@@ -22,6 +22,9 @@ public class App {
         controllers.put("model", new ModelController(repositoryFactory, modelFactory));
         controllers.put("shoe", new ShoeController(repositoryFactory, modelFactory));
         controllers.put("supplier", new SupplierController(repositoryFactory, modelFactory));
+        controllers.put("inventory", new InventoryController(repositoryFactory, modelFactory));
+        controllers.put("shoeStore", new ShoeStoreController(repositoryFactory, modelFactory));
+        controllers.put("address", new AddressController(repositoryFactory, modelFactory));
 
         var requestRouter = new RequestRouterImpl(controllers);
 
