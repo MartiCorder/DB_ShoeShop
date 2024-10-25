@@ -9,9 +9,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public class ClientController implements Controller {
 
     private final RepositoryFactory repositoryFactory;
@@ -56,50 +53,28 @@ public class ClientController implements Controller {
             JsonNode rootNode = mapper.readTree(json);
             Client client = new cat.uvic.teknos.shoeshop.file.models.Client();
 
-            if (rootNode.has("dni")) {
-                client.setDni(rootNode.get("dni").asText());
+            if (rootNode.has("DNI")) {
+                client.setDni(rootNode.get("DNI").asText());
             }
 
-            if (rootNode.has("name")) {
-                client.setName(rootNode.get("name").asText());
+            if (rootNode.has("NAME")) {
+                client.setName(rootNode.get("NAME").asText());
             }
 
-            if (rootNode.has("phone")) {
-                client.setPhone(rootNode.get("phone").asText());
+            if (rootNode.has("PHONE")) {
+                client.setPhone(rootNode.get("PHONE").asText());
             }
 
-            // Gestió d'adreces
-            if (rootNode.has("address")) {
-                Set<Address> addresses = new HashSet<>();
-                JsonNode addressesNode = rootNode.get("address");
-                for (JsonNode addressNode : addressesNode) {
-                    Address address = new cat.uvic.teknos.shoeshop.file.models.Address();
-                    if (addressNode.has("address")) {
-                        address.setLocation(addressNode.get("address").asText());
-                    }
-                    addresses.add(address);
-                }
-                client.setAddresses((Address) addresses);
+            if (rootNode.has("ADDRESS_ID")) {
+                Address address = new cat.uvic.teknos.shoeshop.file.models.Address();
+                address.setId(rootNode.get("ADDRESS_ID").asInt());
+                client.setAddresses(address);
             }
 
-            // Gestió de botigues de sabates
-            if (rootNode.has("shoe_store")) {
-                Set<ShoeStore> shoeStores = new HashSet<>();
-                JsonNode shoeStoresNode = rootNode.get("shoe_store");
-                for (JsonNode shoeStoreNode : shoeStoresNode) {
-                    ShoeStore shoeStore = new cat.uvic.teknos.shoeshop.file.models.ShoeStore();
-                    if (shoeStoreNode.has("name")) {
-                        shoeStore.setName(shoeStoreNode.get("name").asText());
-                    }
-                    if (shoeStoreNode.has("location")) {
-                        shoeStore.setLocation(shoeStoreNode.get("location").asText());
-                    }
-                    if (shoeStoreNode.has("owner")) {
-                        shoeStore.setOwner(shoeStoreNode.get("owner").asText());
-                    }
-                    shoeStores.add(shoeStore);
-                }
-                client.setShoeStores((ShoeStore) shoeStores);
+            if (rootNode.has("SHOE_STORE_ID")) {
+                ShoeStore shoeStore = new cat.uvic.teknos.shoeshop.file.models.ShoeStore();
+                shoeStore.setId(rootNode.get("SHOE_STORE_ID").asInt());
+                client.setShoeStores(shoeStore);
             }
 
             if (client.getDni() == null || client.getName() == null) {
@@ -126,50 +101,39 @@ public class ClientController implements Controller {
 
         try {
             JsonNode rootNode = mapper.readTree(json);
-            if (rootNode.has("dni")) {
-                existingClient.setDni(rootNode.get("dni").asText());
+
+            if (rootNode.has("DNI")) {
+                existingClient.setDni(rootNode.get("DNI").asText());
             }
 
-            if (rootNode.has("name")) {
-                existingClient.setName(rootNode.get("name").asText());
+            if (rootNode.has("NAME")) {
+                existingClient.setName(rootNode.get("NAME").asText());
             }
 
-            if (rootNode.has("phone")) {
-                existingClient.setPhone(rootNode.get("phone").asText());
+            if (rootNode.has("PHONE")) {
+                existingClient.setPhone(rootNode.get("PHONE").asText());
             }
 
-            // Gestió d'adreces
-            if (rootNode.has("addresses")) {
-                Set<Address> addresses = new HashSet<>();
-                JsonNode addressesNode = rootNode.get("addresses");
-                for (JsonNode addressNode : addressesNode) {
-                    Address address = new cat.uvic.teknos.shoeshop.file.models.Address();
-                    if (addressNode.has("address")) {
-                        address.setLocation(addressNode.get("address").asText());
-                    }
-                    addresses.add(address);
+            if (rootNode.has("ADDRESS_ID")) {
+                Address address = new cat.uvic.teknos.shoeshop.file.models.Address();
+                address.setId(rootNode.get("ADDRESS_ID").asInt());
+                if (rootNode.has("LOCATION")) {
+                    address.setLocation(rootNode.get("LOCATION").asText());
                 }
-                existingClient.setAddresses((Address) addresses);
+                existingClient.setAddresses(address);
             }
 
-            // Gestió de botigues de sabates
-            if (rootNode.has("shoeStores")) {
-                Set<ShoeStore> shoeStores = new HashSet<>();
-                JsonNode shoeStoresNode = rootNode.get("shoeStores");
-                for (JsonNode shoeStoreNode : shoeStoresNode) {
-                    ShoeStore shoeStore = new cat.uvic.teknos.shoeshop.file.models.ShoeStore();
-                    if (shoeStoreNode.has("name")) {
-                        shoeStore.setName(shoeStoreNode.get("name").asText());
-                    }
-                    if (shoeStoreNode.has("location")) {
-                        shoeStore.setLocation(shoeStoreNode.get("location").asText());
-                    }
-                    shoeStores.add(shoeStore);
+            if (rootNode.has("SHOE_STORE_ID")) {
+                ShoeStore shoeStore = new cat.uvic.teknos.shoeshop.file.models.ShoeStore();
+                shoeStore.setId(rootNode.get("SHOE_STORE_ID").asInt());
+                if (rootNode.has("NAME")) {
+                    shoeStore.setName(rootNode.get("NAME").asText());
                 }
-                existingClient.setShoeStores((ShoeStore) shoeStores);
+                existingClient.setShoeStores(shoeStore);
             }
 
             repositoryFactory.getClientRepository().save(existingClient);
+
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Error deserializing client from JSON", e);
         }

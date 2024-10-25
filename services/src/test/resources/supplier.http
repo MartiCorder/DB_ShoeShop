@@ -1,0 +1,18 @@
+GET http://localhost:8080/supplier
+Accept: application/json
+###
+GET http://localhost:8080/supplier/1
+Accept: application/json
+###
+DELETE http://localhost:8080/supplier/3
+Accept: application/json
+###
+POST http://localhost:8080/supplier
+Content-Type: application/json
+
+{
+  "NAME": "Rogers",
+  "PHONE": 686775834
+}
+
+###

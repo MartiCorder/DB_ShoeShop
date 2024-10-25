@@ -1,11 +1,11 @@
 ### GET request to example server
 # curl -X GET http://localhost:8080/clients
-GET http://localhost:8080/clients
+GET http://localhost:8080/client
 
 ###
 # curl -X POST http://localhost:8080/clients
 
-POST http://localhost:8080/clients
+POST http://localhost:8080/client
 Content-Type: application/json
 
 {
@@ -25,3 +25,23 @@ Content-Type: application/json
   "name": "Model Y",
   "brand": "Brand B"
 }
+
+###
+POST http://localhost:8080/client
+Accept: application/json
+Content-Type: application/json
+
+{
+  "dni": "11223344C",
+  "name": "Client C",
+  "phone": "333444555",
+  "addresses": {
+    "location": "Street C"
+  },
+  "shoeStores": {
+    "id": 3,
+    "name": "Shoe Store C"
+  }
+}
+
+###

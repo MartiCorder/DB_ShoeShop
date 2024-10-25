@@ -2,9 +2,7 @@ package cat.uvic.teknos.shoeshop.services;
 
 import cat.uvic.teknos.shoeshop.models.ModelFactory;
 import cat.uvic.teknos.shoeshop.repositories.RepositoryFactory;
-import cat.uvic.teknos.shoeshop.services.controllers.ClientController;
-import cat.uvic.teknos.shoeshop.services.controllers.Controller;
-import cat.uvic.teknos.shoeshop.services.controllers.ModelController;
+import cat.uvic.teknos.shoeshop.services.controllers.*;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -20,8 +18,10 @@ public class App {
         ModelFactory modelFactory = (ModelFactory) Class.forName(properties.getProperty("modelFactory")).getConstructor().newInstance();
 
         var controllers = new HashMap<String, Controller>();
-        controllers.put("client", new ClientController(repositoryFactory, modelFactory)); // Canviat "clients" a "client"
-        controllers.put("model", new ModelController(repositoryFactory, modelFactory)); // Canviat "models" a "model"
+        controllers.put("client", new ClientController(repositoryFactory, modelFactory));
+        controllers.put("model", new ModelController(repositoryFactory, modelFactory));
+        controllers.put("shoe", new ShoeController(repositoryFactory, modelFactory));
+        controllers.put("supplier", new SupplierController(repositoryFactory, modelFactory));
 
         var requestRouter = new RequestRouterImpl(controllers);
 

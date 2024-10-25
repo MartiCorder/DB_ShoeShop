@@ -1,6 +1,5 @@
 GET http://localhost:8080/client
 Accept: application/json
-
 ###
 GET http://localhost:8080/client/1
 Accept: application/json
@@ -8,16 +7,17 @@ Accept: application/json
 DELETE http://localhost:8080/client/1
 Accept: application/json
 ###
-PUT http://localhost:8080/client/1
+PUT http://localhost:8080/client/2
 Accept: application/json
 Content-Type: application/json
 
 {
-  "id": 1,
+  "id": 2,
   "dni": "12345678A",
   "name": "Client A (Updated)",
   "phone": "111222333",
   "addresses": {
+    "id": 2,
     "location": "Street A (Updated)"
   },
   "shoeStores": {
@@ -25,6 +25,8 @@ Content-Type: application/json
     "name": "Shoe Store A (Updated)"
   }
 }
+
+
 ###
 POST http://localhost:8080/client
 Accept: application/json
@@ -35,13 +37,12 @@ Content-Type: application/json
   "name": "Client C",
   "phone": "333444555",
   "addresses": {
-    "street": "Street C",
-    "city": "City C",
-    "zip": "67890"
+    "location": "Street C"
   },
   "shoeStores": {
     "id": 3,
     "name": "Shoe Store C"
   }
 }
+
 ###

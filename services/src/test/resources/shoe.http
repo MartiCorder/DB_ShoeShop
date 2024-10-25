@@ -1,0 +1,18 @@
+GET http://localhost:8080/shoe
+Accept: application/json
+###
+GET http://localhost:8080/shoe/1
+Accept: application/json
+###
+DELETE http://localhost:8080/shoe/3
+Accept: application/json
+###
+POST http://localhost:8080/shoe
+Content-Type: application/json
+
+{
+  "NAME": "Rogers",
+  "PHONE": 686775834
+}
+
+###
