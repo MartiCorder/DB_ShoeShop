@@ -41,75 +41,74 @@ public class RequestRouterImpl implements RequestRouter {
         try {
             switch (method) {
                 case "GET":
-                    if (pathParts.length == 2) {
-                        responseJsonBody = controller.get();
-                    } else {
-                        var id = Integer.parseInt(pathParts[2]);
-                        responseJsonBody = controller.get(id);
-                    }
-                    return rawHttp.parseResponse(
-                            "HTTP/1.1 200 OK\r\n" +
-                                    "Content-Type: application/json\r\n" +
-                                    "Content-Length: " + responseJsonBody.length() + "\r\n" +
-                                    "\r\n" +
-                                    responseJsonBody
-                    );
-
+                    responseJsonBody = handleGetRequest(controller, pathParts);
+                    break;
                 case "POST":
-                    if (!request.getBody().isPresent()) {
-                        return rawHttp.parseResponse("HTTP/1.1 400 Bad Request\r\n\r\n");
-                    }
-                    var postJson = request.getBody().get().decodeBodyToString(Charset.defaultCharset());
-                    controller.post(postJson);
-                    responseJsonBody = "{\"message\": \"Resource created successfully.\"}";
-                    return rawHttp.parseResponse(
-                            "HTTP/1.1 201 Created\r\n" +
-                                    "Content-Type: application/json\r\n" +
-                                    "Content-Length: " + responseJsonBody.length() + "\r\n" +
-                                    "\r\n" +
-                                    responseJsonBody
-                    );
-
+                    responseJsonBody = handlePostRequest(controller, request);
+                    break;
                 case "PUT":
-                    if (pathParts.length < 3 || !request.getBody().isPresent()) {
-                        return rawHttp.parseResponse("HTTP/1.1 400 Bad Request\r\n\r\n");
-                    }
-                    var putId = Integer.parseInt(pathParts[2]);
-                    var putJson = request.getBody().get().decodeBodyToString(Charset.defaultCharset());
-                    controller.put(putId, putJson);
-                    responseJsonBody = "{\"message\": \"Resource updated successfully.\"}";
-                    return rawHttp.parseResponse(
-                            "HTTP/1.1 200 OK\r\n" +
-                                    "Content-Type: application/json\r\n" +
-                                    "Content-Length: " + responseJsonBody.length() + "\r\n" +
-                                    "\r\n" +
-                                    responseJsonBody
-                    );
-
+                    handlePutRequest(controller, pathParts, request);
+                    break;
                 case "DELETE":
-                    if (pathParts.length < 3) {
-                        return rawHttp.parseResponse("HTTP/1.1 400 Bad Request\r\n\r\n");
-                    }
-                    var deleteId = Integer.parseInt(pathParts[2]);
-                    controller.delete(deleteId);
-                    responseJsonBody = "{\"message\": \"Resource deleted successfully.\"}";
-                    return rawHttp.parseResponse(
-                            "HTTP/1.1 200 OK\r\n" +
-                                    "Content-Type: application/json\r\n" +
-                                    "Content-Length: " + responseJsonBody.length() + "\r\n" +
-                                    "\r\n" +
-                                    responseJsonBody
-                    );
-
+                    responseJsonBody = handleDeleteRequest(controller, pathParts);
+                    break;
                 default:
                     return rawHttp.parseResponse("HTTP/1.1 405 Method Not Allowed\r\n\r\n");
             }
+
+            return rawHttp.parseResponse(
+                    "HTTP/1.1 200 OK\r\n" +
+                            "Content-Type: application/json\r\n" +
+                            "Content-Length: " + responseJsonBody.length() + "\r\n" +
+                            "\r\n" +
+                            responseJsonBody
+            );
+
         } catch (ResourceNotFoundException e) {
             return rawHttp.parseResponse("HTTP/1.1 404 Not Found\r\n\r\n");
         } catch (ServerErrorException e) {
             return rawHttp.parseResponse("HTTP/1.1 500 Internal Server Error\r\n\r\n");
-        } catch (NumberFormatException | IOException e) {
+        } catch (NumberFormatException e) {
             return rawHttp.parseResponse("HTTP/1.1 400 Bad Request\r\n\r\n");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
+    }
+
+    private String handleGetRequest(Controller controller, String[] pathParts) {
+        if (pathParts.length == 2) {
+            return controller.get();
+        } else {
+            var id = Integer.parseInt(pathParts[2]);
+            return controller.get(id);
+        }
+    }
+
+    private String handlePostRequest(Controller controller, RawHttpRequest request) throws IOException {
+        if (!request.getBody().isPresent()) {
+            throw new ServerErrorException("Body not present");
+        }
+        var postJson = request.getBody().get().decodeBodyToString(Charset.defaultCharset());
+        controller.post(postJson);
+        return "{\"message\": \"Resource created successfully.\"}";
+    }
+
+    private String handlePutRequest(Controller controller, String[] pathParts, RawHttpRequest request) throws IOException {
+        if (pathParts.length < 3 || !request.getBody().isPresent()) {
+            throw new ServerErrorException("Invalid PUT request");
+        }
+        var putId = Integer.parseInt(pathParts[2]);
+        var putJson = request.getBody().get().decodeBodyToString(Charset.defaultCharset());
+        controller.put(putId, putJson);
+        return "{\"message\": \"Resource updated successfully.\"}";
+    }
+
+    private String handleDeleteRequest(Controller controller, String[] pathParts) {
+        if (pathParts.length < 3) {
+            throw new ServerErrorException("Invalid DELETE request");
+        }
+        var deleteId = Integer.parseInt(pathParts[2]);
+        controller.delete(deleteId);
+        return "{\"message\": \"Resource deleted successfully.\"}";
     }
 }

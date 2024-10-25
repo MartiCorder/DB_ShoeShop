@@ -12,7 +12,6 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "id": 2,
   "name": "FutbolManager B",
   "owner": "Martí C",
   "location": "Vic",

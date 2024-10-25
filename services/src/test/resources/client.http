@@ -4,7 +4,7 @@ Accept: application/json
 GET http://localhost:8080/client/1
 Accept: application/json
 ###
-DELETE http://localhost:8080/client/1
+DELETE http://localhost:8080/client/5
 Accept: application/json
 ###
 PUT http://localhost:8080/client/2
@@ -12,7 +12,6 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "id": 2,
   "dni": "48955663F",
   "name": "ORIOL",
   "phone": "686771035",

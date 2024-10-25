@@ -2,8 +2,12 @@ package cat.uvic.teknos.shoeshop.services.controllers;
 
 import cat.uvic.teknos.shoeshop.models.Address;
 import cat.uvic.teknos.shoeshop.models.ModelFactory;
+import cat.uvic.teknos.shoeshop.repositories.AddressRepository;
 import cat.uvic.teknos.shoeshop.repositories.RepositoryFactory;
+import cat.uvic.teknos.shoeshop.services.utils.Mappers;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -47,45 +51,43 @@ public class AddressController implements Controller {
 
     @Override
     public void post(String json) {
+
+        AddressRepository repository = repositoryFactory.getAddressRepository();
+
+        ObjectMapper mapper = Mappers.get();
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
         try {
-            JsonNode rootNode = mapper.readTree(json);
-            Address address = new cat.uvic.teknos.shoeshop.file.models.Address();
-
-            if (rootNode.has("LOCATION")) {
-                address.setLocation(rootNode.get("LOCATION").asText());
-            }
-
-            if (address.getLocation() == null) {
-                throw new IllegalArgumentException("Location is a required field");
-            }
-
-            repositoryFactory.getAddressRepository().save(address);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error deserializing address from JSON", e);
-        } catch (IllegalArgumentException e) {
-            throw new RuntimeException("Invalid address data: " + e.getMessage(), e);
+            cat.uvic.teknos.shoeshop.domain.jdbc.models.Address address = mapper.readValue(json,cat.uvic.teknos.shoeshop.domain.jdbc.models.Address.class );
+            repository.save(address);
+        }catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
         }
     }
 
     @Override
     public void put(int id, String json) {
-        Address existingAddress = repositoryFactory.getAddressRepository().get(id);
+
+        AddressRepository repository = repositoryFactory.getAddressRepository();
+        Address existingAddress = repository.get(id);
 
         if (existingAddress == null) {
             throw new RuntimeException("Address not found");
         }
 
+        ObjectMapper mapper = Mappers.get();
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
         try {
-            JsonNode rootNode = mapper.readTree(json);
 
-            if (rootNode.has("LOCATION")) {
-                existingAddress.setLocation(rootNode.get("LOCATION").asText());
-            }
+            Address addressUpdated = mapper.readValue(json,cat.uvic.teknos.shoeshop.domain.jdbc.models.Address.class );
+            addressUpdated.setId(id);
 
-            repositoryFactory.getAddressRepository().save(existingAddress);
+            existingAddress.setLocation(addressUpdated.getLocation());
 
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error deserializing address from JSON", e);
+            repository.save(existingAddress);
+        }catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
         }
     }
 
