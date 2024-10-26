@@ -2,10 +2,11 @@ package cat.uvic.teknos.shoeshop.services.controllers;
 
 import cat.uvic.teknos.shoeshop.models.Shoe;
 import cat.uvic.teknos.shoeshop.models.ModelFactory;
-import cat.uvic.teknos.shoeshop.models.Inventory;
 import cat.uvic.teknos.shoeshop.repositories.RepositoryFactory;
+import cat.uvic.teknos.shoeshop.repositories.ShoeRepository;
+import cat.uvic.teknos.shoeshop.services.utils.Mappers;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ShoeController implements Controller {
@@ -48,87 +49,47 @@ public class ShoeController implements Controller {
 
     @Override
     public void post(String json) {
-        try {
-            JsonNode rootNode = mapper.readTree(json);
-            Shoe shoe = new cat.uvic.teknos.shoeshop.file.models.Shoe();
 
-            if (rootNode.has("PRICE")) {
-                shoe.setPrice(rootNode.get("PRICE").asDouble());
-            }
+        ShoeRepository repository = repositoryFactory.getShoeRepository();
 
-            if (rootNode.has("COLOR")) {
-                shoe.setColor(rootNode.get("COLOR").asText());
-            }
+        ObjectMapper mapper = Mappers.get();
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
-            if (rootNode.has("SIZE")) {
-                shoe.setSize(rootNode.get("SIZE").asText());
-            }
+        try{
 
-            if (rootNode.has("MODEL_ID")) {
-                var model = modelFactory.createModel();
-                model.setId(rootNode.get("MODEL_ID").asInt());
-                shoe.setModels(model);
-            }
-
-            if (rootNode.has("INVENTORY_ID")) {
-                Inventory inventory = new cat.uvic.teknos.shoeshop.file.models.Inventory();
-                inventory.setId(rootNode.get("INVENTORY_ID").asInt());
-                shoe.setInventories(inventory);
-            }
-
-            if (shoe.getPrice() <= 0 || shoe.getColor() == null || shoe.getSize() == null) {
-                throw new IllegalArgumentException("Price, Color, and Size are required fields");
-            }
-
-            repositoryFactory.getShoeRepository().save(shoe);
+            cat.uvic.teknos.shoeshop.domain.jdbc.models.Shoe shoe = mapper.readValue(json, cat.uvic.teknos.shoeshop.domain.jdbc.models.Shoe.class);
+            repository.save(shoe);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error deserializing shoe from JSON", e);
-        } catch (IllegalArgumentException e) {
-            throw new RuntimeException("Invalid shoe data: " + e.getMessage(), e);
-        } catch (Exception e) {
-            throw new RuntimeException("Error saving shoe", e);
+            throw new RuntimeException(e);
         }
     }
 
     @Override
     public void put(int id, String json) {
-        Shoe existingShoe = repositoryFactory.getShoeRepository().get(id);
+
+        ShoeRepository repository = repositoryFactory.getShoeRepository();
+        Shoe existingShoe = repository.get(id);
 
         if (existingShoe == null) {
             throw new RuntimeException("Shoe not found");
         }
 
+        ObjectMapper mapper = Mappers.get();
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
         try {
-            JsonNode rootNode = mapper.readTree(json);
+            Shoe shoeUpdated = mapper.readValue(json, cat.uvic.teknos.shoeshop.domain.jdbc.models.Shoe.class);
+            shoeUpdated.setId(id);
 
-            if (rootNode.has("PRICE")) {
-                existingShoe.setPrice(rootNode.get("PRICE").asDouble());
-            }
+            existingShoe.setPrice(shoeUpdated.getPrice());
+            existingShoe.setColor(shoeUpdated.getColor());
+            existingShoe.setSize(shoeUpdated.getSize());
+            existingShoe.setModels(shoeUpdated.getModels());
+            existingShoe.setInventories(shoeUpdated.getInventories());
 
-            if (rootNode.has("COLOR")) {
-                existingShoe.setColor(rootNode.get("COLOR").asText());
-            }
-
-            if (rootNode.has("SIZE")) {
-                existingShoe.setSize(rootNode.get("SIZE").asText());
-            }
-
-            if (rootNode.has("MODEL_ID")) {
-                var model = modelFactory.createModel();
-                model.setId(rootNode.get("MODEL_ID").asInt());
-                existingShoe.setModels(model);
-            }
-
-            if (rootNode.has("INVENTORY_ID")) {
-                Inventory inventory = new cat.uvic.teknos.shoeshop.file.models.Inventory();
-                inventory.setId(rootNode.get("INVENTORY_ID").asInt());
-                existingShoe.setInventories(inventory);
-            }
-
-            repositoryFactory.getShoeRepository().save(existingShoe);
-
+            repository.save(existingShoe);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error deserializing shoe from JSON", e);
+            throw new RuntimeException(e);
         }
     }
 

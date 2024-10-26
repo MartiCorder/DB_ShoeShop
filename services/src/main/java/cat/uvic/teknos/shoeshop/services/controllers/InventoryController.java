@@ -4,6 +4,7 @@ import cat.uvic.teknos.shoeshop.models.Inventory;
 import cat.uvic.teknos.shoeshop.models.ModelFactory;
 import cat.uvic.teknos.shoeshop.repositories.InventoryRepository;
 import cat.uvic.teknos.shoeshop.repositories.RepositoryFactory;
+import cat.uvic.teknos.shoeshop.services.exception.ResourceNotFoundException;
 import cat.uvic.teknos.shoeshop.services.utils.Mappers;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -76,6 +77,7 @@ public class InventoryController implements Controller {
             existingInventory.setShoes(inventoryUpdated.getShoes());
 
             repository.save(existingInventory);
+
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -83,11 +85,14 @@ public class InventoryController implements Controller {
 
     @Override
     public void delete(int id) {
-        Inventory existingInventory = repositoryFactory.getInventoryRepository().get(id);
-        if (existingInventory != null) {
-            repositoryFactory.getInventoryRepository().delete(existingInventory);
-        } else {
-            throw new RuntimeException("Inventory not found");
+
+        InventoryRepository repository = repositoryFactory.getInventoryRepository();
+        Inventory inventory = repository.get(id);
+
+        if (inventory == null) {
+            throw new ResourceNotFoundException("Cannot delete. Team not found with id: " + id);
         }
+
+        repository.delete(inventory);
     }
 }

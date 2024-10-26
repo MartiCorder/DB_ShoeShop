@@ -4,7 +4,11 @@ import cat.uvic.teknos.shoeshop.models.Supplier;
 import cat.uvic.teknos.shoeshop.models.ModelFactory;
 import cat.uvic.teknos.shoeshop.models.ShoeStore;
 import cat.uvic.teknos.shoeshop.repositories.RepositoryFactory;
+import cat.uvic.teknos.shoeshop.repositories.SupplierRepository;
+import cat.uvic.teknos.shoeshop.services.utils.Mappers;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -48,65 +52,42 @@ public class SupplierController implements Controller {
 
     @Override
     public void post(String json) {
+
+        SupplierRepository repository = repositoryFactory.getSupplierRepository();
+
+        ObjectMapper mapper = Mappers.get();
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         try {
-            JsonNode rootNode = mapper.readTree(json);
-            Supplier supplier = new cat.uvic.teknos.shoeshop.file.models.Supplier();
-
-            if (rootNode.has("NAME")) {
-                supplier.setName(rootNode.get("NAME").asText());
-            }
-
-            if (rootNode.has("PHONE")) {
-                supplier.setPhone(rootNode.get("PHONE").asText());
-            }
-
-            if (rootNode.has("SHOE_STORE_ID")) {
-                ShoeStore shoeStore = new cat.uvic.teknos.shoeshop.file.models.ShoeStore();
-                shoeStore.setId(rootNode.get("SHOE_STORE_ID").asInt());
-                supplier.getShoeStores().add(shoeStore);
-            }
-
-            if (supplier.getName() == null || supplier.getPhone() == null) {
-                throw new IllegalArgumentException("Name and Phone are required fields");
-            }
-
-            repositoryFactory.getSupplierRepository().save(supplier);
+            cat.uvic.teknos.shoeshop.domain.jdbc.models.Supplier supplier = mapper.readValue(json, cat.uvic.teknos.shoeshop.domain.jdbc.models.Supplier.class);
+            repository.save(supplier);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error deserializing supplier from JSON", e);
-        } catch (IllegalArgumentException e) {
-            throw new RuntimeException("Invalid supplier data: " + e.getMessage(), e);
-        } catch (Exception e) {
-            throw new RuntimeException("Error saving supplier", e);
+            throw new RuntimeException(e);
         }
     }
 
+
     @Override
     public void put(int id, String json) {
-        Supplier existingSupplier = repositoryFactory.getSupplierRepository().get(id);
+
+        SupplierRepository repository = repositoryFactory.getSupplierRepository();
+        Supplier existingSupplier = repository.get(id);
 
         if (existingSupplier == null) {
             throw new RuntimeException("Supplier not found");
         }
 
+        ObjectMapper mapper = Mappers.get();
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
         try {
-            JsonNode rootNode = mapper.readTree(json);
+            Supplier supplierUpdated = mapper.readValue(json,cat.uvic.teknos.shoeshop.domain.jdbc.models.Supplier.class);
+            supplierUpdated.setId(id);
 
-            if (rootNode.has("NAME")) {
-                existingSupplier.setName(rootNode.get("NAME").asText());
-            }
+            existingSupplier.setName(supplierUpdated.getName());
+            existingSupplier.setPhone(supplierUpdated.getPhone());
+            existingSupplier.setShoeStores(supplierUpdated.getShoeStores());
 
-            if (rootNode.has("PHONE")) {
-                existingSupplier.setPhone(rootNode.get("PHONE").asText());
-            }
-
-            if (rootNode.has("SHOE_STORE_ID")) {
-                ShoeStore shoeStore = new cat.uvic.teknos.shoeshop.file.models.ShoeStore();
-                shoeStore.setId(rootNode.get("SHOE_STORE_ID").asInt());
-                existingSupplier.getShoeStores().add(shoeStore);
-            }
-
-            repositoryFactory.getSupplierRepository().save(existingSupplier);
-
+           repository.save(existingSupplier);
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Error deserializing supplier from JSON", e);
         }

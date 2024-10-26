@@ -4,7 +4,10 @@ import cat.uvic.teknos.shoeshop.models.Model;
 import cat.uvic.teknos.shoeshop.models.ModelFactory;
 import cat.uvic.teknos.shoeshop.repositories.ModelRepository;
 import cat.uvic.teknos.shoeshop.repositories.RepositoryFactory;
+import cat.uvic.teknos.shoeshop.services.utils.Mappers;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ModelController implements Controller {
@@ -48,49 +51,40 @@ public class ModelController implements Controller {
 
     @Override
     public void post(String json) {
-        ObjectMapper mapper = new ObjectMapper();
+
+        ModelRepository repository = repositoryFactory.getModelRepository();
+        ObjectMapper mapper = Mappers.get();
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         try {
 
-            Model model = mapper.readValue(json, Model.class);
+            cat.uvic.teknos.shoeshop.domain.jdbc.models.Model model = mapper.readValue(json, cat.uvic.teknos.shoeshop.domain.jdbc.models.Model.class);
 
-            if (model.getName() == null || model.getBrand() == null) {
-                throw new IllegalArgumentException("Name and Brand are required fields");
-            }
-
-            Model newModel = modelFactory.createModel();
-            newModel.setName(model.getName());
-            newModel.setBrand(model.getBrand());
-
-            repositoryFactory.getModelRepository().save(newModel);
+            repository.save(model);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Error deserializing model from JSON", e);
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Invalid model data", e);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Error saving model", e);
+            throw new RuntimeException(e);
         }
     }
 
     @Override
     public void put(int id, String json) {
 
-        Model existingModel = repositoryFactory.getModelRepository().get(id);
+        ModelRepository repository = repositoryFactory.getModelRepository();
+        Model existingModel = repository.get(id);
 
         if (existingModel == null) {
             throw new RuntimeException("Model not found");
         }
 
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = Mappers.get();
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
         try {
-            Model updatedModel = mapper.readValue(json, Model.class);
+            Model updatedModel = mapper.readValue(json, cat.uvic.teknos.shoeshop.domain.jdbc.models.Model.class);
 
             existingModel.setName(updatedModel.getName());
             existingModel.setBrand(updatedModel.getBrand());
 
-            repositoryFactory.getModelRepository().save(existingModel);
+            repository.save(existingModel);
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Error deserializing model from JSON", e);
         }

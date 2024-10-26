@@ -7,8 +7,6 @@ import cat.uvic.teknos.shoeshop.repositories.RepositoryFactory;
 import cat.uvic.teknos.shoeshop.services.utils.Mappers;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class AddressController implements Controller {
@@ -59,6 +57,7 @@ public class AddressController implements Controller {
 
         try {
             cat.uvic.teknos.shoeshop.domain.jdbc.models.Address address = mapper.readValue(json,cat.uvic.teknos.shoeshop.domain.jdbc.models.Address.class );
+
             repository.save(address);
         }catch (JsonProcessingException e) {
             throw new RuntimeException(e);
@@ -67,7 +66,6 @@ public class AddressController implements Controller {
 
     @Override
     public void put(int id, String json) {
-
         AddressRepository repository = repositoryFactory.getAddressRepository();
         Address existingAddress = repository.get(id);
 
@@ -79,14 +77,13 @@ public class AddressController implements Controller {
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
         try {
-
-            Address addressUpdated = mapper.readValue(json,cat.uvic.teknos.shoeshop.domain.jdbc.models.Address.class );
+            Address addressUpdated = mapper.readValue(json, cat.uvic.teknos.shoeshop.domain.jdbc.models.Address.class);
             addressUpdated.setId(id);
 
             existingAddress.setLocation(addressUpdated.getLocation());
 
             repository.save(existingAddress);
-        }catch (JsonProcessingException e) {
+        } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
     }

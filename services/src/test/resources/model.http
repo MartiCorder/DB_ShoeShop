@@ -4,7 +4,7 @@ Accept: application/json
 GET http://localhost:8080/model/1
 Accept: application/json
 ###
-DELETE http://localhost:8080/model/1
+DELETE http://localhost:8080/model/3
 Accept: application/json
 ###
 PUT http://localhost:8080/model/2

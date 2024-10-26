@@ -1,10 +1,10 @@
 GET http://localhost:8080/address
 Accept: application/json
 ###
-GET http://localhost:8080/address/9
+GET http://localhost:8080/address/2
 Accept: application/json
 ###
-DELETE http://localhost:8080/address/9
+DELETE http://localhost:8080/address/20
 Accept: application/json
 ###
 PUT http://localhost:8080/address/2
@@ -12,7 +12,6 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "id": 2,
   "location": "Carrer Novembre"
 }
 ###

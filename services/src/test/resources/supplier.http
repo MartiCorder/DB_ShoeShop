@@ -1,20 +1,27 @@
 GET http://localhost:8080/supplier
 Accept: application/json
 ###
-GET http://localhost:8080/supplier/1
+GET http://localhost:8080/supplier/4
 Accept: application/json
 ###
-DELETE http://localhost:8080/supplier/1
+DELETE http://localhost:8080/supplier/5
 Accept: application/json
 ###
-PUT http://localhost:8080/supplier/2
+PUT http://localhost:8080/supplier/6
 Accept: application/json
 Content-Type: application/json
 
 {
-  "NAME": "ShoeDirect",
-  "PHONE": "931877658",
-  "SHOE_STORE_ID": 2
+  "name": "ShoeDirect",
+  "phone": "931877658",
+  "shoeStores": [
+  {
+    "id": 1
+  },
+  {
+    "id": 2
+  }
+]
 }
 ###
 POST http://localhost:8080/supplier
@@ -22,7 +29,14 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "NAME": "SuppliShoe",
-  "PHONE": "983776831",
-  "SHOE_STORE_ID": 3
+  "name": "SuppliShoe",
+  "phone": "983776831",
+  "shoeStores": [
+    {
+      "id": 1
+    },
+    {
+      "id": 2
+    }
+  ]
 }

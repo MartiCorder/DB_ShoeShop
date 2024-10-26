@@ -2,8 +2,13 @@ package cat.uvic.teknos.shoeshop.services.controllers;
 
 import cat.uvic.teknos.shoeshop.models.ModelFactory;
 import cat.uvic.teknos.shoeshop.models.ShoeStore;
+import cat.uvic.teknos.shoeshop.repositories.ClientRepository;
 import cat.uvic.teknos.shoeshop.repositories.RepositoryFactory;
+import cat.uvic.teknos.shoeshop.repositories.ShoeStoreRepository;
+import cat.uvic.teknos.shoeshop.services.utils.Mappers;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -47,58 +52,48 @@ public class ShoeStoreController implements Controller {
 
     @Override
     public void post(String json) {
+
+        ShoeStoreRepository repository = repositoryFactory.getShoeStoreRepository();
+
+        ObjectMapper mapper = Mappers.get();
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
         try {
-            JsonNode rootNode = mapper.readTree(json);
-            ShoeStore shoeStore = new cat.uvic.teknos.shoeshop.file.models.ShoeStore();
 
-            if (rootNode.has("NAME")) {
-                shoeStore.setName(rootNode.get("NAME").asText());
-            }
 
-            if (rootNode.has("OWNER")) {
-                shoeStore.setOwner(rootNode.get("OWNER").asText());
-            }
-
-            if (rootNode.has("LOCATION")) {
-                shoeStore.setLocation(rootNode.get("LOCATION").asText());
-            }
-
-            if (shoeStore.getName() == null || shoeStore.getOwner() == null) {
-                throw new IllegalArgumentException("Name and Owner are required fields");
-            }
-
-            repositoryFactory.getShoeStoreRepository().save(shoeStore);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error deserializing ShoeStore from JSON", e);
-        } catch (IllegalArgumentException e) {
-            throw new RuntimeException("Invalid ShoeStore data: " + e.getMessage(), e);
+            cat.uvic.teknos.shoeshop.domain.jdbc.models.ShoeStore shoeStore = mapper.readValue(json, cat.uvic.teknos.shoeshop.domain.jdbc.models.ShoeStore.class);
+            repository.save(shoeStore);
+            }catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
         }
     }
 
     @Override
     public void put(int id, String json) {
-        ShoeStore existingShoeStore = repositoryFactory.getShoeStoreRepository().get(id);
+
+        ShoeStoreRepository repository = repositoryFactory.getShoeStoreRepository();
+        ShoeStore existingShoeStore = repository.get(id);
 
         if (existingShoeStore == null) {
             throw new RuntimeException("ShoeStore not found");
         }
 
+        ObjectMapper mapper = Mappers.get();
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
         try {
-            JsonNode rootNode = mapper.readTree(json);
 
-            if (rootNode.has("NAME")) {
-                existingShoeStore.setName(rootNode.get("NAME").asText());
-            }
+            ShoeStore shoeStoreUpdated = mapper.readValue(json, cat.uvic.teknos.shoeshop.domain.jdbc.models.ShoeStore.class);
+            shoeStoreUpdated.setId(id);
 
-            if (rootNode.has("OWNER")) {
-                existingShoeStore.setOwner(rootNode.get("OWNER").asText());
-            }
+                existingShoeStore.setName(shoeStoreUpdated.getName());
+                existingShoeStore.setOwner(shoeStoreUpdated.getOwner());
+                existingShoeStore.setLocation(shoeStoreUpdated.getLocation());
+                existingShoeStore.setSuppliers(shoeStoreUpdated.getSuppliers());
+                existingShoeStore.setClients(shoeStoreUpdated.getClients());
+                existingShoeStore.setInventories(shoeStoreUpdated.getInventories());
 
-            if (rootNode.has("LOCATION")) {
-                existingShoeStore.setLocation(rootNode.get("LOCATION").asText());
-            }
-
-            repositoryFactory.getShoeStoreRepository().save(existingShoeStore);
+                repository.save(existingShoeStore);
 
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Error deserializing ShoeStore from JSON", e);

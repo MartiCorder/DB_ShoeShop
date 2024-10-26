@@ -6,7 +6,6 @@ import cat.uvic.teknos.shoeshop.services.exception.ServerErrorException;
 import rawhttp.core.RawHttp;
 import rawhttp.core.RawHttpRequest;
 import rawhttp.core.RawHttpResponse;
-
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Map;
@@ -47,7 +46,7 @@ public class RequestRouterImpl implements RequestRouter {
                     responseJsonBody = handlePostRequest(controller, request);
                     break;
                 case "PUT":
-                    handlePutRequest(controller, pathParts, request);
+                    responseJsonBody = handlePutRequest(controller, pathParts, request);
                     break;
                 case "DELETE":
                     responseJsonBody = handleDeleteRequest(controller, pathParts);

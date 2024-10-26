@@ -1,34 +1,20 @@
 GET http://localhost:8080/inventory
 Accept: application/json
 ###
-GET http://localhost:8080/inventory/1
+GET http://localhost:8080/inventory/15
 Accept: application/json
 ###
-DELETE http://localhost:8080/inventory/1
+DELETE http://localhost:8080/inventory/14
 Accept: application/json
 ###
-PUT http://localhost:8080/inventory/2
+PUT http://localhost:8080/inventory/5
 Accept: application/json
 Content-Type: application/json
 
 {
-  "id": 2,
   "capacity": 150,
-  "shoeStores": [
-    {
-      "id": 2,
-      "name": "FutbolManager Center",
-      "location": "Vic"
-    }
-  ],
-  "shoes": [
-    {
-      "id": 3,
-      "price": 59.99,
-      "color": "Red",
-      "size": "42"
-    }
-  ]
+  "shoeStores": null,
+  "shoes": null
 }
 ###
 POST http://localhost:8080/inventory
