@@ -77,16 +77,17 @@ public class AddressController implements Controller {
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
         try {
-            Address addressUpdated = mapper.readValue(json, cat.uvic.teknos.shoeshop.domain.jdbc.models.Address.class);
+            Address addressUpdated = mapper.readValue(json, Address.class);
             addressUpdated.setId(id);
 
             existingAddress.setLocation(addressUpdated.getLocation());
 
             repository.save(existingAddress);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Error processing JSON", e);
         }
     }
+
 
     @Override
     public void delete(int id) {
