@@ -10,24 +10,34 @@ import java.util.HashMap;
 import java.util.Properties;
 
 public class App {
-    public static void main(String[] args) throws IOException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        var properties = new Properties();
-        properties.load(App.class.getResourceAsStream("/app.properties"));
+    public static void main(String[] args) {
+        try {
+            var properties = new Properties();
+            properties.load(App.class.getResourceAsStream("/app.properties"));
 
-        RepositoryFactory repositoryFactory = (RepositoryFactory) Class.forName(properties.getProperty("repositoryFactory")).getConstructor().newInstance();
-        ModelFactory modelFactory = (ModelFactory) Class.forName(properties.getProperty("modelFactory")).getConstructor().newInstance();
+            RepositoryFactory repositoryFactory = (RepositoryFactory) Class.forName(properties.getProperty("repositoryFactory"))
+                    .getConstructor().newInstance();
+            ModelFactory modelFactory = (ModelFactory) Class.forName(properties.getProperty("modelFactory"))
+                    .getConstructor().newInstance();
 
-        var controllers = new HashMap<String, Controller>();
-        controllers.put("client", new ClientController(repositoryFactory, modelFactory));
-        controllers.put("model", new ModelController(repositoryFactory, modelFactory));
-        controllers.put("shoe", new ShoeController(repositoryFactory, modelFactory));
-        controllers.put("supplier", new SupplierController(repositoryFactory, modelFactory));
-        controllers.put("inventory", new InventoryController(repositoryFactory, modelFactory));
-        controllers.put("shoeStore", new ShoeStoreController(repositoryFactory, modelFactory));
-        controllers.put("address", new AddressController(repositoryFactory, modelFactory));
+            var controllers = new HashMap<String, Controller>();
+            controllers.put("client", new ClientController(repositoryFactory, modelFactory));
+            controllers.put("model", new ModelController(repositoryFactory, modelFactory));
+            controllers.put("shoe", new ShoeController(repositoryFactory, modelFactory));
+            controllers.put("supplier", new SupplierController(repositoryFactory, modelFactory));
+            controllers.put("inventory", new InventoryController(repositoryFactory, modelFactory));
+            controllers.put("shoeStore", new ShoeStoreController(repositoryFactory, modelFactory));
+            controllers.put("address", new AddressController(repositoryFactory, modelFactory));
 
-        var requestRouter = new RequestRouterImpl(controllers);
+            var requestRouter = new RequestRouterImpl(controllers);
 
-        new Server(requestRouter).start();
+            int maxThreads = Integer.parseInt(properties.getProperty("maxThreads", "10"));
+            Server server = new Server(requestRouter, maxThreads);
+            server.start();
+
+        } catch (IOException | ClassNotFoundException | NoSuchMethodException |
+                 InvocationTargetException | InstantiationException | IllegalAccessException e) {
+            System.err.println("Error al iniciar l'aplicació: " + e.getMessage());
+        }
     }
 }
