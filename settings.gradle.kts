@@ -14,3 +14,6 @@ rootProject.name = "gradle-shoe_shop"
 include("app", "domain", "utilities", ":domain-implementations:file",":domain-implementations:jdbc", "services")
 include("domain-implementations:JPA")
 findProject(":domain-implementations:JPA")?.name = "JPA"
+include("clients")
+include("clients:console")
+findProject(":clients:console")?.name = "console"
