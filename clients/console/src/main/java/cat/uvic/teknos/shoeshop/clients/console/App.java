@@ -14,13 +14,13 @@ import java.io.PrintStream;
 
 public class App {
 
-    private static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-    private static PrintStream out = new PrintStream(System.out);
-    private static RestClient restClient = new RestClientImpl("localhost", 8080);
+    private static final BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+    private static final PrintStream out = new PrintStream(System.out);
+    private static final RestClient restClient = new RestClientImpl("localhost", 8080);
 
-    private static ClientManager clientManager = new ClientManager(restClient, in);
-    private static ShoeManager shoeManager = new ShoeManager(restClient);
-    private static ShoeStoreManager shoeStoreManager = new ShoeStoreManager(restClient);
+    private static final ClientManager clientManager = new ClientManager(restClient, in);
+    private static final ShoeManager shoeManager = new ShoeManager(restClient);
+    private static final ShoeStoreManager shoeStoreManager = new ShoeStoreManager(restClient);
 
     public static void main(String[] args) throws IOException, RequestException {
 
@@ -29,7 +29,7 @@ public class App {
         var command = "";
         do {
             showMainMenu();
-            command = readLine(in);
+            command = readLine();
 
             switch (command) {
                 case "1" -> clientManager.start();
@@ -39,30 +39,30 @@ public class App {
 
         } while (!command.equals("exit"));
 
-        out.println("\n*** Program Finished ***\n");
+        out.println("\n*** Programma tancat correctament ***\n");
 
     }
 
     private static void showWelcomeMessage() {
-        out.println("\n*** Welcome to the ShoeShop Back Office ***\n");
-        out.println("Select a menu option:");
+        out.println("\n*** Benvinguts a ShoeShop Back Office ***\n");
+        out.println("Selecciona una opció:");
         out.println();
     }
 
     private static void showMainMenu() {
-        out.println("\n*** Main Menu ***\n");
-        out.println("1. Manage Client");
-        out.println("2. Manage Shoe");
-        out.println("3. Manage Shoe Store");
-        out.println("\nType 'exit' to quit.");
+        out.println("\n*** Menu Principal ***\n");
+        out.println("1. Client");
+        out.println("2. Shoe");
+        out.println("3. Shoe Store");
+        out.println("\nEscriu 'exit' per acabar el programma.");
     }
 
-    private static String readLine(BufferedReader in) {
+    private static String readLine() {
         String command;
         try {
-            command = in.readLine();
+            command = App.in.readLine();
         } catch (IOException e) {
-            throw new RuntimeException("Error while reading the menu option", e);
+            throw new RuntimeException("Error al llegir la opció.", e);
         }
         return command;
     }
