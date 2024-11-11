@@ -16,6 +16,7 @@ public class App {
 
     private static final BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
     private static final PrintStream out = new PrintStream(System.out);
+
     private static final RestClient restClient = new RestClientImpl("localhost", 8080);
 
     private static final ClientManager clientManager = new ClientManager(restClient, in);
