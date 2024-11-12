@@ -21,13 +21,13 @@ public class App {
                     .getConstructor().newInstance();
 
             var controllers = new HashMap<String, Controller>();
-            controllers.put("client", new ClientController(repositoryFactory, modelFactory));
-            controllers.put("model", new ModelController(repositoryFactory, modelFactory));
-            controllers.put("shoe", new ShoeController(repositoryFactory, modelFactory));
-            controllers.put("supplier", new SupplierController(repositoryFactory, modelFactory));
-            controllers.put("inventory", new InventoryController(repositoryFactory, modelFactory));
-            controllers.put("shoeStore", new ShoeStoreController(repositoryFactory, modelFactory));
-            controllers.put("address", new AddressController(repositoryFactory, modelFactory));
+            controllers.put("clients", new ClientController(repositoryFactory, modelFactory));
+            controllers.put("models", new ModelController(repositoryFactory, modelFactory));
+            controllers.put("shoes", new ShoeController(repositoryFactory, modelFactory));
+            controllers.put("suppliers", new SupplierController(repositoryFactory, modelFactory));
+            controllers.put("inventories", new InventoryController(repositoryFactory, modelFactory));
+            controllers.put("shoeStores", new ShoeStoreController(repositoryFactory, modelFactory));
+            controllers.put("addresses", new AddressController(repositoryFactory, modelFactory));
 
             var requestRouter = new RequestRouterImpl(controllers);
 

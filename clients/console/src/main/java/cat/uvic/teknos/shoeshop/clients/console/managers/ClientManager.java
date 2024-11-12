@@ -6,11 +6,12 @@ import cat.uvic.teknos.shoeshop.clients.console.dto.ShoeStoreDto;
 import cat.uvic.teknos.shoeshop.clients.console.exceptions.RequestException;
 import cat.uvic.teknos.shoeshop.clients.console.utils.Mappers;
 import cat.uvic.teknos.shoeshop.clients.console.utils.RestClient;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
-
+import com.github.freva.asciitable.AsciiTable;
+import com.github.freva.asciitable.Column;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class ClientManager {
 
@@ -33,6 +34,7 @@ public class ClientManager {
                 case "2" -> showClientDetails();
                 case "3" -> addNewClient();
                 case "4" -> deleteClient();
+                case "5" -> updateClient();
                 default -> System.out.println("Commanda no vàlida.");
             }
 
@@ -40,11 +42,8 @@ public class ClientManager {
     }
 
     private void listAllClients() throws RequestException {
-        var clients = restClient.getAll("client", ClientDto[].class);
-        System.out.println("Llista de clients:");
-        for (ClientDto client : clients) {
-            System.out.println(client.getName() + ", ID: " + client.getId());
-        }
+        var clients = restClient.getAll("clients", ClientDto[].class);
+        showClientsTable(clients);
     }
 
     private void showClientDetails() throws RequestException {
@@ -52,7 +51,7 @@ public class ClientManager {
         var clientId = readLine(in);
 
         try {
-            var client = restClient.get("client/" + clientId, ClientDto.class);
+            var client = restClient.get("clients/" + clientId, ClientDto.class);
 
             if (client != null) {
                 System.out.println("Detalls del client: ");
@@ -91,8 +90,8 @@ public class ClientManager {
         client.setDni(readLine(in));
         System.out.println("Insereix el número de telèfon:");
         client.setPhone(readLine(in));
-        System.out.print("Insereix l'adreça: ");
 
+        System.out.print("Insereix l'adreça: ");
         var address = new AddressDto();
         address.setLocation(readLine(in));
         client.setAddresses(address);
@@ -103,7 +102,7 @@ public class ClientManager {
         client.setShoeStores(shoeStore);
 
         try {
-            restClient.post("client/", Mappers.get().writeValueAsString(client));
+            restClient.post("clients/", Mappers.get().writeValueAsString(client));
             System.out.println("Client afegit correctament.");
         } catch (JsonProcessingException | RequestException e) {
             System.out.println("Error al afegir el client: " + e.getMessage());
@@ -115,10 +114,10 @@ public class ClientManager {
         var clientId = readLine(in);
 
         try {
-            var client = restClient.get("client/" + clientId, ClientDto.class);
+            var client = restClient.get("clients/" + clientId, ClientDto.class);
 
             if (client != null) {
-                restClient.delete("client", clientId);
+                restClient.delete("clients/" + clientId, null);
                 System.out.println("Client eliminat correctament.");
             } else {
                 System.out.println("El client amb ID " + clientId + " no existeix.");
@@ -126,6 +125,54 @@ public class ClientManager {
         } catch (RequestException e) {
             System.out.println("Error al eliminar el client: " + e.getMessage());
         }
+    }
+
+    private void updateClient() throws RequestException, JsonProcessingException {
+        System.out.print("ID del client a editar: ");
+        var clientId = readLine(in);
+
+        var existingClient = restClient.get("clients/" + clientId, ClientDto.class);
+        if (existingClient == null) {
+            System.out.println("El client amb ID " + clientId + " no existeix.");
+            return;
+        }
+
+        var client = new ClientDto();
+        System.out.print("Insereix el nom del client: ");
+        client.setName(readLine(in));
+        System.out.println("Insereix el DNI:");
+        client.setDni(readLine(in));
+        System.out.println("Insereix el número de telèfon:");
+        client.setPhone(readLine(in));
+
+        var address = new AddressDto();
+        System.out.print("Insereix l'adreça: ");
+        address.setLocation(readLine(in));
+        client.setAddresses(address);
+
+        var shoeStore = new ShoeStoreDto();
+        System.out.print("Insereix l'id de la botiga: ");
+        shoeStore.setId(Integer.parseInt(readLine(in)));
+        client.setShoeStores(shoeStore);
+
+        try {
+            restClient.put("clients/" + clientId, Mappers.get().writeValueAsString(client));
+            System.out.println("Client actualitzat correctament.");
+        } catch (JsonProcessingException | RequestException e) {
+            System.out.println("Error al actualitzar el client: " + e.getMessage());
+        }
+    }
+
+    private void showClientsTable(ClientDto[] clients) {
+        String table = AsciiTable.getTable(Arrays.asList(clients), Arrays.asList(
+                new Column().header("ID").with(client -> String.valueOf(client.getId())),
+                new Column().header("Nom").with(ClientDto::getName),
+                new Column().header("DNI").with(ClientDto::getDni),
+                new Column().header("Telèfon").with(ClientDto::getPhone),
+                new Column().header("Adreça").with(client -> client.getAddresses() != null ? client.getAddresses().getLocation() : "N/A"),
+                new Column().header("Botiga ID").with(client -> client.getShoeStores() != null ? String.valueOf(client.getShoeStores().getId()) : "N/A")
+        ));
+        System.out.println(table);
     }
 
     private String readLine(BufferedReader in) {
@@ -144,6 +191,7 @@ public class ClientManager {
         System.out.println("2. Detalls d'un client");
         System.out.println("3. Afegir un nou client");
         System.out.println("4. Eliminar un client existent");
+        System.out.println("5. Editar un client existent");
         System.out.println("Escriu 'exit' per tornar al menú principal.");
     }
 }

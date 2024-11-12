@@ -4,13 +4,14 @@ import cat.uvic.teknos.shoeshop.clients.console.dto.ShoeStoreDto;
 import cat.uvic.teknos.shoeshop.clients.console.exceptions.RequestException;
 import cat.uvic.teknos.shoeshop.clients.console.utils.Mappers;
 import cat.uvic.teknos.shoeshop.clients.console.utils.RestClient;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
-
+import com.github.freva.asciitable.AsciiTable;
+import com.github.freva.asciitable.Column;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.util.Arrays;
 
 public class ShoeStoreManager {
 
@@ -35,19 +36,15 @@ public class ShoeStoreManager {
                 case "2" -> showShoeStoreDetails();
                 case "3" -> addNewShoeStore();
                 case "4" -> deleteShoeStoreById();
+                case "5" -> updateShoeStore();
                 default -> out.println("Commanda no vàlida.");
             }
         } while (!command.equals("exit"));
     }
 
     private void listAllShoeStores() throws RequestException {
-        out.println("\n*** Llista de Botigues de Sabates ***\n");
-
-        var shoeStores = restClient.getAll("/shoeStore", ShoeStoreDto[].class);
-
-        for (ShoeStoreDto store : shoeStores) {
-            out.println(store.getName() + ", ID: " + store.getId());
-        }
+        var shoeStores = restClient.getAll("shoeStores", ShoeStoreDto[].class);
+        showShoeStoresTable(shoeStores);
     }
 
     private void showShoeStoreDetails() throws RequestException {
@@ -55,7 +52,7 @@ public class ShoeStoreManager {
         var storeId = readLine(in);
 
         try {
-            var store = restClient.get("shoeStore/" + storeId, ShoeStoreDto.class);
+            var store = restClient.get("shoeStores/" + storeId, ShoeStoreDto.class);
             if (store != null) {
                 out.println("Detalls de la botiga:");
                 out.println("ID: " + store.getId());
@@ -86,7 +83,7 @@ public class ShoeStoreManager {
         store.setLocation(readLine(in));
 
         try {
-            restClient.post("shoeStore", Mappers.get().writeValueAsString(store));
+            restClient.post("shoeStores", Mappers.get().writeValueAsString(store));
             out.println("Botiga afegida correctament.");
         } catch (JsonProcessingException | RequestException e) {
             out.println("Error al afegir la botiga: " + e.getMessage());
@@ -98,10 +95,10 @@ public class ShoeStoreManager {
         var storeId = readLine(in);
 
         try {
-            var store = restClient.get("shoeStore/" + storeId, ShoeStoreDto.class);
+            var store = restClient.get("shoeStores/" + storeId, ShoeStoreDto.class);
 
             if (store != null) {
-                restClient.delete("shoeStore/", storeId);
+                restClient.delete("shoeStores" + storeId, null);
                 out.println("Botiga eliminada correctament.");
             } else {
                 out.println("No s'ha trobat cap botiga amb ID " + storeId);
@@ -111,12 +108,52 @@ public class ShoeStoreManager {
         }
     }
 
+    private void updateShoeStore() throws IOException, RequestException, JsonProcessingException {
+        out.print("ID de la botiga a editar: ");
+        var storeId = readLine(in);
+
+        var existingStore = restClient.get("shoeStores/" + storeId, ShoeStoreDto.class);
+        if (existingStore == null) {
+            out.println("La botiga amb ID " + storeId + " no existeix.");
+            return;
+        }
+
+        var store = new ShoeStoreDto();
+
+        out.print("Introdueix el nou nom de la botiga: ");
+        store.setName(readLine(in));
+
+        out.print("Introdueix el nou nom del propietari: ");
+        store.setOwner(readLine(in));
+
+        out.print("Introdueix la nova ubicació de la botiga: ");
+        store.setLocation(readLine(in));
+
+        try {
+            restClient.put("shoeStores/" + storeId, Mappers.get().writeValueAsString(store));
+            out.println("Botiga actualitzada correctament.");
+        } catch (JsonProcessingException | RequestException e) {
+            out.println("Error al actualitzar la botiga: " + e.getMessage());
+        }
+    }
+
+    private void showShoeStoresTable(ShoeStoreDto[] shoeStores) {
+        String table = AsciiTable.getTable(Arrays.asList(shoeStores), Arrays.asList(
+                new Column().header("ID").with(store -> String.valueOf(store.getId())),
+                new Column().header("Nom").with(ShoeStoreDto::getName),
+                new Column().header("Propietari").with(ShoeStoreDto::getOwner),
+                new Column().header("Ubicació").with(ShoeStoreDto::getLocation)
+        ));
+        out.println(table);
+    }
+
     private void showShoeStoreMenu() {
         out.println("\n--- Menu de Gestió de Botigues de Sabates ---");
         out.println("1. Llista de totes les botigues");
         out.println("2. Detalls d'una botiga");
         out.println("3. Afegir una nova botiga");
         out.println("4. Eliminar una botiga existent");
+        out.println("5. Editar una botiga existent");
         out.println("Escriu 'exit' per tornar al menú principal.");
     }
 

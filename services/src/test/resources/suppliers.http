@@ -1,13 +1,13 @@
-GET http://localhost:8080/supplier
+GET http://localhost:8080/suppliers
 Accept: application/json
 ###
-GET http://localhost:8080/supplier/4
+GET http://localhost:8080/suppliers/4
 Accept: application/json
 ###
-DELETE http://localhost:8080/supplier/5
+DELETE http://localhost:8080/suppliers/5
 Accept: application/json
 ###
-PUT http://localhost:8080/supplier/6
+PUT http://localhost:8080/suppliers/6
 Accept: application/json
 Content-Type: application/json
 
@@ -24,7 +24,7 @@ Content-Type: application/json
 ]
 }
 ###
-POST http://localhost:8080/supplier
+POST http://localhost:8080/suppliers
 Accept: application/json
 Content-Type: application/json
 

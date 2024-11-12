@@ -1,13 +1,13 @@
-GET http://localhost:8080/inventory
+GET http://localhost:8080/inventories
 Accept: application/json
 ###
-GET http://localhost:8080/inventory/15
+GET http://localhost:8080/inventories/15
 Accept: application/json
 ###
-DELETE http://localhost:8080/inventory/14
+DELETE http://localhost:8080/inventories/14
 Accept: application/json
 ###
-PUT http://localhost:8080/inventory/5
+PUT http://localhost:8080/inventories/5
 Accept: application/json
 Content-Type: application/json
 
@@ -17,7 +17,7 @@ Content-Type: application/json
   "shoes": null
 }
 ###
-POST http://localhost:8080/inventory
+POST http://localhost:8080/inventories
 Accept: application/json
 Content-Type: application/json
 

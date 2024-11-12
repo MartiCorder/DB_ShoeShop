@@ -1,13 +1,13 @@
-GET http://localhost:8080/shoeStore
+GET http://localhost:8080/shoeStores
 Accept: application/json
 ###
-GET http://localhost:8080/shoeStore/2
+GET http://localhost:8080/shoeStores/2
 Accept: application/json
 ###
-DELETE http://localhost:8080/shoeStore/3
+DELETE http://localhost:8080/shoeStores/3
 Accept: application/json
 ###
-PUT http://localhost:8080/shoeStore/2
+PUT http://localhost:8080/shoeStores/2
 Accept: application/json
 Content-Type: application/json
 
@@ -35,7 +35,7 @@ Content-Type: application/json
   ]
 }
 ###
-POST http://localhost:8080/shoeStore
+POST http://localhost:8080/shoeStores
 Accept: application/json
 Content-Type: application/json
 
