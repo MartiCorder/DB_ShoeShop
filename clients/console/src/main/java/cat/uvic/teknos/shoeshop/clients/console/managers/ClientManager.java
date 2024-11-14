@@ -11,16 +11,19 @@ import com.github.freva.asciitable.AsciiTable;
 import com.github.freva.asciitable.Column;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.Arrays;
 
 public class ClientManager {
 
     private final RestClient restClient;
     private final BufferedReader in;
+    private final PrintStream out;
 
     public ClientManager(RestClient restClient, BufferedReader in) {
         this.restClient = restClient;
         this.in = in;
+        this.out = new PrintStream(System.out);
     }
 
     public void start() throws RequestException, JsonProcessingException {
@@ -35,7 +38,7 @@ public class ClientManager {
                 case "3" -> addNewClient();
                 case "4" -> deleteClient();
                 case "5" -> updateClient();
-                default -> System.out.println("Commanda no vàlida.");
+                default -> out.println("Commanda no vàlida.");
             }
 
         } while (!command.equals("exit"));
@@ -47,88 +50,88 @@ public class ClientManager {
     }
 
     private void showClientDetails() throws RequestException {
-        System.out.print("ID del client a mostrar: ");
+        out.print("ID del client a mostrar: ");
         var clientId = readLine(in);
 
         try {
             var client = restClient.get("clients/" + clientId, ClientDto.class);
 
             if (client != null) {
-                System.out.println("Detalls del client: ");
-                System.out.println("ID: " + client.getId());
-                System.out.println("Nom: " + client.getName());
-                System.out.println("DNI: " + client.getDni());
-                System.out.println("Número de telèfon: " + client.getPhone());
+                out.println("Detalls del client: ");
+                out.println("ID: " + client.getId());
+                out.println("Nom: " + client.getName());
+                out.println("DNI: " + client.getDni());
+                out.println("Número de telèfon: " + client.getPhone());
 
                 AddressDto address = (AddressDto) client.getAddresses();
                 if (address != null) {
-                    System.out.println("Adreça: " + address.getLocation());
+                    out.println("Adreça: " + address.getLocation());
                 } else {
-                    System.out.println("Adreça: No disponible");
+                    out.println("Adreça: No disponible");
                 }
 
                 ShoeStoreDto shoeStore = (ShoeStoreDto) client.getShoeStores();
                 if (shoeStore != null) {
-                    System.out.println("Botiga de sabates: " + shoeStore.getName());
+                    out.println("Botiga de sabates: " + shoeStore.getName());
                 } else {
-                    System.out.println("Botiga de sabates: No disponible");
+                    out.println("Botiga de sabates: No disponible");
                 }
 
             } else {
-                System.out.println("El client amb ID " + clientId + " no existeix.");
+                out.println("El client amb ID " + clientId + " no existeix.");
             }
         } catch (RequestException e) {
-            System.out.println("Error al obtenir el client: " + e.getMessage());
+            out.println("Error al obtenir el client: " + e.getMessage());
         }
     }
 
     private void addNewClient() throws RequestException, JsonProcessingException {
-        System.out.print("Insereix el nom del client a afegir: ");
+        out.print("Insereix el nom del client a afegir: ");
         var client = new ClientDto();
         client.setName(readLine(in));
-        System.out.println("Insereix el DNI:");
+        out.println("Insereix el DNI:");
         client.setDni(readLine(in));
-        System.out.println("Insereix el número de telèfon:");
+        out.println("Insereix el número de telèfon:");
         client.setPhone(readLine(in));
 
-        System.out.print("Insereix l'adreça: ");
+        out.print("Insereix l'adreça: ");
         var address = new AddressDto();
         address.setLocation(readLine(in));
         client.setAddresses(address);
 
-        System.out.print("Insereix l'id de la botiga: ");
+        out.print("Insereix l'id de la botiga: ");
         var shoeStore = new ShoeStoreDto();
         shoeStore.setId(Integer.parseInt(readLine(in)));
         client.setShoeStores(shoeStore);
 
         try {
             restClient.post("clients/", Mappers.get().writeValueAsString(client));
-            System.out.println("Client afegit correctament.");
+            out.println("Client afegit correctament.");
         } catch (JsonProcessingException | RequestException e) {
-            System.out.println("Error al afegir el client: " + e.getMessage());
+            out.println("Error al afegir el client: " + e.getMessage());
         }
     }
 
     private void deleteClient() throws RequestException {
-        System.out.print("ID del client a eliminar: ");
+        out.print("ID del client a eliminar: ");
         var clientId = readLine(in);
 
         try {
+
             var client = restClient.get("clients/" + clientId, ClientDto.class);
 
             if (client != null) {
                 restClient.delete("clients/" + clientId, null);
-                System.out.println("Client eliminat correctament.");
+                out.println("Client eliminat correctament.");
             } else {
-                System.out.println("El client amb ID " + clientId + " no existeix.");
+                out.println("No s'ha trobat cap client amb ID " + clientId);
             }
         } catch (RequestException e) {
-            System.out.println("Error al eliminar el client: " + e.getMessage());
+            out.println("Error al eliminar el client: " + e.getMessage());
         }
     }
-
     private void updateClient() throws RequestException, JsonProcessingException {
-        System.out.print("ID del client a editar: ");
+        out.print("ID del client a editar: ");
         var clientId = readLine(in);
 
         var existingClient = restClient.get("clients/" + clientId, ClientDto.class);
@@ -138,28 +141,28 @@ public class ClientManager {
         }
 
         var client = new ClientDto();
-        System.out.print("Insereix el nom del client: ");
+        out.print("Insereix el nom del client: ");
         client.setName(readLine(in));
-        System.out.println("Insereix el DNI:");
+        out.println("Insereix el DNI:");
         client.setDni(readLine(in));
-        System.out.println("Insereix el número de telèfon:");
+        out.println("Insereix el número de telèfon:");
         client.setPhone(readLine(in));
 
         var address = new AddressDto();
-        System.out.print("Insereix l'adreça: ");
+        out.print("Insereix l'adreça: ");
         address.setLocation(readLine(in));
         client.setAddresses(address);
 
         var shoeStore = new ShoeStoreDto();
-        System.out.print("Insereix l'id de la botiga: ");
+        out.print("Insereix l'id de la botiga: ");
         shoeStore.setId(Integer.parseInt(readLine(in)));
         client.setShoeStores(shoeStore);
 
         try {
             restClient.put("clients/" + clientId, Mappers.get().writeValueAsString(client));
-            System.out.println("Client actualitzat correctament.");
+            out.println("Client actualitzat correctament.");
         } catch (JsonProcessingException | RequestException e) {
-            System.out.println("Error al actualitzar el client: " + e.getMessage());
+            out.println("Error al actualitzar el client: " + e.getMessage());
         }
     }
 
@@ -172,7 +175,7 @@ public class ClientManager {
                 new Column().header("Adreça").with(client -> client.getAddresses() != null ? client.getAddresses().getLocation() : "N/A"),
                 new Column().header("Botiga ID").with(client -> client.getShoeStores() != null ? String.valueOf(client.getShoeStores().getId()) : "N/A")
         ));
-        System.out.println(table);
+        out.println(table);
     }
 
     private String readLine(BufferedReader in) {
@@ -186,12 +189,12 @@ public class ClientManager {
     }
 
     private void showClientMenu() {
-        System.out.println("\n--- Menu de Gestió de Clients ---");
-        System.out.println("1. Llista de tots els clients");
-        System.out.println("2. Detalls d'un client");
-        System.out.println("3. Afegir un nou client");
-        System.out.println("4. Eliminar un client existent");
-        System.out.println("5. Editar un client existent");
-        System.out.println("Escriu 'exit' per tornar al menú principal.");
+        out.println("\n--- Menu de Gestió de Clients ---");
+        out.println("1. Llista de tots els clients");
+        out.println("2. Detalls d'un client");
+        out.println("3. Afegir un nou client");
+        out.println("4. Eliminar un client existent");
+        out.println("5. Editar un client existent");
+        out.println("Escriu 'exit' per tornar al menú principal.");
     }
 }

@@ -98,7 +98,7 @@ public class ShoeStoreManager {
             var store = restClient.get("shoeStores/" + storeId, ShoeStoreDto.class);
 
             if (store != null) {
-                restClient.delete("shoeStores" + storeId, null);
+                restClient.delete("shoeStores/" + storeId, null);
                 out.println("Botiga eliminada correctament.");
             } else {
                 out.println("No s'ha trobat cap botiga amb ID " + storeId);
