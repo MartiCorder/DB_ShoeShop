@@ -197,4 +197,4 @@ public class ClientManager {
         out.println("5. Editar un client existent");
         out.println("Escriu 'exit' per tornar al menú principal.");
     }
-}
+} 
