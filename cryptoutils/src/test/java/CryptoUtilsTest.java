@@ -1,7 +1,11 @@
 import cat.uvic.teknos.shoeshop.cryptoutils.CryptoUtils;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import javax.crypto.SecretKey;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class CryptoUtilsTest {
 
@@ -11,31 +15,50 @@ class CryptoUtilsTest {
         var base64Text = "quonJ6BjRSC1DBOGuBWNdqixj8z20nuP+QH7cVvp7PI=";
 
         assertEquals(base64Text, CryptoUtils.getHash(text));
-
-        System.out.println(base64Text);
     }
 
     @Test
     void createSecretKey() {
+        var secretKey = CryptoUtils.createSecretKey();
+
+        assertNotNull(secretKey);
+
+        var bytes = secretKey.getEncoded();
+        System.out.println(CryptoUtils.toBase64(bytes));
     }
 
     @Test
     void decodeSecretKey() {
+        var secretKeyBase64 = "jaruKzlE7xerbNSjxiVjZtuAeYWrcyMGsA8TaTqZ8AM=";
+
+        var secretKey = CryptoUtils.decodeSecretKey(secretKeyBase64);
+
+        assertNotNull(secretKey);
+        assertEquals("AES", secretKey.getAlgorithm());
     }
 
     @Test
-    void encrypt() {
+    void encryptAndDecrypt() {
+        var secretKey = CryptoUtils.createSecretKey();
+        var plainText = "Sensitive data";
+
+        var encryptedText = CryptoUtils.encrypt(plainText, secretKey);
+        var decryptedText = CryptoUtils.decrypt(encryptedText, secretKey);
+
+        assertEquals(plainText, decryptedText);
     }
 
     @Test
-    void decrypt() {
-    }
+    void asymmetricEncryptAndDecrypt() throws Exception {
+        var keyPairGen = KeyPairGenerator.getInstance("RSA");
+        keyPairGen.initialize(2048);
+        KeyPair keyPair = keyPairGen.generateKeyPair();
 
-    @Test
-    void asymmetricEncrypt() {
-    }
+        var plainText = "Sensitive asymmetric data";
 
-    @Test
-    void asymmetricDecrypt() {
+        var encryptedText = CryptoUtils.asymmetricEncrypt(plainText, keyPair.getPublic());
+        var decryptedText = CryptoUtils.asymmetricDecrypt(encryptedText, keyPair.getPrivate());
+
+        assertEquals(plainText, decryptedText);
     }
 }

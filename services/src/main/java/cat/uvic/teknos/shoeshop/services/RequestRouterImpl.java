@@ -6,16 +6,27 @@ import cat.uvic.teknos.shoeshop.services.exception.ServerErrorException;
 import rawhttp.core.RawHttp;
 import rawhttp.core.RawHttpRequest;
 import rawhttp.core.RawHttpResponse;
+
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.security.PrivateKey;
+import java.util.Base64;
 import java.util.Map;
 
 public class RequestRouterImpl implements RequestRouter {
     private static final RawHttp rawHttp = new RawHttp();
     private final Map<String, Controller> controllers;
+    private PrivateKey privateKey; // Clau privada per desxifrar la clau simètrica
 
     public RequestRouterImpl(Map<String, Controller> controllers) {
         this.controllers = controllers;
+    }
+
+    public void setPrivateKey(PrivateKey privateKey) {
+        this.privateKey = privateKey;
     }
 
     @Override
@@ -87,8 +98,11 @@ public class RequestRouterImpl implements RequestRouter {
         if (!request.getBody().isPresent()) {
             throw new ServerErrorException("Body not present");
         }
-        var postJson = request.getBody().get().decodeBodyToString(Charset.defaultCharset());
+
+        // Desxifrar dades POST
+        var postJson = decryptRequestBody(request.getBody().get().decodeBodyToString(Charset.defaultCharset()));
         controller.post(postJson);
+
         return "{\"message\": \"Resource created successfully.\"}";
     }
 
@@ -96,9 +110,11 @@ public class RequestRouterImpl implements RequestRouter {
         if (pathParts.length < 3 || !request.getBody().isPresent()) {
             throw new ServerErrorException("Invalid PUT request");
         }
+
         var putId = Integer.parseInt(pathParts[2]);
-        var putJson = request.getBody().get().decodeBodyToString(Charset.defaultCharset());
+        var putJson = decryptRequestBody(request.getBody().get().decodeBodyToString(Charset.defaultCharset()));
         controller.put(putId, putJson);
+
         return "{\"message\": \"Resource updated successfully.\"}";
     }
 
@@ -106,8 +122,34 @@ public class RequestRouterImpl implements RequestRouter {
         if (pathParts.length < 3) {
             throw new ServerErrorException("Invalid DELETE request");
         }
+
         var deleteId = Integer.parseInt(pathParts[2]);
         controller.delete(deleteId);
+
         return "{\"message\": \"Resource deleted successfully.\"}";
+    }
+
+    private String decryptRequestBody(String encryptedBody) {
+        try {
+            // Desxifrar clau simètrica amb clau privada
+            String[] parts = encryptedBody.split("::");  // Format: "encryptedKey::encryptedData"
+            byte[] encryptedKey = Base64.getDecoder().decode(parts[0]);
+            byte[] encryptedData = Base64.getDecoder().decode(parts[1]);
+
+            Cipher rsaCipher = Cipher.getInstance("RSA");
+            rsaCipher.init(Cipher.DECRYPT_MODE, privateKey);
+            byte[] decryptedKey = rsaCipher.doFinal(encryptedKey);
+
+            // Utilitzar clau simètrica per desxifrar les dades
+            SecretKey secretKey = new SecretKeySpec(decryptedKey, 0, decryptedKey.length, "AES");
+            Cipher aesCipher = Cipher.getInstance("AES");
+            aesCipher.init(Cipher.DECRYPT_MODE, secretKey);
+
+            byte[] decryptedData = aesCipher.doFinal(encryptedData);
+            return new String(decryptedData, Charset.defaultCharset());
+
+        } catch (Exception e) {
+            throw new ServerErrorException("Error desxifrant el cos de la petició", e);
+        }
     }
 }

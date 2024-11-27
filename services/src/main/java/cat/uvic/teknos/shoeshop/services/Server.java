@@ -4,11 +4,14 @@ import cat.uvic.teknos.shoeshop.services.exception.ServerException;
 import rawhttp.core.RawHttp;
 import rawhttp.core.RawHttpOptions;
 
+import javax.crypto.SecretKey;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.file.Paths;
+import java.security.KeyStore;
+import java.security.PrivateKey;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -21,9 +24,12 @@ public class Server {
     private final ExecutorService threadPool;
     private static final String PROPERTIES_PATH = "services/src/main/resources/server.properties";
 
+    private PrivateKey serverPrivateKey; // Clau privada del servidor
+
     public Server(RequestRouter requestRouter, int maxThreads) {
         this.requestRouter = requestRouter;
         this.threadPool = Executors.newFixedThreadPool(maxThreads);
+        initKeystore(); // Carregar el keystore durant la inicialització
     }
 
     public void start() {
@@ -58,6 +64,9 @@ public class Server {
             var rawHttp = new RawHttp(RawHttpOptions.newBuilder().doNotInsertHostHeaderIfMissing().build());
             var request = rawHttp.parseRequest(clientSocket.getInputStream()).eagerly();
 
+            // Passar la clau privada al router per desencriptar la clau simètrica
+            ((RequestRouterImpl) requestRouter).setPrivateKey(serverPrivateKey);
+
             var response = requestRouter.execRequest(request);
             response.writeTo(clientSocket.getOutputStream());
         } catch (IOException e) {
@@ -91,5 +100,16 @@ public class Server {
 
     private void shutdown() {
         threadPool.shutdownNow();
+    }
+
+    private void initKeystore() {
+        try (var keystoreStream = new FileInputStream("server.p12")) {
+            KeyStore keystore = KeyStore.getInstance("PKCS12");
+            keystore.load(keystoreStream, "Teknos01".toCharArray());
+            this.serverPrivateKey = (PrivateKey) keystore.getKey("serverAlias", "keyPassword".toCharArray());
+            System.out.println("Clau privada carregada correctament.");
+        } catch (Exception e) {
+            throw new RuntimeException("Error al carregar el keystore", e);
+        }
     }
 }

@@ -3,13 +3,42 @@ package cat.uvic.teknos.shoeshop.clients.console.utils;
 import cat.uvic.teknos.shoeshop.clients.console.exceptions.RequestException;
 
 public interface RestClient {
-    <T> T get(String path, Class<T> returnType) throws RequestException;
+    class HeaderEntry {
 
-    <T> T[] getAll(String path, Class<T[]> returnType) throws RequestException;
+        public String key;
+        public String value;
 
-    void post(String path, String body) throws RequestException;
+        public String getKey() {
+            return key;
+        }
 
-    void put(String path, String body) throws RequestException;
+        public String getValue() {
+            return value;
+        }
 
-    void delete(String path, String body) throws RequestException;
+        public HeaderEntry(String key, String value) {
+            this.key = key;
+            this.value = value;
+        }
+    }
+
+    @FunctionalInterface
+    interface BodyDecoder {
+        String decode(String body);
+    }
+
+    interface BodyEncoder {
+        String encode(String body);
+    }
+
+
+    <T> T get(String path, Class<T> returnType, BodyDecoder decoder, HeaderEntry... entries) throws RequestException;
+
+    <T> T[] getAll(String path, Class<T[]> returnType, BodyDecoder decoder, HeaderEntry... entries) throws RequestException;
+
+    void post(String path, String body, BodyEncoder encoder, HeaderEntry... entries) throws RequestException;
+
+    void put(String path, String body, BodyEncoder encoder, HeaderEntry... entries) throws RequestException;
+
+    void delete(String path, String body, HeaderEntry... entries) throws RequestException;
 }
