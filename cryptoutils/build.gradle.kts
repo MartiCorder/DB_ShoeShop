@@ -11,4 +11,7 @@ tasks.jar {
         include("META-INF/services/cat.fcardara.bandhub.domain.services.ModelCreator")
     }
 }
+dependencies{
+    implementation("org.bouncycastle:bcprov-jdk18on:1.78")
+}
 

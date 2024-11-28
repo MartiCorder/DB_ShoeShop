@@ -1,147 +1,146 @@
 package cat.uvic.teknos.shoeshop.services;
 
 import cat.uvic.teknos.shoeshop.services.controllers.Controller;
-import cat.uvic.teknos.shoeshop.services.exception.ResourceNotFoundException;
 import rawhttp.core.RawHttp;
 import rawhttp.core.RawHttpRequest;
 import rawhttp.core.RawHttpResponse;
 
 import java.io.IOException;
-import java.security.PrivateKey;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.List;
+import java.nio.charset.StandardCharsets;
+import java.security.*;
+import java.security.cert.CertificateException;
 import java.util.Map;
+import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 import cat.uvic.teknos.shoeshop.cryptoutils.CryptoUtils;
 
 public class RequestRouterImpl implements RequestRouter {
+
     private static final RawHttp rawHttp = new RawHttp();
     private final Map<String, Controller> controllers;
-    private final PrivateKey serverPrivateKey; // Clau privada del servidor per desxifrar les claus simètriques
+    private final PrivateKey privateKey;
 
-    public RequestRouterImpl(Map<String, Controller> controllers, PrivateKey serverPrivateKey) {
+    public RequestRouterImpl(Map<String, Controller> controllers) {
         this.controllers = controllers;
-        this.serverPrivateKey = serverPrivateKey;
+        try {
+            KeyStore keyStore = KeyStore.getInstance("PKCS12");
+            keyStore.load(RequestRouterImpl.class.getResourceAsStream("/server.p12"), "Teknos01.".toCharArray());
+            this.privateKey = (PrivateKey) keyStore.getKey("server", "Teknos01.".toCharArray());
+        } catch (KeyStoreException | UnrecoverableKeyException | IOException | NoSuchAlgorithmException |
+                 CertificateException e) {
+            throw new RuntimeException("Couldn't load key (RequestRouterImpl): ", e);
+        }
     }
 
     @Override
     public RawHttpResponse<?> execRequest(RawHttpRequest request) {
-        var path = request.getUri().getPath();
-        var pathParts = path.split("/");
-
-        if (pathParts.length < 3) {
-            return createJsonErrorResponse(404, "Controller not found.");
-        }
-
-        var controllerName = pathParts[2];
-        var method = request.getMethod();
-        String responseJsonBody = "";
-
         try {
-            var controller = controllers.get(controllerName);
-            if (controller == null) {
-                throw new ResourceNotFoundException("Controller not found: " + controllerName);
+            System.out.println("Processing request: " + request.getMethod() + " " + request.getUri().getPath());
+
+            String encryptedKeyBase64 = request.getHeaders()
+                    .get("X-Symmetric-Key")
+                    .stream()
+                    .findFirst()
+                    .orElseThrow(() -> new RuntimeException("Missing 'X-Symmetric-Key' header"));
+            System.out.println("Got encrypted symmetric key: " + encryptedKeyBase64);
+
+            Cipher rsaCipher = Cipher.getInstance("RSA");
+            rsaCipher.init(Cipher.DECRYPT_MODE, privateKey);
+            byte[] decryptedKeyBytes = rsaCipher.doFinal(CryptoUtils.fromBase64(encryptedKeyBase64));
+
+            if (decryptedKeyBytes.length != 32) {
+                throw new RuntimeException("Decrypted key length is incorrect. Expected 32 bytes for AES-256, but got " + decryptedKeyBytes.length);
             }
 
-            // Recuperar la clau simètrica xifrada de l'encapçalament
-            List<String> symmetricKeyHeader = request.getHeaders().get("X-Symmetric-Key");
-            if (symmetricKeyHeader == null || symmetricKeyHeader.isEmpty()) {
-                return createJsonErrorResponse(400, "Missing X-Symmetric-Key header.");
-            }
+            SecretKey symmetricKey = new SecretKeySpec(decryptedKeyBytes, "AES");
+            System.out.println("Symmetric key decrypted successfully");
 
-            String encryptedSymmetricKeyBase64 = symmetricKeyHeader.get(0);
-            byte[] encryptedSymmetricKey = Base64.getDecoder().decode(encryptedSymmetricKeyBase64);
+            String decryptedBody = "";
+            if (request.getBody().isPresent()) {
+                String encryptedBody = request.getBody().get().decodeBodyToString(StandardCharsets.UTF_8);
+                if (!encryptedBody.isEmpty()) {
+                    decryptedBody = CryptoUtils.decrypt(encryptedBody, symmetricKey);
 
-            // Desxifrar la clau simètrica amb la clau privada del servidor
-            SecretKey symmetricKey = CryptoUtils.decodeSecretKey(
-                    CryptoUtils.asymmetricDecrypt(Arrays.toString(encryptedSymmetricKey), serverPrivateKey)
-            );
+                    String providedHash = request.getHeaders()
+                            .get("X-Body-Hash")
+                            .stream()
+                            .findFirst()
+                            .orElseThrow(() -> new RuntimeException("Missing 'X-Body-Hash' header"));
+                    String calculatedHash = CryptoUtils.getHash(encryptedBody);
 
-            // Recuperar i verificar el hash del cos xifrat
-            List<String> bodyHashHeader = request.getHeaders().get("X-Body-Hash");
-            if (bodyHashHeader == null || bodyHashHeader.isEmpty()) {
-                return createJsonErrorResponse(400, "Missing X-Body-Hash header.");
-            }
-
-            String bodyHash = bodyHashHeader.get(0);
-            byte[] encryptedBody = request.getBody().map(body -> {
-                try {
-                    return body.decodeBody();
-                } catch (IOException e) {
-                    throw new RuntimeException("Error decoding body", e);
+                    if (!calculatedHash.equals(providedHash)) {
+                        throw new RuntimeException("Body hash mismatch: Possible tampered data");
+                    }
                 }
-            }).orElse(new byte[0]);
-            String calculatedHash = CryptoUtils.getHash(new String(encryptedBody));
-
-            if (!calculatedHash.equals(bodyHash)) {
-                return createJsonErrorResponse(400, "Invalid hash for the request body.");
             }
 
-            // Desxifrar el cos amb la clau simètrica
-            String decryptedBody = CryptoUtils.decrypt(new String(encryptedBody), symmetricKey);
+            String responseBody = handleRequest(request.getMethod(), request.getUri().getPath(), decryptedBody);
 
-            // Processar la sol·licitud segons el mètode HTTP
-            if ("POST".equals(method)) {
-                controller.post(decryptedBody);
-            } else if ("GET".equals(method)) {
-                if (pathParts.length == 4) {
-                    var resourceId = Integer.parseInt(pathParts[3]);
-                    responseJsonBody = controller.get(resourceId);
-                } else {
-                    responseJsonBody = controller.get();
-                }
-            } else if ("PUT".equals(method)) {
-                if (pathParts.length < 4) {
-                    return createJsonErrorResponse(400, "Resource ID is required for PUT requests.");
-                }
-                var resourceId = Integer.parseInt(pathParts[3]);
-                controller.put(resourceId, decryptedBody);
-            } else if ("DELETE".equals(method)) {
-                if (pathParts.length < 4) {
-                    return createJsonErrorResponse(400, "Resource ID is required for DELETE requests.");
-                }
-                var resourceId = Integer.parseInt(pathParts[3]);
-                controller.delete(resourceId);
-            } else {
-                return createJsonErrorResponse(405, "Method not allowed.");
-            }
-
-            if (responseJsonBody.isEmpty()) {
-                responseJsonBody = "{\"message\": \"No content available\"}";
-            }
-
-            // Cifrar la resposta utilitzant la clau simètrica
-            String encryptedResponseBody = CryptoUtils.encrypt(responseJsonBody, symmetricKey);
-            String responseHash = CryptoUtils.getHash(encryptedResponseBody);
+            String encryptedResponse = CryptoUtils.encrypt(responseBody, symmetricKey);
+            String responseHash = CryptoUtils.getHash(encryptedResponse);
 
             return rawHttp.parseResponse(
                     "HTTP/1.1 200 OK\r\n" +
                             "Content-Type: application/json\r\n" +
+                            "Content-Length: " + encryptedResponse.getBytes(StandardCharsets.UTF_8).length + "\r\n" +
                             "X-Body-Hash: " + responseHash + "\r\n" +
-                            "Content-Length: " + encryptedResponseBody.length() + "\r\n" +
                             "\r\n" +
-                            encryptedResponseBody
+                            encryptedResponse
             );
-
 
         } catch (Exception e) {
             System.err.println("Error processing request: " + e.getMessage());
-            e.printStackTrace(); // Mostrar més detalls del error
-            return createJsonErrorResponse(500, "Error processing request: " + e.getMessage());
+            e.printStackTrace();
+            return rawHttp.parseResponse(
+                    "HTTP/1.1 500 Internal Server Error\r\n" +
+                            "Content-Type: text/plain\r\n" +
+                            "Content-Length: " + e.getMessage().getBytes(StandardCharsets.UTF_8).length + "\r\n" +
+                            "\r\n" +
+                            e.getMessage()
+            );
         }
-
     }
 
-    private RawHttpResponse<?> createJsonErrorResponse(int statusCode, String message) {
-        String jsonResponse = "{\"error\": \"" + message + "\"}";
-        return rawHttp.parseResponse(
-                "HTTP/1.1 " + statusCode + " " + (statusCode == 404 ? "Not Found" : "Error") + "\r\n" +
-                        "Content-Type: application/json\r\n" +
-                        "Content-Length: " + jsonResponse.length() + "\r\n" +
-                        "\r\n" +
-                        jsonResponse
-        );
+    private String handleRequest(String method, String path, String body) throws Exception {
+        String[] pathParts = path.split("/");
+        if (pathParts.length < 2) {
+            throw new RuntimeException("Invalid path: " + path);
+        }
+
+        Controller controller = controllers.get(pathParts[1]);
+        if (controller == null) {
+            throw new RuntimeException("Controller not found for path: " + pathParts[1]);
+        }
+
+        switch (method) {
+            case "POST":
+                controller.post(body);
+                return "{}";
+            case "GET":
+                if (pathParts.length == 2) {
+                    return controller.get();
+                } else if (pathParts.length == 3) {
+                    return controller.get(Integer.parseInt(pathParts[2]));
+                }
+                break;
+            case "PUT":
+                if (pathParts.length == 3) {
+                    controller.put(Integer.parseInt(pathParts[2]), body);
+                    return "{}";
+                }
+                break;
+            case "DELETE":
+                if (pathParts.length == 3) {
+                    controller.delete(Integer.parseInt(pathParts[2]));
+                    return "{}";
+                }
+                break;
+            default:
+                throw new RuntimeException("Unsupported method: " + method);
+        }
+
+        throw new RuntimeException("Invalid path or method combination");
     }
 }

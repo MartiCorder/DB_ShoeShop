@@ -4,73 +4,66 @@ import cat.uvic.teknos.shoeshop.models.ModelFactory;
 import cat.uvic.teknos.shoeshop.repositories.RepositoryFactory;
 import cat.uvic.teknos.shoeshop.services.controllers.*;
 
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.security.*;
-import java.security.cert.CertificateException;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Objects;
+import java.util.Map;
 import java.util.Properties;
 
 public class App {
     public static void main(String[] args) {
         try {
-            // Carregar propietats
-            var properties = new Properties();
-            properties.load(App.class.getResourceAsStream("/app.properties"));
+            Properties properties = loadProperties("/app.properties");
 
-            // Crear les instàncies de les fàbriques
-            RepositoryFactory repositoryFactory = (RepositoryFactory) Class.forName(properties.getProperty("repositoryFactory"))
-                    .getConstructor().newInstance();
-            ModelFactory modelFactory = (ModelFactory) Class.forName(properties.getProperty("modelFactory"))
-                    .getConstructor().newInstance();
+            RepositoryFactory repositoryFactory = createInstance(properties.getProperty("repositoryFactory"), RepositoryFactory.class);
+            ModelFactory modelFactory = createInstance(properties.getProperty("modelFactory"), ModelFactory.class);
 
-            // Crear els controladors
-            var controllers = new HashMap<String, Controller>();
-            controllers.put("clients", new ClientController(repositoryFactory, modelFactory));
-            controllers.put("models", new ModelController(repositoryFactory, modelFactory));
-            controllers.put("shoes", new ShoeController(repositoryFactory, modelFactory));
-            controllers.put("suppliers", new SupplierController(repositoryFactory, modelFactory));
-            controllers.put("inventories", new InventoryController(repositoryFactory, modelFactory));
-            controllers.put("shoeStores", new ShoeStoreController(repositoryFactory, modelFactory));
-            controllers.put("addresses", new AddressController(repositoryFactory, modelFactory));
+            Map<String, Controller> controllers = initializeControllers(repositoryFactory, modelFactory);
 
-            // Alias i contrasenya per al keystore
-            String alias = "client1";
-            char[] password = "Teknos01.".toCharArray();
+            RequestRouterImpl requestRouter = new RequestRouterImpl(controllers);
+            Server server = new Server(requestRouter);
 
-            // Ruta al fitxer del keystore
-            String p12File = Objects.requireNonNull(App.class.getResource("/client1.p12")).getPath();
-
-            // Inicialitzar el KeyStore i carregar la clau privada
-            KeyStore keyStore = KeyStore.getInstance("PKCS12");
-            try (FileInputStream fis = new FileInputStream(p12File)) {
-                keyStore.load(fis, password);
-            }
-
-            // Comprovar els alias disponibles al KeyStore
-            for (String availableAlias : Collections.list(keyStore.aliases())) {
-                System.out.println("Available alias: " + availableAlias);
-            }
-
-            PrivateKey serverPrivateKey = (PrivateKey) keyStore.getKey(alias, password);
-
-            // Crear el RequestRouter amb la clau privada
-            var requestRouter = new RequestRouterImpl(controllers, serverPrivateKey);
-
-            // Iniciar el servidor amb el RequestRouter
             int maxThreads = Integer.parseInt(properties.getProperty("maxThreads", "10"));
-            Server server = new Server(requestRouter, maxThreads);
+            System.out.println("Starting server with maxThreads: " + maxThreads);
             server.start();
 
-        } catch (IOException | ClassNotFoundException | NoSuchMethodException |
-                 InvocationTargetException | InstantiationException | IllegalAccessException e) {
-            System.err.println("Error al iniciar l'aplicació: " + e.getMessage());
-        } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException | CertificateException e) {
-            System.err.println("Error al carregar la clau privada des del keystore: " + e.getMessage());
-            e.printStackTrace();  // Mostrar detalls del error
+        } catch (Exception e) {
+            System.err.println("Error starting the application: " + e.getMessage());
+            e.printStackTrace();
         }
+    }
+
+    private static Properties loadProperties(String resourcePath) throws IOException {
+        try (InputStream input = App.class.getResourceAsStream(resourcePath)) {
+            if (input == null) {
+                throw new IOException("Properties file not found at: " + resourcePath);
+            }
+            Properties properties = new Properties();
+            properties.load(input);
+            return properties;
+        }
+    }
+
+    private static <T> T createInstance(String className, Class<T> type)
+            throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        if (className == null || className.isEmpty()) {
+            throw new IllegalArgumentException("Class name for " + type.getSimpleName() + " is missing in properties.");
+        }
+        Class<?> clazz = Class.forName(className);
+        return type.cast(clazz.getConstructor().newInstance());
+    }
+
+    private static Map<String, Controller> initializeControllers(RepositoryFactory repositoryFactory, ModelFactory modelFactory) {
+        Map<String, Controller> controllers = new HashMap<>();
+        controllers.put("clients", new ClientController(repositoryFactory, modelFactory));
+        controllers.put("models", new ModelController(repositoryFactory, modelFactory));
+        controllers.put("shoes", new ShoeController(repositoryFactory, modelFactory));
+        controllers.put("suppliers", new SupplierController(repositoryFactory, modelFactory));
+        controllers.put("inventories", new InventoryController(repositoryFactory, modelFactory));
+        controllers.put("shoeStores", new ShoeStoreController(repositoryFactory, modelFactory));
+        controllers.put("addresses", new AddressController(repositoryFactory, modelFactory));
+
+        return controllers;
     }
 }

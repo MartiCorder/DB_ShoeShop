@@ -1,112 +1,115 @@
 package cat.uvic.teknos.shoeshop.services;
 
-import cat.uvic.teknos.shoeshop.services.exception.ServerException;
 import rawhttp.core.RawHttp;
 import rawhttp.core.RawHttpOptions;
+import rawhttp.core.RawHttpResponse;
 
-import javax.crypto.SecretKey;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.file.Paths;
-import java.security.KeyStore;
-import java.security.PrivateKey;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class Server {
-    public final int PORT = 8080;
+
+    public static final int PORT = 8080;
+    private static final String PROPERTIES_FILE = "services/src/main/resources/server.properties";
+
     private final RequestRouter requestRouter;
+    private final ExecutorService executor;
+    private final ServerSocket serverSocket;
     private volatile boolean shutdownServer = false;
-    private final ExecutorService threadPool;
-    private static final String PROPERTIES_PATH = "services/src/main/resources/server.properties";
 
-    private PrivateKey serverPrivateKey; // Clau privada del servidor
-
-    public Server(RequestRouter requestRouter, int maxThreads) {
+    public Server(RequestRouterImpl requestRouter) throws IOException {
         this.requestRouter = requestRouter;
-        this.threadPool = Executors.newFixedThreadPool(maxThreads);
-        initKeystore(); // Carregar el keystore durant la inicialització
+        this.executor = Executors.newFixedThreadPool(3);
+        this.serverSocket = new ServerSocket(PORT);
+    }
+
+    private boolean isShutdownRequested() {
+        try (FileInputStream input = new FileInputStream(PROPERTIES_FILE)) {
+            Properties props = new Properties();
+            props.load(input);
+            return Boolean.parseBoolean(props.getProperty("SHUTDOWN_SERVER", "false"));
+        } catch (IOException e) {
+            System.err.println("Error reading properties file: " + e.getMessage());
+            return false;
+        }
+    }
+
+    private void closeServer() {
+        try {
+            System.out.println("Shutting down server...");
+            shutdownServer = true;
+            serverSocket.close();
+            executor.shutdown();
+            if (!executor.awaitTermination(5, TimeUnit.SECONDS)) {
+                System.err.println("Executor service did not terminate in time. Forcing shutdown...");
+                executor.shutdownNow();
+            }
+            System.out.println("Server closed correctly!");
+        } catch (IOException | InterruptedException e) {
+            System.err.println("Error during server shutdown: " + e.getMessage());
+        } finally {
+            System.exit(0);
+        }
     }
 
     public void start() {
+        startShutdownMonitor();
 
-        ExecutorService scheduler = Executors.newSingleThreadExecutor();
-        scheduler.submit(this::monitorShutdown);
+        try {
+            System.out.println("Server started on port " + PORT);
+            while (!shutdownServer) {
+                Socket clientSocket = serverSocket.accept();
+                executor.execute(() -> handleClient(clientSocket));
+            }
+        } catch (IOException e) {
+            if (shutdownServer) {
+                System.out.println("Server stopped listening for connections.");
+            } else {
+                System.err.println("Server error: " + e.getMessage());
+            }
+        }
+    }
 
-        try (var serverSocket = new ServerSocket(PORT)) {
-            System.out.println("Servidor iniciat en el port " + PORT);
+    private void handleClient(Socket clientSocket) {
+        try (clientSocket) {
+            RawHttp rawHttp = new RawHttp(RawHttpOptions.newBuilder().doNotInsertHostHeaderIfMissing().build());
+            var request = rawHttp.parseRequest(clientSocket.getInputStream());
+            RawHttpResponse<?> response = requestRouter.execRequest(request);
 
+            if (response != null) {
+                response.writeTo(clientSocket.getOutputStream());
+                clientSocket.getOutputStream().flush();
+            } else {
+                System.err.println("Null response generated for client request.");
+            }
+        } catch (IOException e) {
+            System.err.println("Error handling client request: " + e.getMessage());
+        }
+    }
+
+    private void startShutdownMonitor() {
+        Thread shutdownMonitor = new Thread(() -> {
             while (!shutdownServer) {
                 try {
-                    var clientSocket = serverSocket.accept();
-                    threadPool.execute(() -> handleRequest(clientSocket));
-                } catch (IOException e) {
-                    if (shutdownServer) {
-                        System.out.println("Servidor detingut.");
-                    } else {
-                        throw new ServerException(e);
+                    Thread.sleep(5000);  // Check every 5 seconds
+                    if (isShutdownRequested()) {
+                        System.out.println("Shutdown request detected.");
+                        closeServer();
                     }
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    System.err.println("Shutdown monitor interrupted.");
                 }
             }
-        } catch (IOException e) {
-            throw new ServerException(e);
-        } finally {
-            shutdown();
-        }
-    }
-
-    private void handleRequest(Socket clientSocket) {
-        try (clientSocket) {
-            var rawHttp = new RawHttp(RawHttpOptions.newBuilder().doNotInsertHostHeaderIfMissing().build());
-            var request = rawHttp.parseRequest(clientSocket.getInputStream()).eagerly();
-
-            var response = requestRouter.execRequest(request);
-            response.writeTo(clientSocket.getOutputStream());
-        } catch (IOException e) {
-            throw new ServerException(e);
-        }
-    }
-
-    private void monitorShutdown() {
-        try {
-            while (!shutdownServer) {
-                checkShutdown();
-                TimeUnit.SECONDS.sleep(10);
-            }
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-    }
-
-    private void checkShutdown() {
-        try (FileInputStream in = new FileInputStream(Paths.get(PROPERTIES_PATH).toFile())) {
-            Properties properties = new Properties();
-            properties.load(in);
-            if ("true".equalsIgnoreCase(properties.getProperty("shutdown"))) {
-                System.out.println("Apagant la aplicació...");
-                System.exit(0);
-            }
-        } catch (IOException e) {
-            System.err.println("Error al verificar l'arxiu de configuració: " + e.getMessage());
-        }
-    }
-
-    private void shutdown() {
-        threadPool.shutdownNow();
-    }
-
-    private void initKeystore() {
-        try (var keystoreStream = new FileInputStream("server.p12")) {
-            KeyStore keystore = KeyStore.getInstance("PKCS12");
-            keystore.load(keystoreStream, "Teknos01.".toCharArray());
-            this.serverPrivateKey = (PrivateKey) keystore.getKey("serverAlias", "keyPassword".toCharArray());
-            System.out.println("Clau privada carregada correctament.");
-        } catch (Exception e) {
-            throw new RuntimeException("Error al carregar el keystore", e);
-        }
+        });
+        shutdownMonitor.setDaemon(true);
+        shutdownMonitor.start();
     }
 }
