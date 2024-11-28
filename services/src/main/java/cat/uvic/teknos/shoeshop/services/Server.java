@@ -64,9 +64,6 @@ public class Server {
             var rawHttp = new RawHttp(RawHttpOptions.newBuilder().doNotInsertHostHeaderIfMissing().build());
             var request = rawHttp.parseRequest(clientSocket.getInputStream()).eagerly();
 
-            // Passar la clau privada al router per desencriptar la clau simètrica
-            ((RequestRouterImpl) requestRouter).setPrivateKey(serverPrivateKey);
-
             var response = requestRouter.execRequest(request);
             response.writeTo(clientSocket.getOutputStream());
         } catch (IOException e) {
@@ -105,7 +102,7 @@ public class Server {
     private void initKeystore() {
         try (var keystoreStream = new FileInputStream("server.p12")) {
             KeyStore keystore = KeyStore.getInstance("PKCS12");
-            keystore.load(keystoreStream, "Teknos01".toCharArray());
+            keystore.load(keystoreStream, "Teknos01.".toCharArray());
             this.serverPrivateKey = (PrivateKey) keystore.getKey("serverAlias", "keyPassword".toCharArray());
             System.out.println("Clau privada carregada correctament.");
         } catch (Exception e) {

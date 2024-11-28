@@ -5,7 +5,6 @@ import cat.uvic.teknos.shoeshop.cryptoutils.exeptions.CryptoException;
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.*;
-import java.security.spec.InvalidKeySpecException;
 import java.util.Base64;
 
 public class CryptoUtils {
@@ -19,6 +18,15 @@ public class CryptoUtils {
             return toBase64(hash);
         } catch (NoSuchAlgorithmException e) {
             throw new CryptoException();
+        }
+    }
+
+    public static byte[] hash(byte[] data) {
+        try {
+            var digest = MessageDigest.getInstance("SHA-256");
+            return digest.digest(data);
+        } catch (NoSuchAlgorithmException e) {
+            throw new CryptoException(e);
         }
     }
 

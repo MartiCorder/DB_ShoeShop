@@ -85,6 +85,7 @@ public class ClientController implements Controller {
             existingClient.setAddresses(clientUpdated.getAddresses());
             existingClient.setShoeStores(clientUpdated.getShoeStores());
 
+
             repository.save(existingClient);
 
         } catch (JsonProcessingException e) {

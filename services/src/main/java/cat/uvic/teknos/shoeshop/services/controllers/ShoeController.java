@@ -87,6 +87,7 @@ public class ShoeController implements Controller {
             existingShoe.setModels(shoeUpdated.getModels());
             existingShoe.setInventories(shoeUpdated.getInventories());
 
+
             repository.save(existingShoe);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
